@@ -8,6 +8,7 @@
     "build-frontend": "cd app && npm run build",
     "build-backend": "cd src && npm run build",
     "start": "cd src && npm start",
+    "start-frontend": "cd app && npm start",
     "postinstall": "cd app && npm install && cd .. && cd src && npm install"
   },
   "repository": {

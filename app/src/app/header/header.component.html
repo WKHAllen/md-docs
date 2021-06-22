@@ -1,0 +1,17 @@
+<mat-toolbar color="primary" class="header">
+  <a mat-button href="/">
+    <mat-icon>tag</mat-icon>
+    <span>MD Docs</span>
+  </a>
+  <div *ngIf="loggedIn; else login">
+    <a mat-icon-button routerLink="/logout" matTooltip="Log out">
+      <mat-icon>logout</mat-icon>
+    </a>
+  </div>
+</mat-toolbar>
+
+<ng-template #login>
+  <a mat-icon-button routerLink="/login" matTooltip="Log in">
+    <mat-icon>login</mat-icon>
+  </a>
+</ng-template>
