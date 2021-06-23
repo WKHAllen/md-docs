@@ -4,8 +4,7 @@
  */
 
 import { BaseService, ServiceError, hashPassword, checkPassword } from "./util";
-// TODO: use session service
-// import { Session } from "./session";
+import { Session } from "./session";
 
 /**
  * User architecture.
@@ -210,7 +209,23 @@ export class UserService extends BaseService {
    * @param password The user's password.
    * @returns The new user session.
    */
-  // public async login(email: string, password: string): Promise<Session> {}
+  public async login(email: string, password: string): Promise<Session> {
+    const userExists = await this.userExistsForEmail(email);
+
+    if (userExists) {
+      const user = await this.getUserByEmail(email);
+      const passwordMatch = await checkPassword(password, user.password);
+
+      if (passwordMatch) {
+        const session = await this.dbm.sessionService.createSession(user.id);
+        return session;
+      } else {
+        throw new ServiceError("Invalid login");
+      }
+    } else {
+      throw new ServiceError("Invalid login");
+    }
+  }
 
   /**
    * Deletes a user.

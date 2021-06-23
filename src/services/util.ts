@@ -30,7 +30,7 @@ interface FieldMap {
 /**
  * Query order by options
  */
-enum OrderBy {
+export enum OrderBy {
   ascending = "ASC",
   descending = "DESC",
 }
