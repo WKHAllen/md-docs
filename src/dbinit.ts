@@ -10,6 +10,11 @@ import DatabaseManager from "./services";
  */
 const PRUNE_INTERVAL: number = 60 * 1000;
 
+/**
+ * Prune records from the database.
+ *
+ * @param dbm The database manager.
+ */
 async function pruneRecords(dbm: DatabaseManager): Promise<void> {
   // TODO: prune verification and password reset records
   // await dbm.verifyService.pruneVerifications();
