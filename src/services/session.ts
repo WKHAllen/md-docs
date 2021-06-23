@@ -72,7 +72,7 @@ export class SessionService extends BaseService {
   public async getUserBySessionID(sessionID: string): Promise<User> {
     const sql = `
       SELECT * FROM app_user WHERE id = (
-        SELECT user_id FROM session WHERE id = $1
+        SELECT user_id FROM session WHERE id = ?
       );
     `;
     const params = [sessionID];
@@ -125,15 +125,15 @@ export class SessionService extends BaseService {
   public async deleteOldUserSessions(userID: number): Promise<void> {
     const sql = `
       DELETE FROM session
-        WHERE user_id = $1
+        WHERE user_id = ?
         AND id NOT IN (
           SELECT id FROM session
-            WHERE user_id = $1
+            WHERE user_id = ?
             ORDER BY create_time DESC
-            LIMIT $2
+            LIMIT ?
       );
     `;
-    const params = [userID, NUM_USER_SESSIONS];
+    const params = [userID, userID, NUM_USER_SESSIONS];
     await this.dbm.execute(sql, params);
   }
 }

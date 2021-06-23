@@ -6,8 +6,7 @@
 import { Request, Response, NextFunction } from "express";
 import DatabaseManager from "../services";
 import { ServiceError } from "../services/util";
-// TODO: use user service
-// import { User } from "../services/user";
+import { User } from "../services/user";
 
 /**
  * A standard JSON response object.
@@ -77,19 +76,18 @@ export function deleteSessionID(res: Response): void {
  * @param req Request object.
  * @returns The user's ID.
  */
-// TODO: return user by session
-// export async function getLoggedInUser(req: Request): Promise<User> {
-//   const dbm = getDBM(req);
+export async function getLoggedInUser(req: Request): Promise<User> {
+  const dbm = getDBM(req);
 
-//   const sessionID = getSessionID(req);
+  const sessionID = getSessionID(req);
 
-//   if (sessionID) {
-//     const user = await dbm.sessionService.getUserBySessionID(sessionID);
-//     return user;
-//   } else {
-//     throw new ServiceError("Not logged in");
-//   }
-// }
+  if (sessionID) {
+    const user = await dbm.sessionService.getUserBySessionID(sessionID);
+    return user;
+  } else {
+    throw new ServiceError("Not logged in");
+  }
+}
 
 /**
  * Query parameter type names
