@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS permission (
+  id   VARCHAR(63) NOT NULL,
+  name VARCHAR(63) NOT NULL,
+
+  PRIMARY KEY (id)
+);

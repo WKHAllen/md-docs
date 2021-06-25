@@ -1,10 +1,11 @@
 CREATE TABLE IF NOT EXISTS app_user (
-    id        SERIAL       NOT NULL,
-    username  VARCHAR(63)  NOT NULL,
-    email     VARCHAR(63)  NOT NULL,
-    password  VARCHAR(255) NOT NULL,
-    verified  BOOLEAN      NOT NULL DEFAULT FALSE,
-    join_time TIMESTAMP    NOT NULL DEFAULT NOW(),
+  id        CHAR(16)     NOT NULL DEFAULT SUBSTR(MD5(RANDOM()::TEXT), 0, 8),
+  username  VARCHAR(63)  NOT NULL,
+  email     VARCHAR(63)  NOT NULL,
+  password  VARCHAR(255) NOT NULL,
+  image     VARCHAR(255),
+  verified  BOOLEAN      NOT NULL DEFAULT FALSE,
+  join_time TIMESTAMP    NOT NULL DEFAULT NOW(),
 
-    PRIMARY KEY (id)
+  PRIMARY KEY (id)
 );

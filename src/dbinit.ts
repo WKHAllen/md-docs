@@ -16,9 +16,8 @@ const PRUNE_INTERVAL: number = 60 * 1000;
  * @param dbm The database manager.
  */
 async function pruneRecords(dbm: DatabaseManager): Promise<void> {
-  // TODO: prune verification and password reset records
-  // await dbm.verifyService.pruneVerifications();
-  // await dbm.passwordResetService.prunePasswordResets();
+  await dbm.verifyService.pruneVerifications();
+  await dbm.passwordResetService.prunePasswordResets();
 }
 
 /**
@@ -30,7 +29,18 @@ export default async function initDB(
   dbm: DatabaseManager,
   prune: boolean = true
 ): Promise<void> {
-  const tables = ["user", "session", "verify", "password_reset"];
+  const tables = [
+    "user",
+    "session",
+    "verify",
+    "password_reset",
+    "favorite_user",
+    "permission",
+    "group",
+    "group_access",
+    "document",
+    "document_edit",
+  ];
   await dbm.db.executeFiles(tables.map((table) => `init/${table}.sql`));
 
   if (prune) {

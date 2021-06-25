@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS verify (
-    id          CHAR(16)    NOT NULL DEFAULT SUBSTR(MD5(RANDOM()::TEXT), 0, 16),
-    email       VARCHAR(63) NOT NULL,
-    create_time TIMESTAMP   NOT NULL DEFAULT NOW(),
+  id          CHAR(16)    NOT NULL DEFAULT SUBSTR(MD5(RANDOM()::TEXT), 0, 16),
+  email       VARCHAR(63) NOT NULL,
+  create_time TIMESTAMP   NOT NULL DEFAULT NOW(),
 
-    PRIMARY KEY (id)
+  PRIMARY KEY (id)
 );
