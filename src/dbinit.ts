@@ -18,6 +18,7 @@ const PRUNE_INTERVAL: number = 60 * 1000;
 async function pruneRecords(dbm: DatabaseManager): Promise<void> {
   await dbm.verifyService.pruneVerifications();
   await dbm.passwordResetService.prunePasswordResets();
+  await dbm.userService.pruneUnverifiedUsers();
 }
 
 /**

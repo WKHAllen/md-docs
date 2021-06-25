@@ -235,4 +235,12 @@ export class UserService extends BaseService {
   public async deleteUser(userID: number): Promise<void> {
     await this.deleteByID(userID);
   }
+
+  /**
+   * Prunes all old unverified accounts.
+   */
+  public async pruneUnverifiedUsers(): Promise<void> {
+    const sql = `DELETE FROM app_user WHERE verified = FALSE AND EXTRACT(EPOCH FROM NOW() - join_time) >= 3600;`;
+    await this.dbm.execute(sql);
+  }
 }
