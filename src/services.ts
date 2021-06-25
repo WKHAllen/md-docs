@@ -10,6 +10,7 @@ import { SessionService } from "./services/session";
 import { VerifyService } from "./services/verify";
 import { PasswordResetService } from "./services/passwordReset";
 import { FavoriteUserService } from "./services/favoriteUser";
+import { PermissionService } from "./services/permission";
 
 export default class DatabaseManager {
   readonly db: DB;
@@ -18,6 +19,7 @@ export default class DatabaseManager {
   readonly verifyService: VerifyService;
   readonly passwordResetService: PasswordResetService;
   readonly favoriteUserService: FavoriteUserService;
+  readonly permissionService: PermissionService;
 
   constructor(dbURL: string, max: number = 20, sqlPath: string = null) {
     this.db = new DB(dbURL, max, sqlPath);
@@ -29,6 +31,7 @@ export default class DatabaseManager {
       "password_reset"
     );
     this.favoriteUserService = new FavoriteUserService(this, "favorite_user");
+    this.permissionService = new PermissionService(this, "permission");
   }
 
   public async execute<T = void>(

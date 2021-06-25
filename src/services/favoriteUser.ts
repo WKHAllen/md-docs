@@ -7,7 +7,7 @@ import { BaseService } from "./util";
 import { User } from "./user";
 
 /**
- * User architecture.
+ * Favorite user architecture.
  */
 export interface FavoriteUser {
   user_id: string;
