@@ -68,9 +68,9 @@ export default async function initDB(
     "permission",
     "group",
     "group_access",
+    "directory",
     "document",
     "document_edit",
-    "directory",
   ];
   await dbm.db.executeFiles(tables.map((table) => `init/${table}.sql`));
 
