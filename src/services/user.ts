@@ -10,7 +10,7 @@ import { Session } from "./session";
  * User architecture.
  */
 export interface User {
-  id: number;
+  id: string;
   username: string;
   email: string;
   password: string;
@@ -61,7 +61,7 @@ export class UserService extends BaseService {
    * @param userID The ID of the user.
    * @returns Whether or not the user exists.
    */
-  public async userExists(userID: number): Promise<boolean> {
+  public async userExists(userID: string): Promise<boolean> {
     const res = await this.getByID<User>(userID);
     return !!res;
   }
@@ -94,7 +94,7 @@ export class UserService extends BaseService {
    * @param userID The ID of the user.
    * @returns The user record.
    */
-  public async getUser(userID: number): Promise<User> {
+  public async getUser(userID: string): Promise<User> {
     const res = await this.getByID<User>(userID);
 
     if (res) {
@@ -143,7 +143,7 @@ export class UserService extends BaseService {
    * @param username The new username.
    * @returns The updated user record.
    */
-  public async setUsername(userID: number, username: string): Promise<User> {
+  public async setUsername(userID: string, username: string): Promise<User> {
     const usernameExists = await this.userExistsForUsername(username);
 
     if (usernameExists) {
@@ -162,7 +162,7 @@ export class UserService extends BaseService {
    * @param email The new email address.
    * @returns The updated user record.
    */
-  public async setEmail(userID: number, email: string): Promise<User> {
+  public async setEmail(userID: string, email: string): Promise<User> {
     const emailExists = await this.userExistsForEmail(email);
 
     if (emailExists) {
@@ -181,7 +181,7 @@ export class UserService extends BaseService {
    * @param password The new password.
    * @returns The updated user record.
    */
-  public async setPassword(userID: number, password: string): Promise<User> {
+  public async setPassword(userID: string, password: string): Promise<User> {
     if (password.length < 8 || password.length > 255) {
       throw new ServiceError("Password must be between 8 and 255 characters");
     } else {
@@ -198,7 +198,7 @@ export class UserService extends BaseService {
    * @returns The updated user record.
    */
   public async setVerified(
-    userID: number,
+    userID: string,
     verified: boolean = true
   ): Promise<User> {
     return await this.updateByID(userID, { verified });
@@ -234,7 +234,7 @@ export class UserService extends BaseService {
    *
    * @param userID The ID of the user.
    */
-  public async deleteUser(userID: number): Promise<void> {
+  public async deleteUser(userID: string): Promise<void> {
     await this.deleteByID(userID);
   }
 

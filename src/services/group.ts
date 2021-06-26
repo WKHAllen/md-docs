@@ -3,7 +3,7 @@
  * @packageDocumentation
  */
 
-import { BaseService } from "./util";
+import { BaseService, ServiceError } from "./util";
 import { User } from "./user";
 
 /**
@@ -73,7 +73,13 @@ export class GroupService extends BaseService {
    * @returns The group record.
    */
   public async getGroup(groupID: string): Promise<Group> {
-    return await this.getByID<Group>(groupID);
+    const res = await this.getByID<Group>(groupID);
+
+    if (res) {
+      return res;
+    } else {
+      throw new ServiceError("Group does not exist");
+    }
   }
 
   /**
@@ -91,7 +97,11 @@ export class GroupService extends BaseService {
     const params = [groupID];
     const res = await this.dbm.execute<User>(sql, params);
 
-    return res[0];
+    if (res.length === 1) {
+      return res[0];
+    } else {
+      throw new ServiceError("Group or group creator does not exist");
+    }
   }
 
   /**
@@ -109,7 +119,11 @@ export class GroupService extends BaseService {
     const params = [groupID];
     const res = await this.dbm.execute<User>(sql, params);
 
-    return res[0];
+    if (res.length === 1) {
+      return res[0];
+    } else {
+      throw new ServiceError("Group does not exist");
+    }
   }
 
   /**
@@ -120,7 +134,13 @@ export class GroupService extends BaseService {
    * @returns The updated group record.
    */
   public async setGroupName(groupID: string, name: string): Promise<Group> {
-    return await this.updateByID<Group>(groupID, { name });
+    const groupExists = await this.groupExists(groupID);
+
+    if (groupExists) {
+      return await this.updateByID<Group>(groupID, { name });
+    } else {
+      throw new ServiceError("Group does not exist");
+    }
   }
 
   /**
@@ -134,7 +154,15 @@ export class GroupService extends BaseService {
     groupID: string,
     newOwnerID: string
   ): Promise<Group> {
-    return await this.updateByID<Group>(groupID, { owner_user_id: newOwnerID });
+    const groupExists = await this.groupExists(groupID);
+
+    if (groupExists) {
+      return await this.updateByID<Group>(groupID, {
+        owner_user_id: newOwnerID,
+      });
+    } else {
+      throw new ServiceError("Group does not exist");
+    }
   }
 
   /**
@@ -148,9 +176,15 @@ export class GroupService extends BaseService {
     groupID: string,
     detailsVisible: boolean
   ): Promise<Group> {
-    return await this.updateByID<Group>(groupID, {
-      details_visible: detailsVisible,
-    });
+    const groupExists = await this.groupExists(groupID);
+
+    if (groupExists) {
+      return await this.updateByID<Group>(groupID, {
+        details_visible: detailsVisible,
+      });
+    } else {
+      throw new ServiceError("Group does not exist");
+    }
   }
 
   /**
@@ -164,7 +198,13 @@ export class GroupService extends BaseService {
     groupID: string,
     searchable: boolean
   ): Promise<Group> {
-    return await this.updateByID<Group>(groupID, { searchable });
+    const groupExists = await this.groupExists(groupID);
+
+    if (groupExists) {
+      return await this.updateByID<Group>(groupID, { searchable });
+    } else {
+      throw new ServiceError("Group does not exist");
+    }
   }
 
   /**
@@ -178,9 +218,15 @@ export class GroupService extends BaseService {
     groupID: string,
     permissions: PermissionType
   ): Promise<Group> {
-    return await this.updateByID<Group>(groupID, {
-      edit_documents_permission_id: permissions,
-    });
+    const groupExists = await this.groupExists(groupID);
+
+    if (groupExists) {
+      return await this.updateByID<Group>(groupID, {
+        edit_documents_permission_id: permissions,
+      });
+    } else {
+      throw new ServiceError("Group does not exist");
+    }
   }
 
   /**
@@ -194,9 +240,15 @@ export class GroupService extends BaseService {
     groupID: string,
     permissions: PermissionType
   ): Promise<Group> {
-    return await this.updateByID<Group>(groupID, {
-      approve_edits_permission_id: permissions,
-    });
+    const groupExists = await this.groupExists(groupID);
+
+    if (groupExists) {
+      return await this.updateByID<Group>(groupID, {
+        approve_edits_permission_id: permissions,
+      });
+    } else {
+      throw new ServiceError("Group does not exist");
+    }
   }
 
   /**

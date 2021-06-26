@@ -3,7 +3,7 @@
  * @packageDocumentation
  */
 
-import { BaseService } from "./util";
+import { BaseService, ServiceError } from "./util";
 
 /**
  * Permission architecture.
@@ -34,7 +34,12 @@ export class PermissionService extends BaseService {
    */
   public async getPermissionName(permissionID: string): Promise<string> {
     const res = await this.getByID<Permission>(permissionID);
-    return res.name;
+
+    if (res) {
+      return res.name;
+    } else {
+      throw new ServiceError("Permission option does not exist");
+    }
   }
 
   /**

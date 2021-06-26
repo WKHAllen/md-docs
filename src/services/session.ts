@@ -16,7 +16,7 @@ const NUM_USER_SESSIONS: number = 4;
  */
 export interface Session {
   id: string;
-  user_id: number;
+  user_id: string;
   create_time: number;
 }
 
@@ -30,7 +30,7 @@ export class SessionService extends BaseService {
    * @param userID The ID of the user creating the session.
    * @returns The session record.
    */
-  public async createSession(userID: number): Promise<Session> {
+  public async createSession(userID: string): Promise<Session> {
     const res = await this.create<Session>({ user_id: userID });
     await this.deleteOldUserSessions(userID);
     return res;
@@ -91,7 +91,7 @@ export class SessionService extends BaseService {
    * @param userID The ID of the user.
    * @returns The sessions associated with the user.
    */
-  public async getUserSessions(userID: number): Promise<Session[]> {
+  public async getUserSessions(userID: string): Promise<Session[]> {
     const res = await this.listByFields<Session>(
       { user_id: userID },
       { fieldName: "create_time", sortOrder: OrderBy.ascending }
@@ -113,7 +113,7 @@ export class SessionService extends BaseService {
    *
    * @param userID The ID of the user.
    */
-  public async deleteUserSessions(userID: number): Promise<void> {
+  public async deleteUserSessions(userID: string): Promise<void> {
     await this.deleteByFields({ user_id: userID });
   }
 
@@ -122,7 +122,7 @@ export class SessionService extends BaseService {
    *
    * @param userID The ID of the user.
    */
-  public async deleteOldUserSessions(userID: number): Promise<void> {
+  public async deleteOldUserSessions(userID: string): Promise<void> {
     const sql = `
       DELETE FROM session
         WHERE user_id = ?

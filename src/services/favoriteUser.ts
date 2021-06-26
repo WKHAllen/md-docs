@@ -3,7 +3,7 @@
  * @packageDocumentation
  */
 
-import { BaseService } from "./util";
+import { BaseService, ServiceError } from "./util";
 import { User } from "./user";
 
 /**
@@ -30,15 +30,24 @@ export class FavoriteUserService extends BaseService {
     userID: string,
     favoriteUserID: string
   ): Promise<FavoriteUser> {
-    const favorite = await this.isFavorite(userID, favoriteUserID);
+    const userExists = await this.dbm.userService.userExists(userID);
+    const favoriteUserExists = await this.dbm.userService.userExists(
+      favoriteUserID
+    );
 
-    if (!favorite) {
-      return await this.create<FavoriteUser>({
-        user_id: userID,
-        favorite_user_id: favoriteUserID,
-      });
+    if (userExists && favoriteUserExists) {
+      const favorite = await this.isFavorite(userID, favoriteUserID);
+
+      if (!favorite) {
+        return await this.create<FavoriteUser>({
+          user_id: userID,
+          favorite_user_id: favoriteUserID,
+        });
+      } else {
+        return await this.getFavorite(userID, favoriteUserID);
+      }
     } else {
-      return await this.getFavorite(userID, favoriteUserID);
+      throw new ServiceError("User does not exist");
     }
   }
 
@@ -52,10 +61,19 @@ export class FavoriteUserService extends BaseService {
     userID: string,
     favoriteUserID: string
   ): Promise<void> {
-    await this.deleteByFields({
-      user_id: userID,
-      favorite_user_id: favoriteUserID,
-    });
+    const userExists = await this.dbm.userService.userExists(userID);
+    const favoriteUserExists = await this.dbm.userService.userExists(
+      favoriteUserID
+    );
+
+    if (userExists && favoriteUserExists) {
+      await this.deleteByFields({
+        user_id: userID,
+        favorite_user_id: favoriteUserID,
+      });
+    } else {
+      throw new ServiceError("User does not exist");
+    }
   }
 
   /**
@@ -87,10 +105,16 @@ export class FavoriteUserService extends BaseService {
     userID: string,
     favoriteUserID: string
   ): Promise<FavoriteUser> {
-    return await this.getByFields<FavoriteUser>({
+    const res = await this.getByFields<FavoriteUser>({
       user_id: userID,
       favorite_user_id: favoriteUserID,
     });
+
+    if (res) {
+      return res;
+    } else {
+      throw new ServiceError("User is not favorited");
+    }
   }
 
   /**
