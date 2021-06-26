@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS app_group (
   searchable                   BOOLEAN      NOT NULL DEFAULT FALSE,
   edit_documents_permission_id VARCHAR(63)  NOT NULL,
   approve_edits_permission_id  VARCHAR(63)  NOT NULL,
-  image                        VARCHAR(255),
+  image_id                     CHAR(16),
   create_time                  TIMESTAMP    NOT NULL DEFAULT NOW(),
 
   PRIMARY KEY (id),

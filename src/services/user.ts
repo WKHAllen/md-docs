@@ -14,6 +14,7 @@ export interface User {
   username: string;
   email: string;
   password: string;
+  image_id?: string;
   verified: boolean;
   join_time: number;
 }
@@ -37,6 +38,7 @@ export class UserService extends BaseService {
   ): Promise<User> {
     const usernameExists = await this.userExistsForUsername(username);
     const emailExists = await this.userExistsForEmail(email);
+
     if (usernameExists) {
       throw new ServiceError("Username is in use");
     } else if (emailExists) {
