@@ -8,6 +8,11 @@ import { Group } from "./group";
 import { Document } from "./document";
 
 /**
+ * The maximum number of directories per directory.
+ */
+const MAX_DIRECTORIES_PER_DIRECTORY = 64;
+
+/**
  * The maximum directory depth.
  */
 const MAX_DIRECTORY_DEPTH = 16;
@@ -45,18 +50,39 @@ export class DirectoryService extends BaseService {
 
     if (groupExists) {
       if (!parentDirectoryID) {
-        return await this.create<Directory>({ name, group_id: groupID });
+        const directoriesHere = await this.dbm.groupService.getRootDirectories(
+          groupID
+        );
+
+        if (directoriesHere.length < MAX_DIRECTORIES_PER_DIRECTORY) {
+          return await this.create<Directory>({ name, group_id: groupID });
+        } else {
+          throw new ServiceError(
+            "Maximum number of directories reached in directory"
+          );
+        }
       } else {
         const parentDirectory = await this.getDirectory(parentDirectoryID);
 
         if (parentDirectory) {
           if (parentDirectory.depth + 1 < MAX_DIRECTORY_DEPTH) {
-            return await this.create<Directory>({
-              name,
-              group_id: groupID,
-              parent_directory_id: parentDirectoryID,
-              depth: parentDirectory.depth + 1,
-            });
+            const directoriesHere =
+              await this.dbm.directoryService.getChildDirectories(
+                parentDirectoryID
+              );
+
+            if (directoriesHere.length < MAX_DIRECTORIES_PER_DIRECTORY) {
+              return await this.create<Directory>({
+                name,
+                group_id: groupID,
+                parent_directory_id: parentDirectoryID,
+                depth: parentDirectory.depth + 1,
+              });
+            } else {
+              throw new ServiceError(
+                "Maximum number of directories reached in directory"
+              );
+            }
           } else {
             throw new ServiceError("Maximum directory depth reached");
           }

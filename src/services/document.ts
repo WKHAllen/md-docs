@@ -54,24 +54,43 @@ export class DocumentService extends BaseService {
 
       if (groupExists) {
         if (!directoryID) {
-          return await this.create<Document>({
-            creator_user_id: creatorUserID,
-            group_id: groupID,
-            name,
-            content: "",
-          });
+          const documentsHere = await this.dbm.groupService.getRootDocuments(
+            groupID
+          );
+
+          if (documentsHere.length < MAX_DOCUMENTS_PER_DIRECTORY) {
+            return await this.create<Document>({
+              creator_user_id: creatorUserID,
+              group_id: groupID,
+              name,
+              content: "",
+            });
+          } else {
+            throw new ServiceError(
+              "Maximum number of documents reached in directory"
+            );
+          }
         } else {
           const directoryExists =
             await this.dbm.directoryService.directoryExists(directoryID);
 
           if (directoryExists) {
-            return await this.create<Document>({
-              creator_user_id: creatorUserID,
-              group_id: groupID,
-              directory_id: directoryID,
-              name,
-              content: "",
-            });
+            const documentsHere =
+              await this.dbm.directoryService.getChildDocuments(directoryID);
+
+            if (documentsHere.length < MAX_DOCUMENTS_PER_DIRECTORY) {
+              return await this.create<Document>({
+                creator_user_id: creatorUserID,
+                group_id: groupID,
+                directory_id: directoryID,
+                name,
+                content: "",
+              });
+            } else {
+              throw new ServiceError(
+                "Maximum number of documents reached in directory"
+              );
+            }
           } else {
             throw new ServiceError("Directory does not exist");
           }
