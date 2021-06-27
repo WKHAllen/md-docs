@@ -8,6 +8,8 @@ import { User } from "./user";
 import { Directory } from "./directory";
 import { Document } from "./document";
 
+const MAX_GROUPS_PER_USER = 64;
+
 /**
  * Group architecture.
  */
@@ -48,13 +50,27 @@ export class GroupService extends BaseService {
     creatorUserID: string,
     groupName: string
   ): Promise<Group> {
-    return await this.create<Group>({
-      creator_user_id: creatorUserID,
-      owner_user_id: creatorUserID,
-      name: groupName,
-      edit_documents_permission_id: PermissionType.ThoseWithAccess,
-      approve_edits_permission_id: PermissionType.OwnerOnly,
-    });
+    const userExists = await this.dbm.userService.userExists(creatorUserID);
+
+    if (userExists) {
+      const userGroups = await this.dbm.userService.getUserGroupsOwned(
+        creatorUserID
+      );
+
+      if (userGroups.length < MAX_GROUPS_PER_USER) {
+        return await this.create<Group>({
+          creator_user_id: creatorUserID,
+          owner_user_id: creatorUserID,
+          name: groupName,
+          edit_documents_permission_id: PermissionType.ThoseWithAccess,
+          approve_edits_permission_id: PermissionType.OwnerOnly,
+        });
+      } else {
+        throw new ServiceError("Maximum number of groups reached for user");
+      }
+    } else {
+      throw new ServiceError("User does not exist");
+    }
   }
 
   /**
