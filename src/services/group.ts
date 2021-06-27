@@ -6,8 +6,7 @@
 import { BaseService, ServiceError } from "./util";
 import { User } from "./user";
 import { Directory } from "./directory";
-// TODO: use document
-// import { Document } from './document';
+import { Document } from "./document";
 
 /**
  * Group architecture.
@@ -284,8 +283,24 @@ export class GroupService extends BaseService {
    * @param groupID The group's ID.
    * @returns The root documents.
    */
-  // TODO: implement getRootDocuments
-  // public async getRootDocuments(groupID: string): Promise<Document[]> {}
+  public async getRootDocuments(groupID: string): Promise<Document[]> {
+    const groupExists = await this.groupExists(groupID);
+
+    if (groupExists) {
+      const sql = `
+        SELECT document.*
+          FROM document
+          JOIN app_group
+            ON document.group_id = app_group.id
+        WHERE app_group.id = ?
+          AND document.directory_id = NULL
+        ORDER BY document.name ASC;`;
+      const params = [groupID];
+      return await this.dbm.execute<Document>(sql, params);
+    } else {
+      throw new ServiceError("Group does not exist");
+    }
+  }
 
   /**
    * Deletes a group.

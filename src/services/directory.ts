@@ -5,9 +5,11 @@
 
 import { BaseService, ServiceError, SortOrder } from "./util";
 import { Group } from "./group";
-// TODO: use document
-// import { Document } from './document';
+import { Document } from "./document";
 
+/**
+ * The maximum directory depth.
+ */
 const MAX_DIRECTORY_DEPTH = 16;
 
 /**
@@ -85,7 +87,13 @@ export class DirectoryService extends BaseService {
    * @returns The directory record.
    */
   public async getDirectory(directoryID: string): Promise<Directory> {
-    return await this.getByID<Directory>(directoryID);
+    const res = await this.getByID<Directory>(directoryID);
+
+    if (res) {
+      return res;
+    } else {
+      throw new ServiceError("Directory does not exist");
+    }
   }
 
   /**
@@ -99,7 +107,13 @@ export class DirectoryService extends BaseService {
     directoryID: string,
     newName: string
   ): Promise<Directory> {
-    return await this.updateByID<Directory>(directoryID, { name: newName });
+    const directoryExists = await this.directoryExists(directoryID);
+
+    if (directoryExists) {
+      return await this.updateByID<Directory>(directoryID, { name: newName });
+    } else {
+      throw new ServiceError("Directory does not exist");
+    }
   }
 
   /**
@@ -127,20 +141,22 @@ export class DirectoryService extends BaseService {
    * Returns the parent directory.
    *
    * @param directoryID The directory's ID.
-   * @returns The parent directory.
+   * @returns The parent directory, or null if root.
    */
   public async getParentDirectory(
     directoryID: string
   ): Promise<Directory | null> {
-    const sql = `
-      SELECT * FROM directory WHERE id = (
-        SELECT parent_directory_id FROM directory WHERE id = ?
-      );`;
-    const params = [directoryID];
-    const res = await this.dbm.execute<Directory>(sql, params);
+    const directoryExists = await this.directoryExists(directoryID);
 
-    if (res.length === 1) {
-      return res[0];
+    if (directoryExists) {
+      const sql = `
+        SELECT * FROM directory WHERE id = (
+          SELECT parent_directory_id FROM directory WHERE id = ?
+        );`;
+      const params = [directoryID];
+      const res = await this.dbm.execute<Directory>(sql, params);
+
+      return res[0] || null;
     } else {
       throw new ServiceError("Directory does not exist");
     }
@@ -171,8 +187,20 @@ export class DirectoryService extends BaseService {
    * @param directoryID The directory's ID.
    * @returns The documents in the directory.
    */
-  // TODO: implement getChildDocuments
-  // public async getChildDocuments(directoryID: string): Promise<Document[]> {}
+  public async getChildDocuments(directoryID: string): Promise<Document[]> {
+    const directoryExists = await this.directoryExists(directoryID);
+
+    if (directoryExists) {
+      const sql = `
+        SELECT * FROM document
+        WHERE directory_id = ?
+        ORDER BY name ASC;`;
+      const params = [directoryID];
+      return await this.dbm.execute<Document>(sql, params);
+    } else {
+      throw new ServiceError("Directory does not exist");
+    }
+  }
 
   /**
    * Deletes a directory and all child directories and documents.
