@@ -1,0 +1,185 @@
+/**
+ * Services for the directory table.
+ * @packageDocumentation
+ */
+
+import { BaseService, ServiceError, SortOrder } from "./util";
+import { Group } from "./group";
+// TODO: use document
+// import { Document } from './document';
+
+const MAX_DIRECTORY_DEPTH = 16;
+
+/**
+ * Directory architecture.
+ */
+export interface Directory {
+  id: string;
+  name: string;
+  group_id: string;
+  parent_directory_id?: string;
+  depth: number;
+  create_time: number;
+}
+
+/**
+ * Directory services.
+ */
+export class DirectoryService extends BaseService {
+  /**
+   * Creates a new directory.
+   *
+   * @param name The directory name.
+   * @param groupID The group's ID.
+   * @param parentDirectoryID The ID of the parent directory, or undefined if root.
+   * @returns The new directory record.
+   */
+  public async createDirectory(
+    name: string,
+    groupID: string,
+    parentDirectoryID?: string
+  ): Promise<Directory> {
+    const groupExists = await this.dbm.groupService.groupExists(groupID);
+
+    if (groupExists) {
+      if (!parentDirectoryID) {
+        return await this.create<Directory>({ name, group_id: groupID });
+      } else {
+        const parentDirectory = await this.getDirectory(parentDirectoryID);
+
+        if (parentDirectory) {
+          if (parentDirectory.depth + 1 < MAX_DIRECTORY_DEPTH) {
+            return await this.create<Directory>({
+              name,
+              group_id: groupID,
+              parent_directory_id: parentDirectoryID,
+              depth: parentDirectory.depth + 1,
+            });
+          } else {
+            throw new ServiceError("Maximum directory depth reached");
+          }
+        } else {
+          throw new ServiceError("Parent directory does not exist");
+        }
+      }
+    } else {
+      throw new ServiceError("Group does not exist");
+    }
+  }
+
+  /**
+   * Returns whether or not the directory exists.
+   *
+   * @param directoryID The directory's ID.
+   * @returns Whether or not the directory exists.
+   */
+  public async directoryExists(directoryID: string): Promise<boolean> {
+    const res = await this.getByID<Directory>(directoryID);
+    return !!res;
+  }
+
+  /**
+   * Returns the directory.
+   *
+   * @param directoryID The directory's ID.
+   * @returns The directory record.
+   */
+  public async getDirectory(directoryID: string): Promise<Directory> {
+    return await this.getByID<Directory>(directoryID);
+  }
+
+  /**
+   * Renames the directory.
+   *
+   * @param directoryID The directory's ID.
+   * @param newName The new name of the directory.
+   * @returns The updated directory record.
+   */
+  public async renameDirectory(
+    directoryID: string,
+    newName: string
+  ): Promise<Directory> {
+    return await this.updateByID<Directory>(directoryID, { name: newName });
+  }
+
+  /**
+   * Returns the group the directory exists in.
+   *
+   * @param directoryID The directory's ID.
+   * @returns The group the directory exists in.
+   */
+  public async getDirectoryGroup(directoryID: string): Promise<Group> {
+    const sql = `
+      SELECT * FROM app_group WHERE id = (
+        SELECT group_id FROM directory WHERE id = ?
+      );`;
+    const params = [directoryID];
+    const res = await this.dbm.execute<Group>(sql, params);
+
+    if (res.length === 1) {
+      return res[0];
+    } else {
+      throw new ServiceError("Directory does not exist");
+    }
+  }
+
+  /**
+   * Returns the parent directory.
+   *
+   * @param directoryID The directory's ID.
+   * @returns The parent directory.
+   */
+  public async getParentDirectory(
+    directoryID: string
+  ): Promise<Directory | null> {
+    const sql = `
+      SELECT * FROM directory WHERE id = (
+        SELECT parent_directory_id FROM directory WHERE id = ?
+      );`;
+    const params = [directoryID];
+    const res = await this.dbm.execute<Directory>(sql, params);
+
+    if (res.length === 1) {
+      return res[0];
+    } else {
+      throw new ServiceError("Directory does not exist");
+    }
+  }
+
+  /**
+   * Returns the subdirectories in the directory.
+   *
+   * @param directoryID The directory's ID.
+   * @returns The subdirectories in the directory.
+   */
+  public async getChildDirectories(directoryID: string): Promise<Directory[]> {
+    const directoryExists = await this.directoryExists(directoryID);
+
+    if (directoryExists) {
+      return await this.listByFields<Directory>(
+        { parent_directory_id: directoryID },
+        { fieldName: "name", sortOrder: SortOrder.ascending }
+      );
+    } else {
+      throw new ServiceError("Directory does not exist");
+    }
+  }
+
+  /**
+   * Returns the documents in the directory.
+   *
+   * @param directoryID The directory's ID.
+   * @returns The documents in the directory.
+   */
+  // TODO: implement getChildDocuments
+  // public async getChildDocuments(directoryID: string): Promise<Document[]> {}
+
+  /**
+   * Deletes a directory and all child directories and documents.
+   *
+   * @param directoryID The directory's ID.
+   */
+  public async deleteDirectory(directoryID: string): Promise<void> {
+    await this.deleteByID(directoryID);
+  }
+}

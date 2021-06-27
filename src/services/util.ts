@@ -28,9 +28,9 @@ interface FieldMap {
 }
 
 /**
- * Query order by options
+ * Query sort order options
  */
-export enum OrderBy {
+export enum SortOrder {
   ascending = "ASC",
   descending = "DESC",
 }
@@ -40,7 +40,7 @@ export enum OrderBy {
  */
 interface OrderOptions {
   fieldName: string;
-  sortOrder: OrderBy;
+  sortOrder: SortOrder;
 }
 
 /**

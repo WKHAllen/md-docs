@@ -5,6 +5,9 @@
 
 import { BaseService, ServiceError } from "./util";
 import { User } from "./user";
+import { Directory } from "./directory";
+// TODO: use document
+// import { Document } from './document';
 
 /**
  * Group architecture.
@@ -92,8 +95,7 @@ export class GroupService extends BaseService {
     const sql = `
       SELECT * FROM app_user WHERE id = (
         SELECT creator_user_id FROM app_group WHERE id = ?
-      );
-    `;
+      );`;
     const params = [groupID];
     const res = await this.dbm.execute<User>(sql, params);
 
@@ -250,6 +252,40 @@ export class GroupService extends BaseService {
       throw new ServiceError("Group does not exist");
     }
   }
+
+  /**
+   * Returns the directories in the root of the group.
+   *
+   * @param groupID The group's ID.
+   * @returns The root directories.
+   */
+  public async getRootDirectories(groupID: string): Promise<Directory[]> {
+    const groupExists = await this.groupExists(groupID);
+
+    if (groupExists) {
+      const sql = `
+        SELECT directory.*
+          FROM directory
+          JOIN app_group
+            ON directory.group_id = app_group.id
+        WHERE app_group.id = ?
+          AND directory.parent_directory_id = NULL
+        ORDER BY directory.name ASC;`;
+      const params = [groupID];
+      return await this.dbm.execute<Directory>(sql, params);
+    } else {
+      throw new ServiceError("Group does not exist");
+    }
+  }
+
+  /**
+   * Returns the documents in the root of the group.
+   *
+   * @param groupID The group's ID.
+   * @returns The root documents.
+   */
+  // TODO: implement getRootDocuments
+  // public async getRootDocuments(groupID: string): Promise<Document[]> {}
 
   /**
    * Deletes a group.

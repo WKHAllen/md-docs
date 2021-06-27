@@ -3,7 +3,7 @@
  * @packageDocumentation
  */
 
-import { BaseService, ServiceError, OrderBy } from "./util";
+import { BaseService, ServiceError, SortOrder } from "./util";
 import { User } from "./user";
 
 /**
@@ -94,7 +94,7 @@ export class SessionService extends BaseService {
   public async getUserSessions(userID: string): Promise<Session[]> {
     const res = await this.listByFields<Session>(
       { user_id: userID },
-      { fieldName: "create_time", sortOrder: OrderBy.ascending }
+      { fieldName: "create_time", sortOrder: SortOrder.ascending }
     );
     return res;
   }

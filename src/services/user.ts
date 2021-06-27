@@ -5,6 +5,7 @@
 
 import { BaseService, ServiceError, hashPassword, checkPassword } from "./util";
 import { Session } from "./session";
+import { Group } from "./group";
 
 /**
  * User architecture.
@@ -226,6 +227,29 @@ export class UserService extends BaseService {
       }
     } else {
       throw new ServiceError("Invalid login");
+    }
+  }
+
+  /**
+   * Returns all groups a user owns.
+   *
+   * @param userID The ID of the user.
+   * @returns All groups the user owns.
+   */
+  public async getUserGroupsOwned(userID: string): Promise<Group[]> {
+    const userExists = await this.userExists(userID);
+
+    if (userExists) {
+      const sql = `
+        SELECT group.*
+          FROM group
+          JOIN app_user
+            ON group.owner_user_id = app_user.id
+        WHERE app_user.id = ?;`;
+      const params = [userID];
+      return await this.dbm.execute<Group>(sql, params);
+    } else {
+      throw new ServiceError("User does not exist");
     }
   }
 
