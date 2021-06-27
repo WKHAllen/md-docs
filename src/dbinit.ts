@@ -68,6 +68,7 @@ export default async function initDB(
     "permission",
     "group",
     "group_access",
+    "favorite_group",
     "directory",
     "document",
     "document_edit",
