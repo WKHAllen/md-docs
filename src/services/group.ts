@@ -195,9 +195,23 @@ export class GroupService extends BaseService {
     const groupExists = await this.groupExists(groupID);
 
     if (groupExists) {
-      return await this.updateByID<Group>(groupID, {
-        owner_user_id: newOwnerID,
-      });
+      const newOwnerExists = await this.dbm.userService.userExists(newOwnerID);
+
+      if (newOwnerExists) {
+        const userGroups = await this.dbm.userService.getUserGroupsOwned(
+          newOwnerID
+        );
+
+        if (userGroups.length < MAX_GROUPS_PER_USER) {
+          return await this.updateByID<Group>(groupID, {
+            owner_user_id: newOwnerID,
+          });
+        } else {
+          throw new ServiceError("Maximum number of groups reached for user");
+        }
+      } else {
+        throw new ServiceError("New owner user does not exist");
+      }
     } else {
       throw new ServiceError("Group does not exist");
     }
