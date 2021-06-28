@@ -18,6 +18,11 @@ const MAX_DIRECTORIES_PER_DIRECTORY = 64;
 const MAX_DIRECTORY_DEPTH = 16;
 
 /**
+ * The maximum length of a directory name.
+ */
+const DIRECTORY_NAME_MAX_LENGTH = 255;
+
+/**
  * Directory architecture.
  */
 export interface Directory {
@@ -46,52 +51,57 @@ export class DirectoryService extends BaseService {
     groupID: string,
     parentDirectoryID?: string
   ): Promise<Directory> {
-    const groupExists = await this.dbm.groupService.groupExists(groupID);
+    if (name.length > 0 && name.length <= DIRECTORY_NAME_MAX_LENGTH) {
+      const groupExists = await this.dbm.groupService.groupExists(groupID);
 
-    if (groupExists) {
-      if (!parentDirectoryID) {
-        const directoriesHere = await this.dbm.groupService.getRootDirectories(
-          groupID
-        );
+      if (groupExists) {
+        if (!parentDirectoryID) {
+          const directoriesHere =
+            await this.dbm.groupService.getRootDirectories(groupID);
 
-        if (directoriesHere.length < MAX_DIRECTORIES_PER_DIRECTORY) {
-          return await this.create<Directory>({ name, group_id: groupID });
-        } else {
-          throw new ServiceError(
-            "Maximum number of directories reached in directory"
-          );
-        }
-      } else {
-        const parentDirectory = await this.getDirectory(parentDirectoryID);
-
-        if (parentDirectory) {
-          if (parentDirectory.depth + 1 < MAX_DIRECTORY_DEPTH) {
-            const directoriesHere =
-              await this.dbm.directoryService.getChildDirectories(
-                parentDirectoryID
-              );
-
-            if (directoriesHere.length < MAX_DIRECTORIES_PER_DIRECTORY) {
-              return await this.create<Directory>({
-                name,
-                group_id: groupID,
-                parent_directory_id: parentDirectoryID,
-                depth: parentDirectory.depth + 1,
-              });
-            } else {
-              throw new ServiceError(
-                "Maximum number of directories reached in directory"
-              );
-            }
+          if (directoriesHere.length < MAX_DIRECTORIES_PER_DIRECTORY) {
+            return await this.create<Directory>({ name, group_id: groupID });
           } else {
-            throw new ServiceError("Maximum directory depth reached");
+            throw new ServiceError(
+              "Maximum number of directories reached in directory"
+            );
           }
         } else {
-          throw new ServiceError("Parent directory does not exist");
+          const parentDirectory = await this.getDirectory(parentDirectoryID);
+
+          if (parentDirectory) {
+            if (parentDirectory.depth + 1 < MAX_DIRECTORY_DEPTH) {
+              const directoriesHere =
+                await this.dbm.directoryService.getChildDirectories(
+                  parentDirectoryID
+                );
+
+              if (directoriesHere.length < MAX_DIRECTORIES_PER_DIRECTORY) {
+                return await this.create<Directory>({
+                  name,
+                  group_id: groupID,
+                  parent_directory_id: parentDirectoryID,
+                  depth: parentDirectory.depth + 1,
+                });
+              } else {
+                throw new ServiceError(
+                  "Maximum number of directories reached in directory"
+                );
+              }
+            } else {
+              throw new ServiceError("Maximum directory depth reached");
+            }
+          } else {
+            throw new ServiceError("Parent directory does not exist");
+          }
         }
+      } else {
+        throw new ServiceError("Group does not exist");
       }
     } else {
-      throw new ServiceError("Group does not exist");
+      throw new ServiceError(
+        `Directory name must be between 1 and ${DIRECTORY_NAME_MAX_LENGTH} characters`
+      );
     }
   }
 
@@ -133,12 +143,18 @@ export class DirectoryService extends BaseService {
     directoryID: string,
     newName: string
   ): Promise<Directory> {
-    const directoryExists = await this.directoryExists(directoryID);
+    if (newName.length > 0 && newName.length <= DIRECTORY_NAME_MAX_LENGTH) {
+      const directoryExists = await this.directoryExists(directoryID);
 
-    if (directoryExists) {
-      return await this.updateByID<Directory>(directoryID, { name: newName });
+      if (directoryExists) {
+        return await this.updateByID<Directory>(directoryID, { name: newName });
+      } else {
+        throw new ServiceError("Directory does not exist");
+      }
     } else {
-      throw new ServiceError("Directory does not exist");
+      throw new ServiceError(
+        `Directory name must be between 1 and ${DIRECTORY_NAME_MAX_LENGTH} characters`
+      );
     }
   }
 

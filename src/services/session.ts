@@ -9,7 +9,7 @@ import { User } from "./user";
 /**
  * The maximum number of sessions per user.
  */
-const NUM_USER_SESSIONS: number = 4;
+export const MAX_USER_SESSIONS = 4;
 
 /**
  * Session architecture.
@@ -31,9 +31,15 @@ export class SessionService extends BaseService {
    * @returns The session record.
    */
   public async createSession(userID: string): Promise<Session> {
-    const res = await this.create<Session>({ user_id: userID });
-    await this.deleteOldUserSessions(userID);
-    return res;
+    const userExists = await this.dbm.userService.userExists(userID);
+
+    if (userExists) {
+      const res = await this.create<Session>({ user_id: userID });
+      await this.deleteOldUserSessions(userID);
+      return res;
+    } else {
+      throw new ServiceError("User does not exist");
+    }
   }
 
   /**
@@ -73,8 +79,7 @@ export class SessionService extends BaseService {
     const sql = `
       SELECT * FROM app_user WHERE id = (
         SELECT user_id FROM session WHERE id = ?
-      );
-    `;
+      );`;
     const params = [sessionID];
     const res = await this.dbm.execute<User>(sql, params);
 
@@ -92,11 +97,16 @@ export class SessionService extends BaseService {
    * @returns The sessions associated with the user.
    */
   public async getUserSessions(userID: string): Promise<Session[]> {
-    const res = await this.listByFields<Session>(
-      { user_id: userID },
-      { fieldName: "create_time", sortOrder: SortOrder.ascending }
-    );
-    return res;
+    const userExists = await this.dbm.userService.userExists(userID);
+
+    if (userExists) {
+      return await this.listByFields<Session>(
+        { user_id: userID },
+        { fieldName: "create_time", sortOrder: SortOrder.ascending }
+      );
+    } else {
+      throw new ServiceError("User does not exist");
+    }
   }
 
   /**
@@ -123,17 +133,23 @@ export class SessionService extends BaseService {
    * @param userID The ID of the user.
    */
   public async deleteOldUserSessions(userID: string): Promise<void> {
-    const sql = `
-      DELETE FROM session
-        WHERE user_id = ?
-        AND id NOT IN (
-          SELECT id FROM session
-            WHERE user_id = ?
-            ORDER BY create_time DESC
-            LIMIT ?
-      );
-    `;
-    const params = [userID, userID, NUM_USER_SESSIONS];
-    await this.dbm.execute(sql, params);
+    const userExists = await this.dbm.userService.userExists(userID);
+
+    if (userExists) {
+      const sql = `
+        DELETE FROM session
+          WHERE user_id = ?
+          AND id NOT IN (
+            SELECT id FROM session
+              WHERE user_id = ?
+              ORDER BY create_time DESC
+              LIMIT ?
+        );
+      `;
+      const params = [userID, userID, MAX_USER_SESSIONS];
+      await this.dbm.execute(sql, params);
+    } else {
+      throw new ServiceError("User does not exist");
+    }
   }
 }

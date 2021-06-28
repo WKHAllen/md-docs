@@ -11,7 +11,17 @@ import { DocumentEdit } from "./documentEdit";
 /**
  * The maximum number of documents per directory.
  */
-const MAX_DOCUMENTS_PER_DIRECTORY = 64;
+export const MAX_DOCUMENTS_PER_DIRECTORY = 64;
+
+/**
+ * The maximum length of a document name.
+ */
+export const DOCUMENT_NAME_MAX_LENGTH = 255;
+
+/**
+ * The maximum length of a document's content.
+ */
+export const DOCUMENT_CONTENT_MAX_LENGTH = 65535;
 
 /**
  * Document architecture.
@@ -47,44 +57,24 @@ export class DocumentService extends BaseService {
     groupID: string,
     directoryID?: string
   ): Promise<Document> {
-    const creatorUserExists = await this.dbm.userService.userExists(
-      creatorUserID
-    );
+    if (name.length > 0 && name.length <= DOCUMENT_NAME_MAX_LENGTH) {
+      const creatorUserExists = await this.dbm.userService.userExists(
+        creatorUserID
+      );
 
-    if (creatorUserExists) {
-      const groupExists = await this.dbm.groupService.groupExists(groupID);
+      if (creatorUserExists) {
+        const groupExists = await this.dbm.groupService.groupExists(groupID);
 
-      if (groupExists) {
-        if (!directoryID) {
-          const documentsHere = await this.dbm.groupService.getRootDocuments(
-            groupID
-          );
-
-          if (documentsHere.length < MAX_DOCUMENTS_PER_DIRECTORY) {
-            return await this.create<Document>({
-              creator_user_id: creatorUserID,
-              group_id: groupID,
-              name,
-              content: "",
-            });
-          } else {
-            throw new ServiceError(
-              "Maximum number of documents reached in directory"
+        if (groupExists) {
+          if (!directoryID) {
+            const documentsHere = await this.dbm.groupService.getRootDocuments(
+              groupID
             );
-          }
-        } else {
-          const directoryExists =
-            await this.dbm.directoryService.directoryExists(directoryID);
-
-          if (directoryExists) {
-            const documentsHere =
-              await this.dbm.directoryService.getChildDocuments(directoryID);
 
             if (documentsHere.length < MAX_DOCUMENTS_PER_DIRECTORY) {
               return await this.create<Document>({
                 creator_user_id: creatorUserID,
                 group_id: groupID,
-                directory_id: directoryID,
                 name,
                 content: "",
               });
@@ -94,14 +84,40 @@ export class DocumentService extends BaseService {
               );
             }
           } else {
-            throw new ServiceError("Directory does not exist");
+            const directoryExists =
+              await this.dbm.directoryService.directoryExists(directoryID);
+
+            if (directoryExists) {
+              const documentsHere =
+                await this.dbm.directoryService.getChildDocuments(directoryID);
+
+              if (documentsHere.length < MAX_DOCUMENTS_PER_DIRECTORY) {
+                return await this.create<Document>({
+                  creator_user_id: creatorUserID,
+                  group_id: groupID,
+                  directory_id: directoryID,
+                  name,
+                  content: "",
+                });
+              } else {
+                throw new ServiceError(
+                  "Maximum number of documents reached in directory"
+                );
+              }
+            } else {
+              throw new ServiceError("Directory does not exist");
+            }
           }
+        } else {
+          throw new ServiceError("Group does not exist");
         }
       } else {
-        throw new ServiceError("Group does not exist");
+        throw new ServiceError("User does not exist");
       }
     } else {
-      throw new ServiceError("User does not exist");
+      throw new ServiceError(
+        `Document name must be between 1 and ${DOCUMENT_NAME_MAX_LENGTH} characters`
+      );
     }
   }
 
@@ -143,12 +159,18 @@ export class DocumentService extends BaseService {
     documentID: string,
     newName: string
   ): Promise<Document> {
-    const documentExists = await this.documentExists(documentID);
+    if (newName.length > 0 && newName.length <= DOCUMENT_NAME_MAX_LENGTH) {
+      const documentExists = await this.documentExists(documentID);
 
-    if (documentExists) {
-      return await this.updateByID<Document>(documentID, { name: newName });
+      if (documentExists) {
+        return await this.updateByID<Document>(documentID, { name: newName });
+      } else {
+        throw new ServiceError("Document does not exist");
+      }
     } else {
-      throw new ServiceError("Document does not exist");
+      throw new ServiceError(
+        `Document name must be between 1 and ${DOCUMENT_NAME_MAX_LENGTH} characters`
+      );
     }
   }
 
@@ -165,30 +187,36 @@ export class DocumentService extends BaseService {
     editorUserID: string,
     newContent: string
   ): Promise<Document> {
-    const documentExists = await this.documentExists(documentID);
+    if (newContent.length <= DOCUMENT_CONTENT_MAX_LENGTH) {
+      const documentExists = await this.documentExists(documentID);
 
-    if (documentExists) {
-      const editorUserExists = await this.dbm.userService.userExists(
-        editorUserID
-      );
+      if (documentExists) {
+        const editorUserExists = await this.dbm.userService.userExists(
+          editorUserID
+        );
 
-      if (editorUserExists) {
-        const sql = `
-          UPDATE document
-            SET content = ?,
-                last_edit_time = NOW(),
-                last_edit_user_id = ?
-          WHERE id = ?
-          RETURNING *;`;
-        const params = [newContent, editorUserID, documentID];
-        const res = await this.dbm.execute<Document>(sql, params);
+        if (editorUserExists) {
+          const sql = `
+            UPDATE document
+              SET content = ?,
+                  last_edit_time = NOW(),
+                  last_edit_user_id = ?
+            WHERE id = ?
+            RETURNING *;`;
+          const params = [newContent, editorUserID, documentID];
+          const res = await this.dbm.execute<Document>(sql, params);
 
-        return res[0];
+          return res[0];
+        } else {
+          throw new ServiceError("Editor user does not exist");
+        }
       } else {
-        throw new ServiceError("Editor user does not exist");
+        throw new ServiceError("Document does not exist");
       }
     } else {
-      throw new ServiceError("Document does not exist");
+      throw new ServiceError(
+        `Document content must be no more than ${DOCUMENT_CONTENT_MAX_LENGTH} characters`
+      );
     }
   }
 

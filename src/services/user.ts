@@ -6,6 +6,37 @@
 import { BaseService, ServiceError, hashPassword, checkPassword } from "./util";
 import { Session } from "./session";
 import { Group } from "./group";
+import { DocumentEdit } from "./documentEdit";
+
+/**
+ * The minimum length of a user's username.
+ */
+export const USER_USERNAME_MIN_LENGTH = 3;
+
+/**
+ * The maximum length of a user's username.
+ */
+export const USER_USERNAME_MAX_LENGTH = 63;
+
+/**
+ * The minimum length of a user's email.
+ */
+export const USER_EMAIL_MIN_LENGTH = 5;
+
+/**
+ * The maximum length of a user's email address.
+ */
+export const USER_EMAIL_MAX_LENGTH = 63;
+
+/**
+ * The minimum length of a user's password.
+ */
+export const USER_PASSWORD_MIN_LENGTH = 8;
+
+/**
+ * The maximum length of a user's password.
+ */
+export const USER_PASSWORD_MAX_LENGTH = 255;
 
 /**
  * User architecture.
@@ -37,22 +68,51 @@ export class UserService extends BaseService {
     email: string,
     password: string
   ): Promise<User> {
-    const usernameExists = await this.userExistsForUsername(username);
-    const emailExists = await this.userExistsForEmail(email);
+    if (
+      username.length >= USER_USERNAME_MIN_LENGTH &&
+      username.length <= USER_USERNAME_MAX_LENGTH
+    ) {
+      if (
+        email.length >= USER_EMAIL_MIN_LENGTH &&
+        email.length <= USER_EMAIL_MAX_LENGTH
+      ) {
+        if (
+          password.length >= USER_PASSWORD_MIN_LENGTH &&
+          password.length <= USER_PASSWORD_MAX_LENGTH
+        ) {
+          const usernameExists = await this.userExistsForUsername(username);
 
-    if (usernameExists) {
-      throw new ServiceError("Username is in use");
-    } else if (emailExists) {
-      throw new ServiceError("Email is in use");
-    } else if (username.length < 3 || username.length > 63) {
-      throw new ServiceError("Username must be between 3 and 63 characters");
-    } else if (email.length < 5 || email.length > 63) {
-      throw new ServiceError("Email must be between 5 and 63 characters");
-    } else if (password.length < 8 || password.length > 255) {
-      throw new ServiceError("Password must be between 8 and 255 characters");
+          if (!usernameExists) {
+            const emailExists = await this.userExistsForEmail(email);
+
+            if (!emailExists) {
+              const passwordHash = await hashPassword(password);
+
+              return await this.create<User>({
+                username,
+                email,
+                password: passwordHash,
+              });
+            } else {
+              throw new ServiceError("Email is already in use");
+            }
+          } else {
+            throw new ServiceError("Username is already in use");
+          }
+        } else {
+          throw new ServiceError(
+            `Password must be between ${USER_PASSWORD_MIN_LENGTH} and ${USER_PASSWORD_MAX_LENGTH} characters`
+          );
+        }
+      } else {
+        throw new ServiceError(
+          `Email must be between ${USER_EMAIL_MIN_LENGTH} and ${USER_EMAIL_MAX_LENGTH} characters`
+        );
+      }
     } else {
-      const passwordHash = await hashPassword(password);
-      return await this.create({ username, email, password: passwordHash });
+      throw new ServiceError(
+        `Username must be between ${USER_USERNAME_MIN_LENGTH} and ${USER_USERNAME_MAX_LENGTH} characters`
+      );
     }
   }
 
@@ -141,18 +201,31 @@ export class UserService extends BaseService {
    * Sets a user's username.
    *
    * @param userID The ID of the user.
-   * @param username The new username.
+   * @param newUsername The new username.
    * @returns The updated user record.
    */
-  public async setUsername(userID: string, username: string): Promise<User> {
-    const usernameExists = await this.userExistsForUsername(username);
+  public async setUsername(userID: string, newUsername: string): Promise<User> {
+    if (
+      newUsername.length >= USER_USERNAME_MIN_LENGTH &&
+      newUsername.length <= USER_USERNAME_MAX_LENGTH
+    ) {
+      const userExists = await this.userExists(userID);
 
-    if (usernameExists) {
-      throw new ServiceError("Username is in use");
-    } else if (username.length < 3 || username.length > 63) {
-      throw new ServiceError("Username must be between 3 and 63 characters");
+      if (userExists) {
+        const usernameExists = await this.userExistsForUsername(newUsername);
+
+        if (!usernameExists) {
+          return await this.updateByID<User>(userID, { username: newUsername });
+        } else {
+          throw new ServiceError("Username is already in use");
+        }
+      } else {
+        throw new ServiceError("User does not exist");
+      }
     } else {
-      return await this.updateByID(userID, { username });
+      throw new ServiceError(
+        `Username must be between ${USER_USERNAME_MIN_LENGTH} and ${USER_USERNAME_MAX_LENGTH} characters`
+      );
     }
   }
 
@@ -160,18 +233,31 @@ export class UserService extends BaseService {
    * Sets a user's email address.
    *
    * @param userID The ID of the user.
-   * @param email The new email address.
+   * @param newEmail The new email address.
    * @returns The updated user record.
    */
-  public async setEmail(userID: string, email: string): Promise<User> {
-    const emailExists = await this.userExistsForEmail(email);
+  public async setEmail(userID: string, newEmail: string): Promise<User> {
+    if (
+      newEmail.length >= USER_EMAIL_MIN_LENGTH &&
+      newEmail.length <= USER_EMAIL_MAX_LENGTH
+    ) {
+      const userExists = await this.userExists(userID);
 
-    if (emailExists) {
-      throw new ServiceError("Email is in use");
-    } else if (email.length < 5 || email.length > 63) {
-      throw new ServiceError("Email must be between 5 and 63 characters");
+      if (userExists) {
+        const emailExists = await this.userExistsForEmail(newEmail);
+
+        if (!emailExists) {
+          return await this.updateByID<User>(userID, { email: newEmail });
+        } else {
+          throw new ServiceError("Email is already in use");
+        }
+      } else {
+        throw new ServiceError("User does not exist");
+      }
     } else {
-      return await this.updateByID(userID, { email });
+      throw new ServiceError(
+        `Email must be between ${USER_EMAIL_MIN_LENGTH} and ${USER_EMAIL_MAX_LENGTH} characters`
+      );
     }
   }
 
@@ -179,15 +265,27 @@ export class UserService extends BaseService {
    * Sets a user's password.
    *
    * @param userID The ID of the user.
-   * @param password The new password.
+   * @param newPassword The new password.
    * @returns The updated user record.
    */
-  public async setPassword(userID: string, password: string): Promise<User> {
-    if (password.length < 8 || password.length > 255) {
-      throw new ServiceError("Password must be between 8 and 255 characters");
+  public async setPassword(userID: string, newPassword: string): Promise<User> {
+    if (
+      newPassword.length >= USER_PASSWORD_MIN_LENGTH &&
+      newPassword.length <= USER_PASSWORD_MAX_LENGTH
+    ) {
+      const userExists = await this.userExists(userID);
+
+      if (userExists) {
+        const passwordHash = await hashPassword(newPassword);
+
+        return await this.updateByID<User>(userID, { password: passwordHash });
+      } else {
+        throw new ServiceError("User does not exist");
+      }
     } else {
-      const passwordHash = await hashPassword(password);
-      return await this.updateByID(userID, { password: passwordHash });
+      throw new ServiceError(
+        `Password must be between ${USER_PASSWORD_MIN_LENGTH} and ${USER_PASSWORD_MAX_LENGTH} characters`
+      );
     }
   }
 
@@ -202,7 +300,13 @@ export class UserService extends BaseService {
     userID: string,
     verified: boolean = true
   ): Promise<User> {
-    return await this.updateByID(userID, { verified });
+    const userExists = await this.userExists(userID);
+
+    if (userExists) {
+      return await this.updateByID<User>(userID, { verified });
+    } else {
+      throw new ServiceError("User does not exist");
+    }
   }
 
   /**
@@ -241,13 +345,67 @@ export class UserService extends BaseService {
 
     if (userExists) {
       const sql = `
-        SELECT group.*
-          FROM group
+        SELECT app_group.*
+          FROM app_group
           JOIN app_user
-            ON group.owner_user_id = app_user.id
+            ON app_group.owner_user_id = app_user.id
         WHERE app_user.id = ?;`;
       const params = [userID];
       return await this.dbm.execute<Group>(sql, params);
+    } else {
+      throw new ServiceError("User does not exist");
+    }
+  }
+
+  /**
+   * Returns all document edit requests made by a user.
+   *
+   * @param userID The ID of the user.
+   * @returns All document edit requests made by the user.
+   */
+  public async getUserDocumentEditRequests(
+    userID: string
+  ): Promise<DocumentEdit[]> {
+    const userExists = await this.userExists(userID);
+
+    if (userExists) {
+      const sql = `
+        SELECT document_edit.*
+          FROM document_edit
+          JOIN app_user
+            ON document_edit.editor_user_id = app_user.id
+        WHERE app_user.id = ?
+        ORDER BY document_edit.edit_request_time ASC;`;
+      const params = [userID];
+      return await this.dbm.execute<DocumentEdit>(sql, params);
+    } else {
+      throw new ServiceError("User does not exist");
+    }
+  }
+
+  /**
+   * Returns all documents with edit requests made by a user.
+   *
+   * @param userID The ID of the user.
+   * @returns All documents with edit requests made by the user.
+   */
+  public async getUserDocumentEditRequestDocuments(
+    userID: string
+  ): Promise<DocumentEdit[]> {
+    const userExists = await this.userExists(userID);
+
+    if (userExists) {
+      const sql = `
+        SELECT document.*
+          FROM document_edit
+          JOIN document
+            ON document_edit.document_id = document.id
+          JOIN app_user
+            ON document_edit.editor_user_id = app_user.id
+        WHERE app_user.id = ?
+        ORDER BY document_edit.edit_request_time ASC;`;
+      const params = [userID];
+      return await this.dbm.execute<DocumentEdit>(sql, params);
     } else {
       throw new ServiceError("User does not exist");
     }

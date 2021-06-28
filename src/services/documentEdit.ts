@@ -6,12 +6,12 @@
 import { BaseService, ServiceError } from "./util";
 import { User } from "./user";
 import { Group } from "./group";
-import { Document } from "./document";
+import { Document, DOCUMENT_CONTENT_MAX_LENGTH } from "./document";
 
 /**
  * The maximum number of documents edit requests per user.
  */
-const MAX_DOCUMENT_EDITS_PER_USER = 64;
+export const MAX_DOCUMENT_EDITS_PER_USER = 64;
 
 /**
  * Document edit architecture.
@@ -41,26 +41,43 @@ export class DocumentEditService extends BaseService {
     editorUserID: string,
     newContent: string
   ): Promise<DocumentEdit> {
-    const documentExists = await this.dbm.documentService.documentExists(
-      documentID
-    );
-
-    if (documentExists) {
-      const editorUserExists = await this.dbm.userService.userExists(
-        editorUserID
+    if (newContent.length <= DOCUMENT_CONTENT_MAX_LENGTH) {
+      const documentExists = await this.dbm.documentService.documentExists(
+        documentID
       );
 
-      if (editorUserExists) {
-        return await this.create<DocumentEdit>({
-          document_id: documentID,
-          editor_user_id: editorUserID,
-          new_content: newContent,
-        });
+      if (documentExists) {
+        const editorUserExists = await this.dbm.userService.userExists(
+          editorUserID
+        );
+
+        if (editorUserExists) {
+          const userDocumentEdits =
+            await this.dbm.userService.getUserDocumentEditRequests(
+              editorUserID
+            );
+
+          if (userDocumentEdits.length < MAX_DOCUMENT_EDITS_PER_USER) {
+            return await this.create<DocumentEdit>({
+              document_id: documentID,
+              editor_user_id: editorUserID,
+              new_content: newContent,
+            });
+          } else {
+            throw new ServiceError(
+              "Maximum number of document edit requests reached for user"
+            );
+          }
+        } else {
+          throw new ServiceError("Editor user does not exist");
+        }
       } else {
-        throw new ServiceError("Editor user does not exist");
+        throw new ServiceError("Document does not exist");
       }
     } else {
-      throw new ServiceError("Document does not exist");
+      throw new ServiceError(
+        `Document content must be no more than ${DOCUMENT_CONTENT_MAX_LENGTH} characters`
+      );
     }
   }
 

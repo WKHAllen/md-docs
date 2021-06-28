@@ -4,7 +4,11 @@
  */
 
 import { BaseService, ServiceError } from "./util";
-import { User } from "./user";
+import {
+  User,
+  USER_PASSWORD_MIN_LENGTH,
+  USER_PASSWORD_MAX_LENGTH,
+} from "./user";
 
 /**
  * Password reset architecture.
@@ -26,12 +30,18 @@ export class PasswordResetService extends BaseService {
    * @returns The password reset record.
    */
   public async createPasswordReset(email: string): Promise<PasswordReset> {
-    const passwordResetExists = await this.passwordResetExists(email);
+    const emailExists = await this.dbm.userService.userExistsForEmail(email);
 
-    if (!passwordResetExists) {
-      return await this.create<PasswordReset>({ email });
+    if (emailExists) {
+      const passwordResetExists = await this.passwordResetExists(email);
+
+      if (!passwordResetExists) {
+        return await this.create<PasswordReset>({ email });
+      } else {
+        return await this.getPasswordResetForEmail(email);
+      }
     } else {
-      return await this.getPasswordResetForEmail(email);
+      throw new ServiceError("Email does not exist");
     }
   }
 
@@ -112,8 +122,7 @@ export class PasswordResetService extends BaseService {
     const sql = `
       SELECT * FROM app_user WHERE email = (
         SELECT email FROM password_reset WHERE id = $1
-      );
-    `;
+      );`;
     const params = [passwordResetID];
     const res = await this.dbm.execute<User>(sql, params);
 
@@ -143,14 +152,23 @@ export class PasswordResetService extends BaseService {
     passwordResetID: string,
     newPassword: string
   ): Promise<void> {
-    const valid = await this.passwordResetExists(passwordResetID);
+    if (
+      newPassword.length >= USER_PASSWORD_MIN_LENGTH &&
+      newPassword.length <= USER_PASSWORD_MAX_LENGTH
+    ) {
+      const valid = await this.passwordResetExists(passwordResetID);
 
-    if (valid) {
-      const user = await this.getUserByPasswordReset(passwordResetID);
-      await this.deletePasswordReset(passwordResetID);
-      await this.dbm.userService.setPassword(user.id, newPassword);
+      if (valid) {
+        const user = await this.getUserByPasswordReset(passwordResetID);
+        await this.deletePasswordReset(passwordResetID);
+        await this.dbm.userService.setPassword(user.id, newPassword);
+      } else {
+        throw new ServiceError("Invalid password reset ID");
+      }
     } else {
-      throw new ServiceError("Invalid password reset ID");
+      throw new ServiceError(
+        `Password must be between ${USER_PASSWORD_MIN_LENGTH} and ${USER_PASSWORD_MAX_LENGTH} characters`
+      );
     }
   }
 

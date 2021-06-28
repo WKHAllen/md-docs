@@ -9,7 +9,15 @@ import { Directory } from "./directory";
 import { Document } from "./document";
 import { DocumentEdit } from "./documentEdit";
 
-const MAX_GROUPS_PER_USER = 64;
+/**
+ * The maximum number of groups a user can create.
+ */
+export const MAX_GROUPS_PER_USER = 64;
+
+/**
+ * The maximum length of a group name.
+ */
+export const GROUP_NAME_MAX_LENGTH = 255;
 
 /**
  * Group architecture.
@@ -51,26 +59,32 @@ export class GroupService extends BaseService {
     creatorUserID: string,
     groupName: string
   ): Promise<Group> {
-    const userExists = await this.dbm.userService.userExists(creatorUserID);
+    if (groupName.length > 0 && groupName.length <= GROUP_NAME_MAX_LENGTH) {
+      const userExists = await this.dbm.userService.userExists(creatorUserID);
 
-    if (userExists) {
-      const userGroups = await this.dbm.userService.getUserGroupsOwned(
-        creatorUserID
-      );
+      if (userExists) {
+        const userGroups = await this.dbm.userService.getUserGroupsOwned(
+          creatorUserID
+        );
 
-      if (userGroups.length < MAX_GROUPS_PER_USER) {
-        return await this.create<Group>({
-          creator_user_id: creatorUserID,
-          owner_user_id: creatorUserID,
-          name: groupName,
-          edit_documents_permission_id: PermissionType.ThoseWithAccess,
-          approve_edits_permission_id: PermissionType.OwnerOnly,
-        });
+        if (userGroups.length < MAX_GROUPS_PER_USER) {
+          return await this.create<Group>({
+            creator_user_id: creatorUserID,
+            owner_user_id: creatorUserID,
+            name: groupName,
+            edit_documents_permission_id: PermissionType.ThoseWithAccess,
+            approve_edits_permission_id: PermissionType.OwnerOnly,
+          });
+        } else {
+          throw new ServiceError("Maximum number of groups reached for user");
+        }
       } else {
-        throw new ServiceError("Maximum number of groups reached for user");
+        throw new ServiceError("User does not exist");
       }
     } else {
-      throw new ServiceError("User does not exist");
+      throw new ServiceError(
+        `Group name must be between 1 and ${GROUP_NAME_MAX_LENGTH} characters`
+      );
     }
   }
 
@@ -148,16 +162,22 @@ export class GroupService extends BaseService {
    * Sets the group's name.
    *
    * @param groupID The group's ID.
-   * @param name The new group name.
+   * @param newName The new group name.
    * @returns The updated group record.
    */
-  public async setGroupName(groupID: string, name: string): Promise<Group> {
-    const groupExists = await this.groupExists(groupID);
+  public async setGroupName(groupID: string, newName: string): Promise<Group> {
+    if (newName.length > 0 && newName.length <= GROUP_NAME_MAX_LENGTH) {
+      const groupExists = await this.groupExists(groupID);
 
-    if (groupExists) {
-      return await this.updateByID<Group>(groupID, { name });
+      if (groupExists) {
+        return await this.updateByID<Group>(groupID, { name: newName });
+      } else {
+        throw new ServiceError("Group does not exist");
+      }
     } else {
-      throw new ServiceError("Group does not exist");
+      throw new ServiceError(
+        `Group name must be between 1 and ${GROUP_NAME_MAX_LENGTH} characters`
+      );
     }
   }
 

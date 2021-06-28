@@ -26,12 +26,18 @@ export class VerifyService extends BaseService {
    * @returns The resulting verification record.
    */
   public async createVerification(email: string): Promise<Verify> {
-    const verificationExists = await this.verificationExistsForEmail(email);
+    const emailExists = await this.dbm.userService.userExistsForEmail(email);
 
-    if (!verificationExists) {
-      return await this.create<Verify>({ email });
+    if (emailExists) {
+      const verificationExists = await this.verificationExistsForEmail(email);
+
+      if (!verificationExists) {
+        return await this.create<Verify>({ email });
+      } else {
+        return await this.getVerificationForEmail(email);
+      }
     } else {
-      return await this.getVerificationForEmail(email);
+      throw new ServiceError("Email does not exist");
     }
   }
 
@@ -110,8 +116,7 @@ export class VerifyService extends BaseService {
     const sql = `
       SELECT * FROM app_user WHERE email = (
         SELECT email FROM verify WHERE id = ?
-      );
-    `;
+      );`;
     const params = [verifyID];
     const res = await this.dbm.execute<User>(sql, params);
 
