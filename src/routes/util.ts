@@ -106,18 +106,18 @@ type QueryParamType<T> = T extends "boolean"
   : never;
 
 /**
- * Get the requested query parameters, throwing errors when they don't exist.
+ * Returns the requested parameter, throwing errors when it doesn't exist.
  *
- * @param req Request object.
- * @returns The requested query parameters.
+ * @param paramValue The value of the parameter.
+ * @param paramName The name of the parameter.
+ * @param paramType The type of the parameter.
+ * @returns The requested parameter.
  */
-export function getParam<T extends QueryParamTypeName>(
-  req: Request,
+function getParam<T extends QueryParamTypeName>(
+  paramValue: string,
   paramName: string,
   paramType: T
 ): QueryParamType<T> {
-  const paramValue = req.query[paramName] as string;
-
   if (paramValue === undefined) {
     throw new ServiceError(`Missing query parameter '${paramName}'`);
   } else {
@@ -147,6 +147,40 @@ export function getParam<T extends QueryParamTypeName>(
         throw new Error("Unexpected query param type");
     }
   }
+}
+
+/**
+ * Returns the requested query parameter, throwing errors when it doesn't exist.
+ *
+ * @param req The request object.
+ * @param paramName The name of the parameter.
+ * @param paramType The type of the parameter.
+ * @returns The requested query parameter.
+ */
+export function getQueryParam<T extends QueryParamTypeName>(
+  req: Request,
+  paramName: string,
+  paramType: T
+): QueryParamType<T> {
+  const paramValue = req.query[paramName] as string;
+  return getParam(paramValue, paramName, paramType);
+}
+
+/**
+ * Returns the requested body parameter, throwing errors when it doesn't exist.
+ *
+ * @param req The request object.
+ * @param paramName The name of the parameter.
+ * @param paramType The type of the parameter.
+ * @returns The requested body parameter.
+ */
+export function getBodyParam<T extends QueryParamTypeName>(
+  req: Request,
+  paramName: string,
+  paramType: T
+): QueryParamType<T> {
+  const paramValue = req.body[paramName] as string;
+  return getParam(paramValue, paramName, paramType);
 }
 
 /**
