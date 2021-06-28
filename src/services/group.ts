@@ -7,6 +7,7 @@ import { BaseService, ServiceError } from "./util";
 import { User } from "./user";
 import { Directory } from "./directory";
 import { Document } from "./document";
+import { DocumentEdit } from "./documentEdit";
 
 const MAX_GROUPS_PER_USER = 64;
 
@@ -313,6 +314,62 @@ export class GroupService extends BaseService {
         ORDER BY document.name ASC;`;
       const params = [groupID];
       return await this.dbm.execute<Document>(sql, params);
+    } else {
+      throw new ServiceError("Group does not exist");
+    }
+  }
+
+  /**
+   * Returns all edit requests for documents within the group.
+   *
+   * @param groupID The group's ID.
+   * @returns All edit requests for documents within the group.
+   */
+  public async getGroupDocumentEditRequests(
+    groupID: string
+  ): Promise<DocumentEdit[]> {
+    const groupExists = await this.groupExists(groupID);
+
+    if (groupExists) {
+      const sql = `
+        SELECT document_edit.*
+          FROM document_edit
+          JOIN document
+            ON document_edit.document_id = document.id
+          JOIN app_group
+            ON document.group_id = app_group.id
+        WHERE app_group.id = ?
+        ORDER BY document_edit.edit_request_time ASC;`;
+      const params = [groupID];
+      return await this.dbm.execute<DocumentEdit>(sql, params);
+    } else {
+      throw new ServiceError("Group does not exist");
+    }
+  }
+
+  /**
+   * Returns all documents with edit requests within the group.
+   *
+   * @param groupID The group's ID.
+   * @returns All documents with edit requests within the group.
+   */
+  public async getGroupDocumentEditRequestDocuments(
+    groupID: string
+  ): Promise<DocumentEdit[]> {
+    const groupExists = await this.groupExists(groupID);
+
+    if (groupExists) {
+      const sql = `
+        SELECT document.*
+          FROM document_edit
+          JOIN document
+            ON document_edit.document_id = document.id
+          JOIN app_group
+            ON document.group_id = app_group.id
+        WHERE app_group.id = ?
+        ORDER BY document_edit.edit_request_time ASC;`;
+      const params = [groupID];
+      return await this.dbm.execute<DocumentEdit>(sql, params);
     } else {
       throw new ServiceError("Group does not exist");
     }

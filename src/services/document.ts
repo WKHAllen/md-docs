@@ -6,6 +6,7 @@
 import { BaseService, ServiceError } from "./util";
 import { Group } from "./group";
 import { Directory } from "./directory";
+import { DocumentEdit } from "./documentEdit";
 
 /**
  * The maximum number of documents per directory.
@@ -32,6 +33,7 @@ export interface Document {
  */
 export class DocumentService extends BaseService {
   /**
+   * Creates a new document.
    *
    * @param name The document name.
    * @param creatorUserID The ID of the user creating the document.
@@ -151,22 +153,40 @@ export class DocumentService extends BaseService {
   }
 
   /**
-   * Sets the document content.
+   * Edits the document content.
    *
    * @param documentID The document's ID.
+   * @param editorUserID The document editor's ID.
    * @param newContent The new document content.
    * @returns The updated document record.
    */
-  public async setDocumentContent(
+  public async editDocument(
     documentID: string,
+    editorUserID: string,
     newContent: string
   ): Promise<Document> {
     const documentExists = await this.documentExists(documentID);
 
     if (documentExists) {
-      return await this.updateByID<Document>(documentID, {
-        content: newContent,
-      });
+      const editorUserExists = await this.dbm.userService.userExists(
+        editorUserID
+      );
+
+      if (editorUserExists) {
+        const sql = `
+          UPDATE document
+            SET content = ?,
+                last_edit_time = NOW(),
+                last_edit_user_id = ?
+          WHERE id = ?
+          RETURNING *;`;
+        const params = [newContent, editorUserID, documentID];
+        const res = await this.dbm.execute<Document>(sql, params);
+
+        return res[0];
+      } else {
+        throw new ServiceError("Editor user does not exist");
+      }
     } else {
       throw new ServiceError("Document does not exist");
     }
@@ -213,6 +233,30 @@ export class DocumentService extends BaseService {
       const res = await this.dbm.execute<Directory>(sql, params);
 
       return res[0] || null;
+    } else {
+      throw new ServiceError("Document does not exist");
+    }
+  }
+
+  /**
+   * Returns all edit requests for document.
+   *
+   * @param documentID The document's ID.
+   * @returns All edit requests for document.
+   */
+  public async getEditRequests(documentID: string): Promise<DocumentEdit[]> {
+    const documentExists = await this.documentExists(documentID);
+
+    if (documentExists) {
+      const sql = `
+        SELECT document_edit.*
+          FROM document_edit
+          JOIN document
+            ON document_edit.document_id = document.id
+        WHERE document.id = ?
+        ORDER BY document_edit.edit_request_time ASC;`;
+      const params = [documentID];
+      return await this.dbm.execute<DocumentEdit>(sql, params);
     } else {
       throw new ServiceError("Document does not exist");
     }

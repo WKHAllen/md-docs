@@ -16,6 +16,7 @@ import { GroupAccessService } from "./services/groupAccess";
 import { FavoriteGroupService } from "./services/favoriteGroup";
 import { DirectoryService } from "./services/directory";
 import { DocumentService } from "./services/document";
+import { DocumentEditService } from "./services/documentEdit";
 
 export default class DatabaseManager {
   readonly db: DB;
@@ -30,6 +31,7 @@ export default class DatabaseManager {
   readonly favoriteGroupService: FavoriteGroupService;
   readonly directoryService: DirectoryService;
   readonly documentService: DocumentService;
+  readonly documentEditService: DocumentEditService;
 
   constructor(dbURL: string, max: number = 20, sqlPath: string = null) {
     this.db = new DB(dbURL, max, sqlPath);
@@ -50,6 +52,7 @@ export default class DatabaseManager {
     );
     this.directoryService = new DirectoryService(this, "directory");
     this.documentService = new DocumentService(this, "document");
+    this.documentEditService = new DocumentEditService(this, "document_edit");
   }
 
   public async execute<T = void>(
