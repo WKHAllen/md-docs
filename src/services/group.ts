@@ -20,6 +20,11 @@ export const MAX_GROUPS_PER_USER = 64;
 export const GROUP_NAME_MAX_LENGTH = 255;
 
 /**
+ * The maximum length of a group description.
+ */
+export const GROUP_DESCRIPTION_MAX_LENGTH = 1023;
+
+/**
  * Group architecture.
  */
 export interface Group {
@@ -27,6 +32,7 @@ export interface Group {
   creator_user_id?: string;
   owner_user_id: string;
   name: string;
+  description: string;
   details_visible: boolean;
   searchable: boolean;
   edit_documents_permission_id: string;
@@ -177,6 +183,34 @@ export class GroupService extends BaseService {
     } else {
       throw new ServiceError(
         `Group name must be between 1 and ${GROUP_NAME_MAX_LENGTH} characters`
+      );
+    }
+  }
+
+  /**
+   * Sets the group's description.
+   *
+   * @param groupID The group's ID.
+   * @param newDescription The new group description.
+   * @returns The updated group record.
+   */
+  public async setGroupDescription(
+    groupID: string,
+    newDescription: string
+  ): Promise<Group> {
+    if (newDescription.length <= GROUP_DESCRIPTION_MAX_LENGTH) {
+      const groupExists = await this.groupExists(groupID);
+
+      if (groupExists) {
+        return await this.updateByID<Group>(groupID, {
+          description: newDescription,
+        });
+      } else {
+        throw new ServiceError("Group does not exist");
+      }
+    } else {
+      throw new ServiceError(
+        `Group description must be no more than ${GROUP_DESCRIPTION_MAX_LENGTH} characters`
       );
     }
   }
