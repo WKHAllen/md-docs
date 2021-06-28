@@ -47,6 +47,7 @@ app.use(express.static(path.join(__dirname + "/../../app/dist/md-docs")));
 // Use routes
 app.use("/api", express.json(), routes.userRouter);
 app.use("/api", express.json(), routes.loginRegisterRouter);
+app.use("/api", express.json(), routes.verificationRouter);
 
 app.use((req, res) => {
   res.sendFile(path.join(__dirname + "/../../app/dist/md-docs/index.html"));
