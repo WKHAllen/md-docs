@@ -1,0 +1,256 @@
+/**
+ * Group routes.
+ * @packageDocumentation
+ */
+
+import { Router } from "express";
+import {
+  getDBM,
+  getLoggedInUser,
+  getQueryParam,
+  getBodyParam,
+  respond,
+  wrapRoute,
+} from "./util";
+import { ServiceError } from "../services/util";
+import { PermissionType } from "../services/group";
+
+/**
+ * The group router.
+ */
+export const groupRouter = Router();
+
+// Creates a new group
+groupRouter.post(
+  "/create_group",
+  wrapRoute(async (req, res) => {
+    const dbm = getDBM(req);
+    const user = await getLoggedInUser(req);
+    const groupName = getBodyParam(req, "name", "string");
+    const groupDescription = getBodyParam(req, "description", "string");
+
+    const group = await dbm.groupService.createGroup(
+      user.id,
+      groupName,
+      groupDescription
+    );
+
+    respond(res, group);
+  })
+);
+
+// Returns the group info
+groupRouter.get(
+  "/get_group_info",
+  wrapRoute(async (req, res) => {
+    const dbm = getDBM(req);
+    const groupID = getQueryParam(req, "group_id", "string");
+
+    const group = await dbm.groupService.getGroup(groupID);
+
+    respond(res, group);
+  })
+);
+
+// Returns the group creator
+groupRouter.get(
+  "/get_group_creator",
+  wrapRoute(async (req, res) => {
+    const dbm = getDBM(req);
+    const groupID = getQueryParam(req, "group_id", "string");
+
+    const groupCreator = await dbm.groupService.getGroupCreator(groupID);
+
+    respond(res, groupCreator);
+  })
+);
+
+// Returns the group owner
+groupRouter.get(
+  "/get_group_owner",
+  wrapRoute(async (req, res) => {
+    const dbm = getDBM(req);
+    const groupID = getQueryParam(req, "group_id", "string");
+
+    const groupOwner = await dbm.groupService.getGroupOwner(groupID);
+
+    respond(res, groupOwner);
+  })
+);
+
+// Sets the group's name
+groupRouter.post(
+  "/set_group_name",
+  wrapRoute(async (req, res) => {
+    const dbm = getDBM(req);
+    const user = await getLoggedInUser(req);
+    const groupID = getBodyParam(req, "group_id", "string");
+    const newName = getBodyParam(req, "name", "string");
+
+    const group = await dbm.groupService.getGroup(groupID);
+
+    if (user.id === group.owner_user_id) {
+      await dbm.groupService.setGroupName(groupID, newName);
+
+      respond(res);
+    } else {
+      throw new ServiceError(
+        "You do not have permission to set this group's name"
+      );
+    }
+  })
+);
+
+// Sets the group's description
+groupRouter.post(
+  "/set_group_description",
+  wrapRoute(async (req, res) => {
+    const dbm = getDBM(req);
+    const user = await getLoggedInUser(req);
+    const groupID = getBodyParam(req, "group_id", "string");
+    const newDescription = getBodyParam(req, "description", "string");
+
+    const group = await dbm.groupService.getGroup(groupID);
+
+    if (user.id === group.owner_user_id) {
+      await dbm.groupService.setGroupDescription(groupID, newDescription);
+
+      respond(res);
+    } else {
+      throw new ServiceError(
+        "You do not have permission to set this group's description"
+      );
+    }
+  })
+);
+
+// Passes group ownership to another user
+groupRouter.post(
+  "/pass_group_ownership",
+  wrapRoute(async (req, res) => {
+    const dbm = getDBM(req);
+    const user = await getLoggedInUser(req);
+    const groupID = getBodyParam(req, "group_id", "string");
+    const newOwnerID = getBodyParam(req, "new_owner_id", "string");
+
+    const group = await dbm.groupService.getGroup(groupID);
+
+    if (user.id === group.owner_user_id) {
+      await dbm.groupService.passOwnership(groupID, newOwnerID);
+
+      respond(res);
+    } else {
+      throw new ServiceError(
+        "You do not have permission to pass ownership of this group"
+      );
+    }
+  })
+);
+
+// Sets the visibility of group details
+groupRouter.post(
+  "/set_details_visible",
+  wrapRoute(async (req, res) => {
+    const dbm = getDBM(req);
+    const user = await getLoggedInUser(req);
+    const groupID = getBodyParam(req, "group_id", "string");
+    const detailsVisible = getBodyParam(req, "details_visible", "boolean");
+
+    const group = await dbm.groupService.getGroup(groupID);
+
+    if (user.id === group.owner_user_id) {
+      await dbm.groupService.setDetailsVisible(groupID, detailsVisible);
+
+      respond(res);
+    } else {
+      throw new ServiceError(
+        "You do not have permission to set the detail visibility of this group"
+      );
+    }
+  })
+);
+
+// Sets the searchability of the group
+groupRouter.post(
+  "/set_searchable",
+  wrapRoute(async (req, res) => {
+    const dbm = getDBM(req);
+    const user = await getLoggedInUser(req);
+    const groupID = getBodyParam(req, "group_id", "string");
+    const searchable = getBodyParam(req, "searchable", "boolean");
+
+    const group = await dbm.groupService.getGroup(groupID);
+
+    if (user.id === group.owner_user_id) {
+      await dbm.groupService.setSearchable(groupID, searchable);
+
+      respond(res);
+    } else {
+      throw new ServiceError(
+        "You do not have permission to set the searchability of this group"
+      );
+    }
+  })
+);
+
+// Sets the group's edit permissions
+groupRouter.post(
+  "/set_edit_permissions",
+  wrapRoute(async (req, res) => {
+    const dbm = getDBM(req);
+    const user = await getLoggedInUser(req);
+    const groupID = getBodyParam(req, "group_id", "string");
+    const permissions = getBodyParam(
+      req,
+      "permissions",
+      "string"
+    ) as PermissionType;
+
+    const group = await dbm.groupService.getGroup(groupID);
+
+    if (user.id === group.owner_user_id) {
+      if (Object.values(PermissionType).includes(permissions)) {
+        await dbm.groupService.setEditPermissions(groupID, permissions);
+
+        respond(res);
+      } else {
+        throw new ServiceError("Invalid permission type");
+      }
+    } else {
+      throw new ServiceError(
+        "You do not have permission to set edit permissions for this group"
+      );
+    }
+  })
+);
+
+// Sets the group's approve edits permissions
+groupRouter.post(
+  "/set_approve_edits_permissions",
+  wrapRoute(async (req, res) => {
+    const dbm = getDBM(req);
+    const user = await getLoggedInUser(req);
+    const groupID = getBodyParam(req, "group_id", "string");
+    const permissions = getBodyParam(
+      req,
+      "permissions",
+      "string"
+    ) as PermissionType;
+
+    const group = await dbm.groupService.getGroup(groupID);
+
+    if (user.id === group.owner_user_id) {
+      if (Object.values(PermissionType).includes(permissions)) {
+        await dbm.groupService.setApproveEditsPermissions(groupID, permissions);
+
+        respond(res);
+      } else {
+        throw new ServiceError("Invalid permission type");
+      }
+    } else {
+      throw new ServiceError(
+        "You do not have permission to set approve edits permissions for this group"
+      );
+    }
+  })
+);

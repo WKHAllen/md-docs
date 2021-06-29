@@ -59,33 +59,42 @@ export class GroupService extends BaseService {
    *
    * @param creatorUserID The ID of the user creating the group.
    * @param groupName The name of the new group.
+   * @param groupDescription The group description.
    * @returns The new group record.
    */
   public async createGroup(
     creatorUserID: string,
-    groupName: string
+    groupName: string,
+    groupDescription: string = ""
   ): Promise<Group> {
     if (groupName.length > 0 && groupName.length <= GROUP_NAME_MAX_LENGTH) {
       const userExists = await this.dbm.userService.userExists(creatorUserID);
 
-      if (userExists) {
-        const userGroups = await this.dbm.userService.getUserGroupsOwned(
-          creatorUserID
-        );
+      if (groupDescription.length <= GROUP_DESCRIPTION_MAX_LENGTH) {
+        if (userExists) {
+          const userGroups = await this.dbm.userService.getUserGroupsOwned(
+            creatorUserID
+          );
 
-        if (userGroups.length < MAX_GROUPS_PER_USER) {
-          return await this.create<Group>({
-            creator_user_id: creatorUserID,
-            owner_user_id: creatorUserID,
-            name: groupName,
-            edit_documents_permission_id: PermissionType.ThoseWithAccess,
-            approve_edits_permission_id: PermissionType.OwnerOnly,
-          });
+          if (userGroups.length < MAX_GROUPS_PER_USER) {
+            return await this.create<Group>({
+              creator_user_id: creatorUserID,
+              owner_user_id: creatorUserID,
+              name: groupName,
+              description: groupDescription,
+              edit_documents_permission_id: PermissionType.ThoseWithAccess,
+              approve_edits_permission_id: PermissionType.OwnerOnly,
+            });
+          } else {
+            throw new ServiceError("Maximum number of groups reached for user");
+          }
         } else {
-          throw new ServiceError("Maximum number of groups reached for user");
+          throw new ServiceError("User does not exist");
         }
       } else {
-        throw new ServiceError("User does not exist");
+        throw new ServiceError(
+          `Group description must be no more than ${GROUP_DESCRIPTION_MAX_LENGTH} characters`
+        );
       }
     } else {
       throw new ServiceError(
@@ -127,7 +136,7 @@ export class GroupService extends BaseService {
    * @param groupID The group's ID.
    * @returns The group's creator.
    */
-  public async getGroupCreator(groupID: string): Promise<User> {
+  public async getGroupCreator(groupID: string): Promise<User | null> {
     const sql = `
       SELECT * FROM app_user WHERE id = (
         SELECT creator_user_id FROM app_group WHERE id = ?
@@ -136,7 +145,7 @@ export class GroupService extends BaseService {
     const res = await this.dbm.execute<User>(sql, params);
 
     if (res.length === 1) {
-      return res[0];
+      return res[0] || null;
     } else {
       throw new ServiceError("Group or group creator does not exist");
     }
