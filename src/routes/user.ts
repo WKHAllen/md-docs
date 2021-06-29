@@ -106,3 +106,130 @@ userRouter.get(
     respond(res, documentEditRequests);
   })
 );
+
+// Favorites a user
+userRouter.post(
+  "/favorite_user",
+  wrapRoute(async (req, res) => {
+    const dbm = getDBM(req);
+    const user = await getLoggedInUser(req);
+    const favoriteUserID = getBodyParam(req, "favorite_user_id", "string");
+
+    await dbm.favoriteUserService.favoriteUser(user.id, favoriteUserID);
+
+    respond(res);
+  })
+);
+
+// Unfavorites a user
+userRouter.post(
+  "/unfavorite_user",
+  wrapRoute(async (req, res) => {
+    const dbm = getDBM(req);
+    const user = await getLoggedInUser(req);
+    const favoriteUserID = getBodyParam(req, "favorite_user_id", "string");
+
+    await dbm.favoriteUserService.unfavoriteUser(user.id, favoriteUserID);
+
+    respond(res);
+  })
+);
+
+// Returns whether or not a user is favorited
+userRouter.get(
+  "/user_is_favorite",
+  wrapRoute(async (req, res) => {
+    const dbm = getDBM(req);
+    const user = await getLoggedInUser(req);
+    const favoriteUserID = getQueryParam(req, "favorite_user_id", "string");
+
+    const isFavorite = await dbm.favoriteUserService.isFavorite(
+      user.id,
+      favoriteUserID
+    );
+
+    respond(res, isFavorite);
+  })
+);
+
+// Gets all favorited users
+userRouter.get(
+  "/get_favorite_users",
+  wrapRoute(async (req, res) => {
+    const dbm = getDBM(req);
+    const user = await getLoggedInUser(req);
+
+    const favoriteUsers = await dbm.favoriteUserService.getFavoriteUsers(
+      user.id
+    );
+
+    const users = favoriteUsers.map((user) => ({
+      id: user.id,
+      username: user.username,
+      image_id: user.image_id,
+      join_time: user.join_time,
+    }));
+
+    respond(res, users);
+  })
+);
+
+// Favorites a group
+userRouter.post(
+  "/favorite_group",
+  wrapRoute(async (req, res) => {
+    const dbm = getDBM(req);
+    const user = await getLoggedInUser(req);
+    const favoriteGroupID = getBodyParam(req, "favorite_group_id", "string");
+
+    await dbm.favoriteGroupService.favoriteGroup(user.id, favoriteGroupID);
+
+    respond(res);
+  })
+);
+
+// Unfavorites a group
+userRouter.post(
+  "/unfavorite_group",
+  wrapRoute(async (req, res) => {
+    const dbm = getDBM(req);
+    const user = await getLoggedInUser(req);
+    const favoriteGroupID = getBodyParam(req, "favorite_group_id", "string");
+
+    await dbm.favoriteGroupService.unfavoriteGroup(user.id, favoriteGroupID);
+
+    respond(res);
+  })
+);
+
+// Returns whether or not a group is favorited
+userRouter.get(
+  "/group_is_favorite",
+  wrapRoute(async (req, res) => {
+    const dbm = getDBM(req);
+    const user = await getLoggedInUser(req);
+    const favoriteGroupID = getQueryParam(req, "favorite_group_id", "string");
+
+    const isFavorite = await dbm.favoriteGroupService.isFavorite(
+      user.id,
+      favoriteGroupID
+    );
+
+    respond(res, isFavorite);
+  })
+);
+
+// Gets all favorited groups
+userRouter.get(
+  "/get_favorite_groups",
+  wrapRoute(async (req, res) => {
+    const dbm = getDBM(req);
+    const user = await getLoggedInUser(req);
+
+    const favoriteGroups = await dbm.favoriteGroupService.getFavoriteGroups(
+      user.id
+    );
+
+    respond(res, favoriteGroups);
+  })
+);

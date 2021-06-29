@@ -57,12 +57,12 @@ export class FavoriteGroupService extends BaseService {
   }
 
   /**
-   * Removes a user as a favorite.
+   * Removes a group as a favorite.
    *
    * @param userID The user's ID.
    * @param favoriteGroupID The ID of the group being unfavorited.
    */
-  public async unfavoriteUser(
+  public async unfavoriteGroup(
     userID: string,
     favoriteGroupID: string
   ): Promise<void> {
@@ -133,7 +133,7 @@ export class FavoriteGroupService extends BaseService {
    * @param userID The user's ID.
    * @returns All groups favorited by the user.
    */
-  public async getFavoriteUsers(userID: string): Promise<Group[]> {
+  public async getFavoriteGroups(userID: string): Promise<Group[]> {
     const sql = `
       SELECT app_group.*
         FROM app_group
