@@ -8,6 +8,7 @@ import { User } from "./user";
 import { Directory } from "./directory";
 import { Document } from "./document";
 import { DocumentEdit } from "./documentEdit";
+import { PermissionType } from "./permission";
 
 /**
  * The maximum number of groups a user can create.
@@ -35,19 +36,10 @@ export interface Group {
   description: string;
   details_visible: boolean;
   searchable: boolean;
-  edit_documents_permission_id: string;
-  approve_edits_permission_id: string;
+  edit_documents_permission_id: PermissionType;
+  approve_edits_permission_id: PermissionType;
   image_id?: string;
   create_time: number;
-}
-
-/**
- * Permission types.
- */
-export enum PermissionType {
-  Anyone = "ANYONE",
-  ThoseWithAccess = "THOSE_WITH_ACCESS",
-  OwnerOnly = "OWNER_ONLY",
 }
 
 /**

@@ -13,7 +13,7 @@ import {
   wrapRoute,
 } from "./util";
 import { ServiceError } from "../services/util";
-import { PermissionType } from "../services/group";
+import { PermissionType } from "../services/permission";
 
 /**
  * The group router.
@@ -250,6 +250,59 @@ groupRouter.post(
     } else {
       throw new ServiceError(
         "You do not have permission to set approve edits permissions for this group"
+      );
+    }
+  })
+);
+
+// Returns all edit requests for documents within the group
+groupRouter.get(
+  "/get_group_document_edit_requests",
+  wrapRoute(async (req, res) => {
+    const dbm = getDBM(req);
+    const user = await getLoggedInUser(req);
+    const groupID = getQueryParam(req, "group_id", "string");
+
+    const canView = await dbm.permissionService.canViewGroupDetails(
+      user.id,
+      groupID
+    );
+
+    if (canView) {
+      const editRequests = await dbm.groupService.getGroupDocumentEditRequests(
+        groupID
+      );
+
+      respond(res, editRequests);
+    } else {
+      throw new ServiceError(
+        "You do not have permission to view document edit requests for this group"
+      );
+    }
+  })
+);
+
+// Returns all documents with edit requests within the group
+groupRouter.get(
+  "/get_group_document_edit_request_documents",
+  wrapRoute(async (req, res) => {
+    const dbm = getDBM(req);
+    const user = await getLoggedInUser(req);
+    const groupID = getQueryParam(req, "group_id", "string");
+
+    const canView = await dbm.permissionService.canViewGroupDetails(
+      user.id,
+      groupID
+    );
+
+    if (canView) {
+      const editRequestDocuments =
+        await dbm.groupService.getGroupDocumentEditRequestDocuments(groupID);
+
+      respond(res, editRequestDocuments);
+    } else {
+      throw new ServiceError(
+        "You do not have permission to view document edit request documents for this group"
       );
     }
   })
