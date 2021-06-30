@@ -255,6 +255,112 @@ groupRouter.post(
   })
 );
 
+// Grants a user access to a group
+groupRouter.post(
+  "/grant_group_access",
+  wrapRoute(async (req, res) => {
+    const dbm = getDBM(req);
+    const user = await getLoggedInUser(req);
+    const groupID = getBodyParam(req, "group_id", "string");
+    const userID = getBodyParam(req, "user_id", "string");
+
+    const group = await dbm.groupService.getGroup(groupID);
+
+    if (user.id === group.owner_user_id) {
+      await dbm.groupAccessService.grantAccess(groupID, userID);
+
+      respond(res);
+    } else {
+      throw new ServiceError(
+        "You do not have permission to grant access to this group"
+      );
+    }
+  })
+);
+
+// Revokes a user's access to a group
+groupRouter.post(
+  "/revoke_group_access",
+  wrapRoute(async (req, res) => {
+    const dbm = getDBM(req);
+    const user = await getLoggedInUser(req);
+    const groupID = getBodyParam(req, "group_id", "string");
+    const userID = getBodyParam(req, "user_id", "string");
+
+    const group = await dbm.groupService.getGroup(groupID);
+
+    if (user.id === group.owner_user_id) {
+      await dbm.groupAccessService.revokeAccess(groupID, userID);
+
+      respond(res);
+    } else {
+      throw new ServiceError(
+        "You do not have permission to revoke access to this group"
+      );
+    }
+  })
+);
+
+// Returns whether or not a user has access to a group
+groupRouter.get(
+  "/has_group_access",
+  wrapRoute(async (req, res) => {
+    const dbm = getDBM(req);
+    const user = await getLoggedInUser(req);
+    const groupID = getQueryParam(req, "group_id", "string");
+    const userID = getBodyParam(req, "user_id", "string");
+
+    const canView = await dbm.permissionService.canViewGroupDetails(
+      user.id,
+      groupID
+    );
+
+    if (canView) {
+      const hasAccess = await dbm.groupAccessService.hasAccess(groupID, userID);
+
+      respond(res, hasAccess);
+    } else {
+      throw new ServiceError(
+        "You do not have permission to view access for this group"
+      );
+    }
+  })
+);
+
+// Returns all users who have access to a group
+groupRouter.get(
+  "/get_users_with_access",
+  wrapRoute(async (req, res) => {
+    const dbm = getDBM(req);
+    const user = await getLoggedInUser(req);
+    const groupID = getQueryParam(req, "group_id", "string");
+
+    const canView = await dbm.permissionService.canViewGroupDetails(
+      user.id,
+      groupID
+    );
+
+    if (canView) {
+      const usersWithAccess = await dbm.groupAccessService.usersWithAccess(
+        groupID
+      );
+
+      const users = usersWithAccess.map((userWithAccess) => ({
+        id: userWithAccess.id,
+        username: userWithAccess.username,
+        image_id: userWithAccess.image_id,
+        join_time: userWithAccess.join_time,
+      }));
+
+      respond(res, users);
+    } else {
+      throw new ServiceError(
+        "You do not have permission to view access for this group"
+      );
+    }
+  })
+);
+
 // Returns all edit requests for documents within the group
 groupRouter.get(
   "/get_group_document_edit_requests",

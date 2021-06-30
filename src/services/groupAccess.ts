@@ -70,7 +70,7 @@ export class GroupAccessService extends BaseService {
   }
 
   /**
-   * Revokes a user's access to the group.
+   * Revokes a user's access to a group.
    *
    * @param groupID The group's ID.
    * @param userID The user's ID.
