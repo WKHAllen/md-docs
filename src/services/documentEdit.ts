@@ -132,7 +132,7 @@ export class DocumentEditService extends BaseService {
   }
 
   /**
-   * Returns the group the document edit exists in.
+   * Returns the group the document edit request exists in.
    *
    * @param documentEditID The document edit ID.
    * @returns The group the document edit exists in.

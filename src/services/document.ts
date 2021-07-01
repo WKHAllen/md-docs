@@ -84,10 +84,11 @@ export class DocumentService extends BaseService {
               );
             }
           } else {
-            const directoryExists =
-              await this.dbm.directoryService.directoryExists(directoryID);
+            const directory = await this.dbm.directoryService.getDirectory(
+              directoryID
+            );
 
-            if (directoryExists) {
+            if (directory.group_id === groupID) {
               const documentsHere =
                 await this.dbm.directoryService.getChildDocuments(directoryID);
 
@@ -105,7 +106,7 @@ export class DocumentService extends BaseService {
                 );
               }
             } else {
-              throw new ServiceError("Directory does not exist");
+              throw new ServiceError("Directory does not exist in this group");
             }
           }
         } else {
@@ -267,7 +268,7 @@ export class DocumentService extends BaseService {
   }
 
   /**
-   * Returns all edit requests for document.
+   * Returns all edit requests for a document.
    *
    * @param documentID The document's ID.
    * @returns All edit requests for document.
