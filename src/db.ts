@@ -16,11 +16,30 @@ types.setTypeParser(1114, (timestamp) =>
 );
 
 /**
- * If an error is thrown, provide information on the error.
+ * Provides information on an error.
+ *
+ * @param stmt The SQL statement.
+ * @param params The query parameters.
+ * @param res The query response.
+ * @param err The error thrown.
  */
 function logError(stmt: string, params: any[], res: any, err: Error) {
   const msg = `\n\n######### ERROR #########\n\n\nStatement:\n${stmt}\n\nParameters:\n${params}\n\nResponse:\n${res}\n\nError:\n${err}`;
   console.error(msg);
+}
+
+/**
+ * Transforms question mark query param indicators.
+ *
+ * @param stmt The SQL statement.
+ * @returns The query with transformed parameters.
+ */
+function transformParams(stmt: string): string {
+  let paramCount = 0;
+  while (stmt.includes("?")) {
+    stmt = stmt.replace("?", `$${++paramCount}`);
+  }
+  return stmt;
 }
 
 /**
@@ -77,6 +96,8 @@ export class DB {
   ): Promise<T[]> {
     const conn = await this.pool.connect();
 
+    stmt = transformParams(stmt);
+
     try {
       const res = await conn.query(stmt, params);
       conn.release();
@@ -103,6 +124,8 @@ export class DB {
   ): Promise<T[][]> {
     const conn = await this.pool.connect();
     let res: T[][] = [];
+
+    stmts = stmts.map(transformParams);
 
     for (let i = 0; i < stmts.length; i++) {
       try {
@@ -135,7 +158,8 @@ export class DB {
     sqlPath = sqlPath || this.sqlPath;
     const filepath = sqlPath ? path.join(sqlPath, filename) : filename;
     const sql = await fs.promises.readFile(filepath);
-    const res = await this.execute<T>(sql.toString(), params);
+    const stmt = transformParams(sql.toString());
+    const res = await this.execute<T>(stmt, params);
     return res;
   }
 
@@ -159,7 +183,8 @@ export class DB {
         ? path.join(sqlPath, filenames[i])
         : filenames[i];
       const sql = await fs.promises.readFile(filepath);
-      const results = await this.execute<T>(sql.toString(), params[i] || []);
+      const stmt = transformParams(sql.toString());
+      const results = await this.execute<T>(stmt, params[i] || []);
       res.push(results);
     }
 
