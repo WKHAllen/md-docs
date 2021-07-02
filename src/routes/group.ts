@@ -413,3 +413,55 @@ groupRouter.get(
     }
   })
 );
+
+// Returns the directories in the root of the group
+groupRouter.get(
+  "/get_root_directories",
+  wrapRoute(async (req, res) => {
+    const dbm = getDBM(req);
+    const user = await getLoggedInUser(req);
+    const groupID = getQueryParam(req, "group_id", "string");
+
+    const canView = await dbm.permissionService.canViewGroupDetails(
+      user.id,
+      groupID
+    );
+
+    if (canView) {
+      const rootDirectories = await dbm.groupService.getRootDirectories(
+        groupID
+      );
+
+      respond(res, rootDirectories);
+    } else {
+      throw new ServiceError(
+        "You do not have permission to view the directories in the root of this group"
+      );
+    }
+  })
+);
+
+// Returns the documents in the root of the group
+groupRouter.get(
+  "/get_root_documents",
+  wrapRoute(async (req, res) => {
+    const dbm = getDBM(req);
+    const user = await getLoggedInUser(req);
+    const groupID = getQueryParam(req, "group_id", "string");
+
+    const canView = await dbm.permissionService.canViewGroupDetails(
+      user.id,
+      groupID
+    );
+
+    if (canView) {
+      const rootDocuments = await dbm.groupService.getRootDocuments(groupID);
+
+      respond(res, rootDocuments);
+    } else {
+      throw new ServiceError(
+        "You do not have permission to view the documents in the root of this group"
+      );
+    }
+  })
+);
