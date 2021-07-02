@@ -51,6 +51,7 @@ app.use("/api", express.json(), routes.verificationRouter);
 app.use("/api", express.json(), routes.passwordResetRouter);
 app.use("/api", express.json(), routes.groupRouter);
 app.use("/api", express.json(), routes.documentRouter);
+app.use("/api", express.json(), routes.directoryRouter);
 
 app.use((req, res) => {
   res.sendFile(path.join(__dirname + "/../../app/dist/md-docs/index.html"));

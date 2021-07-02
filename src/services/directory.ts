@@ -10,17 +10,17 @@ import { Document } from "./document";
 /**
  * The maximum number of directories per directory.
  */
-const MAX_DIRECTORIES_PER_DIRECTORY = 64;
+export const MAX_DIRECTORIES_PER_DIRECTORY = 64;
 
 /**
  * The maximum directory depth.
  */
-const MAX_DIRECTORY_DEPTH = 16;
+export const MAX_DIRECTORY_DEPTH = 16;
 
 /**
  * The maximum length of a directory name.
  */
-const DIRECTORY_NAME_MAX_LENGTH = 255;
+export const DIRECTORY_NAME_MAX_LENGTH = 255;
 
 /**
  * Directory architecture.

@@ -13,7 +13,6 @@ import {
   wrapRoute,
 } from "./util";
 import { ServiceError } from "../services/util";
-import { PermissionType } from "../services/permission";
 
 /**
  * The document router.
@@ -109,7 +108,7 @@ documentRouter.get(
   wrapRoute(async (req, res) => {
     const dbm = getDBM(req);
     const user = await getLoggedInUser(req);
-    const documentID = getBodyParam(req, "document_id", "string");
+    const documentID = getQueryParam(req, "document_id", "string");
 
     const group = await dbm.documentService.getDocumentGroup(documentID);
     const canView = await dbm.permissionService.canViewGroupDetails(
@@ -133,7 +132,7 @@ documentRouter.get(
   wrapRoute(async (req, res) => {
     const dbm = getDBM(req);
     const user = await getLoggedInUser(req);
-    const documentID = getBodyParam(req, "document_id", "string");
+    const documentID = getQueryParam(req, "document_id", "string");
 
     const group = await dbm.documentService.getDocumentGroup(documentID);
     const canView = await dbm.permissionService.canViewGroupDetails(
@@ -160,7 +159,7 @@ documentRouter.get(
   wrapRoute(async (req, res) => {
     const dbm = getDBM(req);
     const user = await getLoggedInUser(req);
-    const documentID = getBodyParam(req, "document_id", "string");
+    const documentID = getQueryParam(req, "document_id", "string");
 
     const group = await dbm.documentService.getDocumentGroup(documentID);
     const canView = await dbm.permissionService.canViewGroupDetails(
@@ -188,7 +187,7 @@ documentRouter.post(
   wrapRoute(async (req, res) => {
     const dbm = getDBM(req);
     const user = await getLoggedInUser(req);
-    const documentID = getQueryParam(req, "document_id", "string");
+    const documentID = getBodyParam(req, "document_id", "string");
 
     const group = await dbm.documentService.getDocumentGroup(documentID);
 

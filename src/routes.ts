@@ -9,3 +9,4 @@ export * from "./routes/verify";
 export * from "./routes/passwordReset";
 export * from "./routes/group";
 export * from "./routes/document";
+export * from "./routes/directory";
