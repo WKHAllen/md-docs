@@ -301,22 +301,24 @@ groupRouter.post(
   })
 );
 
-// Returns whether or not a user has access to a group
+// Returns whether or not the user has access to a group
 groupRouter.get(
   "/has_group_access",
   wrapRoute(async (req, res) => {
     const dbm = getDBM(req);
-    const user = await getLoggedInUser(req);
+    const user = await getLoggedInUser(req, false);
     const groupID = getQueryParam(req, "group_id", "string");
-    const userID = getBodyParam(req, "user_id", "string");
 
     const canView = await dbm.permissionService.canViewGroupDetails(
-      user.id,
+      user?.id,
       groupID
     );
 
     if (canView) {
-      const hasAccess = await dbm.groupAccessService.hasAccess(groupID, userID);
+      const hasAccess = await dbm.groupAccessService.hasAccess(
+        groupID,
+        user?.id
+      );
 
       respond(res, hasAccess);
     } else {
@@ -332,11 +334,11 @@ groupRouter.get(
   "/get_users_with_access",
   wrapRoute(async (req, res) => {
     const dbm = getDBM(req);
-    const user = await getLoggedInUser(req);
+    const user = await getLoggedInUser(req, false);
     const groupID = getQueryParam(req, "group_id", "string");
 
     const canView = await dbm.permissionService.canViewGroupDetails(
-      user.id,
+      user?.id,
       groupID
     );
 
@@ -366,11 +368,11 @@ groupRouter.get(
   "/get_group_document_edit_requests",
   wrapRoute(async (req, res) => {
     const dbm = getDBM(req);
-    const user = await getLoggedInUser(req);
+    const user = await getLoggedInUser(req, false);
     const groupID = getQueryParam(req, "group_id", "string");
 
     const canView = await dbm.permissionService.canViewGroupDetails(
-      user.id,
+      user?.id,
       groupID
     );
 
@@ -393,11 +395,11 @@ groupRouter.get(
   "/get_group_document_edit_request_documents",
   wrapRoute(async (req, res) => {
     const dbm = getDBM(req);
-    const user = await getLoggedInUser(req);
+    const user = await getLoggedInUser(req, false);
     const groupID = getQueryParam(req, "group_id", "string");
 
     const canView = await dbm.permissionService.canViewGroupDetails(
-      user.id,
+      user?.id,
       groupID
     );
 
@@ -419,11 +421,11 @@ groupRouter.get(
   "/get_root_directories",
   wrapRoute(async (req, res) => {
     const dbm = getDBM(req);
-    const user = await getLoggedInUser(req);
+    const user = await getLoggedInUser(req, false);
     const groupID = getQueryParam(req, "group_id", "string");
 
     const canView = await dbm.permissionService.canViewGroupDetails(
-      user.id,
+      user?.id,
       groupID
     );
 
@@ -446,11 +448,11 @@ groupRouter.get(
   "/get_root_documents",
   wrapRoute(async (req, res) => {
     const dbm = getDBM(req);
-    const user = await getLoggedInUser(req);
+    const user = await getLoggedInUser(req, false);
     const groupID = getQueryParam(req, "group_id", "string");
 
     const canView = await dbm.permissionService.canViewGroupDetails(
-      user.id,
+      user?.id,
       groupID
     );
 

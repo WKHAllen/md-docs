@@ -74,9 +74,13 @@ export function deleteSessionID(res: Response): void {
  * Get the currently logged in user's ID.
  *
  * @param req Request object.
+ * @param throwOnNoUser Whether or not to throw an error when the user is not logged in.
  * @returns The user's ID.
  */
-export async function getLoggedInUser(req: Request): Promise<User> {
+export async function getLoggedInUser(
+  req: Request,
+  throwOnNoUser: boolean = true
+): Promise<User | null> {
   const dbm = getDBM(req);
 
   const sessionID = getSessionID(req);
@@ -85,7 +89,11 @@ export async function getLoggedInUser(req: Request): Promise<User> {
     const user = await dbm.sessionService.getUserBySessionID(sessionID);
     return user;
   } else {
-    throw new ServiceError("Not logged in");
+    if (throwOnNoUser) {
+      throw new ServiceError("Not logged in");
+    } else {
+      return null;
+    }
   }
 }
 

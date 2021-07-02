@@ -56,12 +56,12 @@ directoryRouter.get(
   "/get_directory_info",
   wrapRoute(async (req, res) => {
     const dbm = getDBM(req);
-    const user = await getLoggedInUser(req);
+    const user = await getLoggedInUser(req, false);
     const directoryID = getQueryParam(req, "directory_id", "string");
 
     const directory = await dbm.directoryService.getDirectory(directoryID);
     const canView = await dbm.permissionService.canViewGroupDetails(
-      user.id,
+      user?.id,
       directory.group_id
     );
 
@@ -106,12 +106,12 @@ directoryRouter.get(
   "/get_directory_group",
   wrapRoute(async (req, res) => {
     const dbm = getDBM(req);
-    const user = await getLoggedInUser(req);
+    const user = await getLoggedInUser(req, false);
     const directoryID = getQueryParam(req, "directory_id", "string");
 
     const group = await dbm.directoryService.getDirectoryGroup(directoryID);
     const canView = await dbm.permissionService.canViewGroupDetails(
-      user.id,
+      user?.id,
       group.id
     );
 
@@ -130,12 +130,12 @@ directoryRouter.get(
   "/get_parent_directory",
   wrapRoute(async (req, res) => {
     const dbm = getDBM(req);
-    const user = await getLoggedInUser(req);
+    const user = await getLoggedInUser(req, false);
     const directoryID = getQueryParam(req, "directory_id", "string");
 
     const group = await dbm.directoryService.getDirectoryGroup(directoryID);
     const canView = await dbm.permissionService.canViewGroupDetails(
-      user.id,
+      user?.id,
       group.id
     );
 
@@ -158,12 +158,12 @@ directoryRouter.get(
   "/get_subdirectories",
   wrapRoute(async (req, res) => {
     const dbm = getDBM(req);
-    const user = await getLoggedInUser(req);
+    const user = await getLoggedInUser(req, false);
     const directoryID = getQueryParam(req, "directory_id", "string");
 
     const directory = await dbm.directoryService.getDirectory(directoryID);
     const canView = await dbm.permissionService.canViewGroupDetails(
-      user.id,
+      user?.id,
       directory.group_id
     );
 
@@ -186,12 +186,12 @@ directoryRouter.get(
   "/get_documents_within_directory",
   wrapRoute(async (req, res) => {
     const dbm = getDBM(req);
-    const user = await getLoggedInUser(req);
+    const user = await getLoggedInUser(req, false);
     const directoryID = getQueryParam(req, "directory_id", "string");
 
     const directory = await dbm.directoryService.getDirectory(directoryID);
     const canView = await dbm.permissionService.canViewGroupDetails(
-      user.id,
+      user?.id,
       directory.group_id
     );
 

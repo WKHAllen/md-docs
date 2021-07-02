@@ -57,12 +57,12 @@ documentRouter.get(
   "/get_document_info",
   wrapRoute(async (req, res) => {
     const dbm = getDBM(req);
-    const user = await getLoggedInUser(req);
+    const user = await getLoggedInUser(req, false);
     const documentID = getQueryParam(req, "document_id", "string");
 
     const document = await dbm.documentService.getDocument(documentID);
     const canView = await dbm.permissionService.canViewGroupDetails(
-      user.id,
+      user?.id,
       document.group_id
     );
 
@@ -107,12 +107,12 @@ documentRouter.get(
   "/get_document_group",
   wrapRoute(async (req, res) => {
     const dbm = getDBM(req);
-    const user = await getLoggedInUser(req);
+    const user = await getLoggedInUser(req, false);
     const documentID = getQueryParam(req, "document_id", "string");
 
     const group = await dbm.documentService.getDocumentGroup(documentID);
     const canView = await dbm.permissionService.canViewGroupDetails(
-      user.id,
+      user?.id,
       group.id
     );
 
@@ -131,12 +131,12 @@ documentRouter.get(
   "/get_directory_containing_document",
   wrapRoute(async (req, res) => {
     const dbm = getDBM(req);
-    const user = await getLoggedInUser(req);
+    const user = await getLoggedInUser(req, false);
     const documentID = getQueryParam(req, "document_id", "string");
 
     const group = await dbm.documentService.getDocumentGroup(documentID);
     const canView = await dbm.permissionService.canViewGroupDetails(
-      user.id,
+      user?.id,
       group.id
     );
 
@@ -158,12 +158,12 @@ documentRouter.get(
   "/get_document_edit_requests",
   wrapRoute(async (req, res) => {
     const dbm = getDBM(req);
-    const user = await getLoggedInUser(req);
+    const user = await getLoggedInUser(req, false);
     const documentID = getQueryParam(req, "document_id", "string");
 
     const group = await dbm.documentService.getDocumentGroup(documentID);
     const canView = await dbm.permissionService.canViewGroupDetails(
-      user.id,
+      user?.id,
       group.id
     );
 
@@ -239,14 +239,14 @@ documentRouter.get(
   "/get_document_edit",
   wrapRoute(async (req, res) => {
     const dbm = getDBM(req);
-    const user = await getLoggedInUser(req);
+    const user = await getLoggedInUser(req, false);
     const documentEditID = getQueryParam(req, "document_edit_id", "string");
 
     const document = await dbm.documentEditService.getDocumentEditDocument(
       documentEditID
     );
     const canView = await dbm.permissionService.canViewGroupDetails(
-      user.id,
+      user?.id,
       document.group_id
     );
 
@@ -269,14 +269,14 @@ documentRouter.get(
   "/get_document_editor",
   wrapRoute(async (req, res) => {
     const dbm = getDBM(req);
-    const user = await getLoggedInUser(req);
+    const user = await getLoggedInUser(req, false);
     const documentEditID = getQueryParam(req, "document_edit_id", "string");
 
     const document = await dbm.documentEditService.getDocumentEditDocument(
       documentEditID
     );
     const canView = await dbm.permissionService.canViewGroupDetails(
-      user.id,
+      user?.id,
       document.group_id
     );
 
@@ -299,14 +299,14 @@ documentRouter.get(
   "/get_document_edit_group",
   wrapRoute(async (req, res) => {
     const dbm = getDBM(req);
-    const user = await getLoggedInUser(req);
+    const user = await getLoggedInUser(req, false);
     const documentEditID = getQueryParam(req, "document_edit_id", "string");
 
     const group = await dbm.documentEditService.getDocumentEditGroup(
       documentEditID
     );
     const canView = await dbm.permissionService.canViewGroupDetails(
-      user.id,
+      user?.id,
       group.id
     );
 
@@ -325,14 +325,14 @@ documentRouter.get(
   "/get_document_edit_document",
   wrapRoute(async (req, res) => {
     const dbm = getDBM(req);
-    const user = await getLoggedInUser(req);
+    const user = await getLoggedInUser(req, false);
     const documentEditID = getQueryParam(req, "document_edit_id", "string");
 
     const document = await dbm.documentEditService.getDocumentEditDocument(
       documentEditID
     );
     const canView = await dbm.permissionService.canViewGroupDetails(
-      user.id,
+      user?.id,
       document.group_id
     );
 

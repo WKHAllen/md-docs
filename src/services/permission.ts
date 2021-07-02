@@ -65,30 +65,34 @@ export class PermissionService extends BaseService {
   /**
    * Returns whether or not a user can view a group's details.
    *
-   * @param userID The user's ID.
+   * @param userID The user's ID or null.
    * @param groupID The group's ID.
    * @returns Whether or not the user can view the group's details.
    */
   public async canViewGroupDetails(
-    userID: string,
+    userID: string | undefined | null,
     groupID: string
   ): Promise<boolean> {
-    const userExists = await this.dbm.userService.userExists(userID);
+    const group = await this.dbm.groupService.getGroup(groupID);
 
-    if (userExists) {
-      const group = await this.dbm.groupService.getGroup(groupID);
+    if (userID) {
+      const userExists = await this.dbm.userService.userExists(userID);
 
-      if (group.details_visible) {
-        return true;
-      } else {
-        if (group.owner_user_id === userID) {
+      if (userExists) {
+        if (group.details_visible) {
           return true;
         } else {
-          return this.dbm.groupAccessService.hasAccess(groupID, userID);
+          if (group.owner_user_id === userID) {
+            return true;
+          } else {
+            return this.dbm.groupAccessService.hasAccess(groupID, userID);
+          }
         }
+      } else {
+        throw new ServiceError("User does not exist");
       }
     } else {
-      throw new ServiceError("User does not exist");
+      return group.details_visible;
     }
   }
 

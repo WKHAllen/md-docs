@@ -58,15 +58,22 @@ export class GroupAccessService extends BaseService {
    * Returns whether or not a user has access to a group.
    *
    * @param groupID The group's ID.
-   * @param userID The user's ID.
+   * @param userID The user's ID or null.
    * @returns Whether or not the user has access to the group.
    */
-  public async hasAccess(groupID: string, userID: string): Promise<boolean> {
-    const res = await this.getByFields<GroupAccess>({
-      group_id: groupID,
-      user_id: userID,
-    });
-    return !!res;
+  public async hasAccess(
+    groupID: string,
+    userID: string | undefined | null
+  ): Promise<boolean> {
+    if (userID) {
+      const res = await this.getByFields<GroupAccess>({
+        group_id: groupID,
+        user_id: userID,
+      });
+      return !!res;
+    } else {
+      return false;
+    }
   }
 
   /**
