@@ -1,0 +1,32 @@
+<mat-card class="verify-card">
+  <h1>Verify Account</h1>
+  <div *ngIf="!error; else verifyErrorMessage">
+    <div *ngIf="!verifySuccess; else verifySuccessMessage" class="verifying">
+      One moment, we're verifying your account...
+    </div>
+  </div>
+</mat-card>
+
+<ng-template #verifyErrorMessage>
+  <p class="verify-error-msg error-text">Error: {{ error }}</p>
+  <p class="verify-error">
+    This may have occurred because your link expired or because you have already
+    verified your account. Please
+    <a routerLink="/register" class="standard-link">try registering again</a>,
+    bearing in mind you have one hour to verify your account. If this problem
+    persists, please
+    <a
+      href="https://github.com/WKHAllen/md-docs/issues/new"
+      target="_blank"
+      class="standard-link"
+      >create an issue for it on GitHub</a
+    >.
+  </p>
+</ng-template>
+
+<ng-template #verifySuccessMessage>
+  <div class="verify-success">
+    Success! Your account has been verified and activated. You may now proceed
+    to <a routerLink="/login" class="standard-link">the login page</a>.
+  </div>
+</ng-template>

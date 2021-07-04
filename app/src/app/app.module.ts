@@ -21,6 +21,7 @@ import { HeaderComponent } from './header/header.component';
 import { LoginComponent } from './login-register/login.component';
 import { LogoutComponent } from './login-register/logout.component';
 import { RegisterComponent } from './login-register/register.component';
+import { VerifyComponent } from './verify/verify.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { RegisterComponent } from './login-register/register.component';
     LoginComponent,
     LogoutComponent,
     RegisterComponent,
+    VerifyComponent,
   ],
   imports: [
     BrowserModule,
