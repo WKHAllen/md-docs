@@ -19,9 +19,15 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { HeaderComponent } from './header/header.component';
 import { LoginComponent } from './login-register/login.component';
+import { LogoutComponent } from './login-register/logout.component';
 
 @NgModule({
-  declarations: [AppComponent, HeaderComponent, LoginComponent],
+  declarations: [
+    AppComponent,
+    HeaderComponent,
+    LoginComponent,
+    LogoutComponent,
+  ],
   imports: [
     BrowserModule,
     FormsModule,

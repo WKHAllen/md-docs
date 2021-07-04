@@ -1,0 +1,10 @@
+<h1>Logout</h1>
+<div *ngIf="!error; else logoutError" class="logging-out">
+  Logging you out...
+</div>
+
+<ng-template #logoutError>
+  <div *ngIf="error" class="logout-error error-text">
+    Error: <code>{{ error }}</code>
+  </div>
+</ng-template>
