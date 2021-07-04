@@ -22,6 +22,7 @@ import { LoginComponent } from './login-register/login.component';
 import { LogoutComponent } from './login-register/logout.component';
 import { RegisterComponent } from './login-register/register.component';
 import { VerifyComponent } from './verify/verify.component';
+import { PasswordResetComponent } from './password-reset/password-reset.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { VerifyComponent } from './verify/verify.component';
     LogoutComponent,
     RegisterComponent,
     VerifyComponent,
+    PasswordResetComponent,
   ],
   imports: [
     BrowserModule,
