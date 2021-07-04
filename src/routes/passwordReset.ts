@@ -30,7 +30,7 @@ passwordResetRouter.post(
       email
     );
 
-    sendFormattedEmail(email, "GreenPoll - Password Reset", "password_reset", {
+    sendFormattedEmail(email, "Password Reset", "password_reset", {
       url: getHostname(req),
       reset_id: passwordReset.id,
     });

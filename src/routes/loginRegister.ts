@@ -34,7 +34,7 @@ loginRegisterRouter.post(
     const user = await dbm.userService.createUser(username, email, password);
     const verification = await dbm.verifyService.createVerification(email);
 
-    sendFormattedEmail(email, "GreenPoll - Verify Account", "verify", {
+    sendFormattedEmail(email, "Verify Account", "verify", {
       url: getHostname(req),
       verify_id: verification.id,
     });
