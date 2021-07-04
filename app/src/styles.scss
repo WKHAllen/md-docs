@@ -1,4 +1,37 @@
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+h1 {
+  text-align: center;
+}
+
+a.standard-link {
+  color: blue;
+  text-decoration: none;
+  transition: color 0.1s ease;
+
+  &:hover {
+    color: darken(blue, 15%);
+    text-decoration: underline;
+  }
+
+  &:active {
+    color: darken(blue, 25%);
+  }
+}
+
+.max-width {
+  width: 100%;
+}
+
+.error-text {
+  color: red;
+}
