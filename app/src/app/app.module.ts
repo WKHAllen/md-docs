@@ -20,6 +20,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { HeaderComponent } from './header/header.component';
 import { LoginComponent } from './login-register/login.component';
 import { LogoutComponent } from './login-register/logout.component';
+import { RegisterComponent } from './login-register/register.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { LogoutComponent } from './login-register/logout.component';
     HeaderComponent,
     LoginComponent,
     LogoutComponent,
+    RegisterComponent,
   ],
   imports: [
     BrowserModule,

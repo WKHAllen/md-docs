@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { LoginRegisterService } from './login-register.service';
-import { MatFormFieldAppearance } from '@angular/material/form-field';
+import { inputAppearance } from '../constants';
 
 interface LoginForm {
   email: string;
@@ -17,7 +17,7 @@ export class LoginComponent implements OnInit {
   public submittingLogin: boolean = false;
   public error: string = '';
   public after: string = '';
-  public inputAppearance: MatFormFieldAppearance = 'outline';
+  readonly inputAppearance = inputAppearance;
 
   constructor(
     private loginRegisterService: LoginRegisterService,
