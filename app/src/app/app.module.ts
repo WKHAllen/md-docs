@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -18,6 +19,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { HeaderComponent } from './header/header.component';
+import { IndexComponent } from './index/index.component';
 import { LoginComponent } from './login-register/login.component';
 import { LogoutComponent } from './login-register/logout.component';
 import { RegisterComponent } from './login-register/register.component';
@@ -28,6 +30,7 @@ import { PasswordResetComponent } from './password-reset/password-reset.componen
   declarations: [
     AppComponent,
     HeaderComponent,
+    IndexComponent,
     LoginComponent,
     LogoutComponent,
     RegisterComponent,
@@ -35,6 +38,7 @@ import { PasswordResetComponent } from './password-reset/password-reset.componen
     PasswordResetComponent,
   ],
   imports: [
+    CommonModule,
     BrowserModule,
     FormsModule,
     HttpClientModule,
