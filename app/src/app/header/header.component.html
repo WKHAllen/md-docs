@@ -4,6 +4,12 @@
     <span>MD Docs</span>
   </a>
   <div *ngIf="loggedIn; else login">
+    <a mat-icon-button routerLink="/group" matTooltip="New group">
+      <mat-icon>add</mat-icon>
+    </a>
+    <a mat-icon-button routerLink="/profile" matTooltip="Profile">
+      <mat-icon>person</mat-icon>
+    </a>
     <a mat-icon-button routerLink="/logout" matTooltip="Log out">
       <mat-icon>logout</mat-icon>
     </a>

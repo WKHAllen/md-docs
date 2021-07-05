@@ -22,7 +22,7 @@ export class RegisterComponent {
 
   constructor(private loginRegisterService: LoginRegisterService) {}
 
-  public async onRegister(form: RegisterForm) {
+  public async onRegister(form: RegisterForm): Promise<void> {
     this.errors = [];
 
     if (form.username.length < 3 || form.username.length > 63) {

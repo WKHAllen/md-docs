@@ -32,7 +32,7 @@ export class PasswordResetComponent implements OnInit {
     private activatedRoute: ActivatedRoute
   ) {}
 
-  public async ngOnInit() {
+  public ngOnInit(): void {
     this.activatedRoute.paramMap.subscribe(async (paramMap) => {
       const resetID = paramMap.get('resetID');
 
@@ -54,7 +54,9 @@ export class PasswordResetComponent implements OnInit {
     });
   }
 
-  public async onRequestPasswordReset(form: RequestPasswordResetForm) {
+  public async onRequestPasswordReset(
+    form: RequestPasswordResetForm
+  ): Promise<void> {
     this.error = '';
 
     if (form.email.length < 5 || form.email.length > 63) {
@@ -74,7 +76,7 @@ export class PasswordResetComponent implements OnInit {
     }
   }
 
-  public async onPasswordReset(form: PasswordResetForm) {
+  public async onPasswordReset(form: PasswordResetForm): Promise<void> {
     this.error = '';
 
     if (form.password.length < 8 || form.password.length > 255) {

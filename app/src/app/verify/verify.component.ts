@@ -16,7 +16,7 @@ export class VerifyComponent implements OnInit {
     private activatedRoute: ActivatedRoute
   ) {}
 
-  public async ngOnInit() {
+  public ngOnInit(): void {
     this.activatedRoute.paramMap.subscribe(async (paramMap) => {
       const verifyID = paramMap.get('verifyID');
 

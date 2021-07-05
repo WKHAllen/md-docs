@@ -25,13 +25,13 @@ export class LoginComponent implements OnInit {
     private activatedRoute: ActivatedRoute
   ) {}
 
-  public ngOnInit() {
+  public ngOnInit(): void {
     this.activatedRoute.queryParamMap.subscribe((queryParams) => {
       this.after = queryParams.get('after') || '';
     });
   }
 
-  public async onLogin(form: LoginForm) {
+  public async onLogin(form: LoginForm): Promise<void> {
     this.error = '';
     this.submittingLogin = true;
 

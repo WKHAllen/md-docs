@@ -11,7 +11,7 @@ export class IndexComponent implements OnInit {
 
   constructor(private loginRegisterService: LoginRegisterService) {}
 
-  public ngOnInit() {
+  public ngOnInit(): void {
     this.loggedIn = this.loginRegisterService.loggedIn();
   }
 }

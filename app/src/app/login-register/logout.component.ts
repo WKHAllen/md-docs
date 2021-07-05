@@ -15,7 +15,7 @@ export class LogoutComponent implements OnInit {
     private router: Router
   ) {}
 
-  public async ngOnInit() {
+  public async ngOnInit(): Promise<void> {
     try {
       await this.loginRegisterService.logout();
       await this.router.navigate(['/']);
