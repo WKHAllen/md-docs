@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { VerifyService } from './verify.service';
 
 @Component({
-  selector: 'gp-verify',
+  selector: 'mdd-verify',
   templateUrl: './verify.component.html',
   styleUrls: ['./verify.component.scss'],
 })

@@ -13,7 +13,7 @@ interface PasswordResetForm {
 }
 
 @Component({
-  selector: 'gp-password-reset',
+  selector: 'mdd-password-reset',
   templateUrl: './password-reset.component.html',
   styleUrls: ['./password-reset.component.scss'],
 })

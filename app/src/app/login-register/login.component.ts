@@ -9,7 +9,7 @@ interface LoginForm {
 }
 
 @Component({
-  selector: 'gp-login',
+  selector: 'mdd-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })

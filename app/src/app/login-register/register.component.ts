@@ -10,7 +10,7 @@ interface RegisterForm {
 }
 
 @Component({
-  selector: 'gp-register',
+  selector: 'mdd-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss'],
 })

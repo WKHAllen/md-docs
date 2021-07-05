@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { LoginRegisterService } from './login-register.service';
 
 @Component({
-  selector: 'gp-logout',
+  selector: 'mdd-logout',
   templateUrl: './logout.component.html',
   styleUrls: ['./logout.component.scss'],
 })
