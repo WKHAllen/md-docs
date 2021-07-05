@@ -2,7 +2,7 @@
   <h1>Verify Account</h1>
   <div *ngIf="!error; else verifyErrorMessage">
     <div *ngIf="!verifySuccess; else verifySuccessMessage" class="verifying">
-      One moment, we're verifying your account...
+      <mat-spinner class="spinner"></mat-spinner>
     </div>
   </div>
 </mat-card>

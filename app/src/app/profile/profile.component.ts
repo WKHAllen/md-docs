@@ -112,7 +112,7 @@ export class ProfileComponent implements OnInit {
   public async onSetUsername(form: SetUsernameForm) {
     this.setUsernameError = '';
 
-    if (form.username === this.userInfo?.username) {
+    if (form.username === this.userInfo.username) {
       return;
     }
     if (form.username.length < 3 || form.username.length > 63) {
