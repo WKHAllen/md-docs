@@ -25,6 +25,7 @@ import { LogoutComponent } from './login-register/logout.component';
 import { RegisterComponent } from './login-register/register.component';
 import { VerifyComponent } from './verify/verify.component';
 import { PasswordResetComponent } from './password-reset/password-reset.component';
+import { NotFoundComponent } from './error/not-found.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { PasswordResetComponent } from './password-reset/password-reset.componen
     RegisterComponent,
     VerifyComponent,
     PasswordResetComponent,
+    NotFoundComponent,
   ],
   imports: [
     CommonModule,
