@@ -36,6 +36,22 @@ a.standard-link {
   color: red;
 }
 
+.form-error-text {
+  color: red;
+  margin-top: 8px;
+}
+
+.centered-text {
+  text-align: center;
+}
+
+.spinner {
+  text-align: center;
+  margin: auto;
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
 @mixin centerer($horizontal: true, $vertical: true) {
   position: absolute;
 

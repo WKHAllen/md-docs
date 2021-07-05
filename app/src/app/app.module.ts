@@ -15,6 +15,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
@@ -26,6 +28,7 @@ import { RegisterComponent } from './login-register/register.component';
 import { VerifyComponent } from './verify/verify.component';
 import { PasswordResetComponent } from './password-reset/password-reset.component';
 import { NotFoundComponent } from './error/not-found.component';
+import { ProfileComponent } from './profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +41,7 @@ import { NotFoundComponent } from './error/not-found.component';
     VerifyComponent,
     PasswordResetComponent,
     NotFoundComponent,
+    ProfileComponent,
   ],
   imports: [
     CommonModule,
@@ -57,6 +61,8 @@ import { NotFoundComponent } from './error/not-found.component';
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
+    MatProgressSpinnerModule,
+    MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
   ],

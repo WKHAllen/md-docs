@@ -1,0 +1,40 @@
+.user-info {
+  padding-inline-start: 0;
+  text-align: center;
+}
+
+.user-info li {
+  list-style: none;
+  display: inline;
+}
+
+.user-info li:after {
+  content: " \2022  ";
+  padding: 0 8px;
+}
+
+.user-info li:last-child:after {
+  content: none;
+}
+
+.settings-card {
+  max-width: 600px;
+  margin: auto;
+  margin-top: 24px;
+  margin-bottom: 16px;
+  padding: 20px;
+}
+
+mat-card h2 {
+  text-align: center;
+}
+
+.success-message {
+  padding-left: 0.75rem;
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+.success-message.success-show {
+  opacity: 1;
+}
