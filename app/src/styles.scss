@@ -76,3 +76,14 @@ a.standard-link {
 @mixin full-center {
   @include centerer(true, true);
 }
+
+@mixin flex-grid($width, $gap) {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: $gap;
+
+  & > * {
+    flex: 0 1 $width;
+  }
+}

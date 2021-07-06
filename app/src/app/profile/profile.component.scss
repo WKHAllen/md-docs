@@ -1,3 +1,5 @@
+@use '../../styles.scss';
+
 .user-info {
   padding-inline-start: 0;
   text-align: center;
@@ -33,4 +35,28 @@
 
 .success-message.success-show {
   opacity: 1;
+}
+
+.groups-owned {
+  padding: 16px;
+  @include styles.flex-grid(20em, 16px);
+}
+
+.group-owned {
+  a {
+    text-decoration: none;
+    width: 100%;
+
+    mat-card {
+      transition: transform 0.2s;
+
+      &:hover {
+        transform: scale(1.05);
+      }
+
+      mat-card-title {
+        line-height: 1em;
+      }
+    }
+  }
 }

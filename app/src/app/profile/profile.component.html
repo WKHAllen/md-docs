@@ -179,7 +179,18 @@
   </mat-card>
 </ng-template>
 
-<ng-template #yourGroupsTemplate></ng-template>
+<ng-template #yourGroupsTemplate>
+  <div class="groups-owned">
+    <div *ngFor="let group of userGroupsOwned" class="group-owned">
+      <a href="/group/{{ group.id }}">
+        <mat-card>
+          <mat-card-title>{{ group.name }}</mat-card-title>
+          <mat-card-content>{{ group.description }}</mat-card-content>
+        </mat-card>
+      </a>
+    </div>
+  </div>
+</ng-template>
 
 <ng-template #documentEditRequestsTemplate></ng-template>
 
