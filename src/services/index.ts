@@ -3,20 +3,20 @@
  * @packageDocumentation
  */
 
-import { DB } from "./db";
+import { DB } from "../db";
 
-import { UserService } from "./services/user";
-import { SessionService } from "./services/session";
-import { VerifyService } from "./services/verify";
-import { PasswordResetService } from "./services/passwordReset";
-import { FavoriteUserService } from "./services/favoriteUser";
-import { PermissionService } from "./services/permission";
-import { GroupService } from "./services/group";
-import { GroupAccessService } from "./services/groupAccess";
-import { FavoriteGroupService } from "./services/favoriteGroup";
-import { DirectoryService } from "./services/directory";
-import { DocumentService } from "./services/document";
-import { DocumentEditService } from "./services/documentEdit";
+import { UserService } from "./user";
+import { SessionService } from "./session";
+import { VerifyService } from "./verify";
+import { PasswordResetService } from "./passwordReset";
+import { FavoriteUserService } from "./favoriteUser";
+import { PermissionService } from "./permission";
+import { GroupService } from "./group";
+import { GroupAccessService } from "./groupAccess";
+import { FavoriteGroupService } from "./favoriteGroup";
+import { DirectoryService } from "./directory";
+import { DocumentService } from "./document";
+import { DocumentEditService } from "./documentEdit";
 
 export default class DatabaseManager {
   readonly db: DB;

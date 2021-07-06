@@ -3,7 +3,7 @@
  * @packageDocumentation
  */
 
-import DatabaseManager from "../services";
+import DatabaseManager from ".";
 import * as bcrypt from "bcrypt";
 
 /**
