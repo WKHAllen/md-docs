@@ -1,60 +1,62 @@
 <div class="login-page">
   <mat-card class="login-card">
-    <h1>Login</h1>
-    <form
-      #loginForm="ngForm"
-      (ngSubmit)="onLogin(loginForm.value)"
-      class="login-form"
-    >
-      <mat-form-field [appearance]="inputAppearance" class="max-width">
-        <mat-label>Email</mat-label>
-        <input
-          matInput
-          type="email"
-          id="email"
-          name="email"
-          maxlength="63"
-          required
-          ngModel
-        />
-      </mat-form-field>
-      <mat-form-field [appearance]="inputAppearance" class="max-width">
-        <mat-label>Password</mat-label>
-        <input
-          matInput
-          type="password"
-          id="password"
-          name="password"
-          maxlength="255"
-          required
-          ngModel
-        />
-      </mat-form-field>
-      <button
-        mat-raised-button
-        color="primary"
-        type="submit"
-        [disabled]="submittingLogin"
+    <mat-card-title>Login</mat-card-title>
+    <mat-card-content>
+      <form
+        #loginForm="ngForm"
+        (ngSubmit)="onLogin(loginForm.value)"
+        class="login-form"
       >
-        Login
-      </button>
-      <div *ngIf="error" class="login-error">
-        <span class="error-text">{{ error }}</span>
+        <mat-form-field [appearance]="inputAppearance" class="max-width">
+          <mat-label>Email</mat-label>
+          <input
+            matInput
+            type="email"
+            id="email"
+            name="email"
+            maxlength="63"
+            required
+            ngModel
+          />
+        </mat-form-field>
+        <mat-form-field [appearance]="inputAppearance" class="max-width">
+          <mat-label>Password</mat-label>
+          <input
+            matInput
+            type="password"
+            id="password"
+            name="password"
+            maxlength="255"
+            required
+            ngModel
+          />
+        </mat-form-field>
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="submittingLogin"
+        >
+          Login
+        </button>
+        <div *ngIf="error" class="login-error">
+          <span class="error-text">{{ error }}</span>
+        </div>
+      </form>
+      <div>
+        <small
+          >If you do not have an account, please
+          <a routerLink="/register" class="standard-link">create one here</a
+          >.</small
+        >
       </div>
-    </form>
-    <div>
-      <small
-        >If you do not have an account, please
-        <a routerLink="/register" class="standard-link">create one here</a
-        >.</small
-      >
-    </div>
-    <div>
-      <small
-        >Forgot your password?
-        <a routerLink="/password-reset" class="standard-link">Reset it here</a
-        >.</small
-      >
-    </div>
+      <div>
+        <small
+          >Forgot your password?
+          <a routerLink="/password-reset" class="standard-link">Reset it here</a
+          >.</small
+        >
+      </div>
+    </mat-card-content>
   </mat-card>
 </div>

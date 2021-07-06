@@ -1,81 +1,83 @@
 <div class="register-page">
   <mat-card class="register-card">
-    <h1>Register</h1>
-    <div *ngIf="!registerSuccess; else registrationSuccessMessage">
-      <form
-        #registerForm="ngForm"
-        (ngSubmit)="onRegister(registerForm.value)"
-        class="register-form"
-      >
-        <mat-form-field [appearance]="inputAppearance" class="max-width">
-          <mat-label>Email</mat-label>
-          <input
-            matInput
-            type="email"
-            id="email"
-            name="email"
-            maxlength="63"
-            required
-            ngModel
-          />
-        </mat-form-field>
-        <mat-form-field [appearance]="inputAppearance" class="max-width">
-          <mat-label>Username</mat-label>
-          <input
-            matInput
-            type="text"
-            id="username"
-            name="username"
-            maxlength="63"
-            required
-            ngModel
-          />
-        </mat-form-field>
-        <mat-form-field [appearance]="inputAppearance" class="max-width">
-          <mat-label>Password</mat-label>
-          <input
-            matInput
-            type="password"
-            id="password"
-            name="password"
-            maxlength="255"
-            required
-            ngModel
-          />
-        </mat-form-field>
-        <mat-form-field [appearance]="inputAppearance" class="max-width">
-          <mat-label>Confirm password</mat-label>
-          <input
-            matInput
-            type="password"
-            id="confirmPassword"
-            name="confirmPassword"
-            maxlength="255"
-            required
-            ngModel
-          />
-        </mat-form-field>
-        <button
-          mat-raised-button
-          color="primary"
-          type="submit"
-          [disabled]="submittingRegistration"
+    <mat-card-title>Register</mat-card-title>
+    <mat-card-content>
+      <div *ngIf="!registerSuccess; else registrationSuccessMessage">
+        <form
+          #registerForm="ngForm"
+          (ngSubmit)="onRegister(registerForm.value)"
+          class="register-form"
         >
-          Register
-        </button>
-        <div *ngIf="errors" class="register-error">
-          <div *ngFor="let error of errors">
-            <small class="error-text">{{ error }}</small>
+          <mat-form-field [appearance]="inputAppearance" class="max-width">
+            <mat-label>Email</mat-label>
+            <input
+              matInput
+              type="email"
+              id="email"
+              name="email"
+              maxlength="63"
+              required
+              ngModel
+            />
+          </mat-form-field>
+          <mat-form-field [appearance]="inputAppearance" class="max-width">
+            <mat-label>Username</mat-label>
+            <input
+              matInput
+              type="text"
+              id="username"
+              name="username"
+              maxlength="63"
+              required
+              ngModel
+            />
+          </mat-form-field>
+          <mat-form-field [appearance]="inputAppearance" class="max-width">
+            <mat-label>Password</mat-label>
+            <input
+              matInput
+              type="password"
+              id="password"
+              name="password"
+              maxlength="255"
+              required
+              ngModel
+            />
+          </mat-form-field>
+          <mat-form-field [appearance]="inputAppearance" class="max-width">
+            <mat-label>Confirm password</mat-label>
+            <input
+              matInput
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+              maxlength="255"
+              required
+              ngModel
+            />
+          </mat-form-field>
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="submittingRegistration"
+          >
+            Register
+          </button>
+          <div *ngIf="errors" class="register-error">
+            <div *ngFor="let error of errors">
+              <small class="error-text">{{ error }}</small>
+            </div>
           </div>
+        </form>
+        <div>
+          <small
+            >If you already have an account, please
+            <a routerLink="/login" class="standard-link">log in here</a>.</small
+          >
         </div>
-      </form>
-      <div>
-        <small
-          >If you already have an account, please
-          <a routerLink="/login" class="standard-link">log in here</a>.</small
-        >
       </div>
-    </div>
+    </mat-card-content>
   </mat-card>
 </div>
 

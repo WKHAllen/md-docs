@@ -49,125 +49,133 @@
 
 <ng-template #settingsTemplate>
   <mat-card class="settings-card">
-    <h2>Your info</h2>
-    <p *ngIf="userInfoError" class="user-info-error error-text">
-      Error: {{ userInfoError }}
-    </p>
-    <ul *ngIf="gotUserInfo" class="user-info">
-      <li>{{ userInfo.username }}</li>
-      <li>{{ userInfo.email }}</li>
-      <li>{{ userInfo.join_time | date }}</li>
-    </ul>
+    <mat-card-title>Your info</mat-card-title>
+    <mat-card-content>
+      <p *ngIf="userInfoError" class="user-info-error error-text">
+        Error: {{ userInfoError }}
+      </p>
+      <ul *ngIf="gotUserInfo" class="user-info">
+        <li>{{ userInfo.username }}</li>
+        <li>{{ userInfo.email }}</li>
+        <li>{{ userInfo.join_time | date }}</li>
+      </ul>
+    </mat-card-content>
   </mat-card>
   <mat-card class="settings-card">
-    <h2>Change your username</h2>
-    <form
-      #setUsernameForm="ngForm"
-      (ngSubmit)="onSetUsername(setUsernameForm.value)"
-    >
-      <mat-form-field [appearance]="inputAppearance" class="max-width">
-        <mat-label>New username</mat-label>
-        <input
-          matInput
-          type="text"
-          id="username"
-          name="username"
-          maxlength="63"
-          required
-          ngModel
-        />
-      </mat-form-field>
+    <mat-card-title>Change your username</mat-card-title>
+    <mat-card-content>
+      <form
+        #setUsernameForm="ngForm"
+        (ngSubmit)="onSetUsername(setUsernameForm.value)"
+      >
+        <mat-form-field [appearance]="inputAppearance" class="max-width">
+          <mat-label>New username</mat-label>
+          <input
+            matInput
+            type="text"
+            id="username"
+            name="username"
+            maxlength="63"
+            required
+            ngModel
+          />
+        </mat-form-field>
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="submittingUsernameForm"
+        >
+          Change username
+        </button>
+        <small
+          class="success-message"
+          [ngClass]="{ 'success-show': showUsernameSuccess === true }"
+        >
+          <mat-icon>check</mat-icon>
+        </small>
+        <div *ngIf="setUsernameError" class="form-error-text">
+          <small>
+            {{ setUsernameError }}
+          </small>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+  <mat-card class="settings-card">
+    <mat-card-title>Change your password</mat-card-title>
+    <mat-card-content>
+      <form
+        #setPasswordForm="ngForm"
+        (ngSubmit)="onSetPassword(setPasswordForm.value)"
+      >
+        <mat-form-field [appearance]="inputAppearance" class="max-width">
+          <mat-label>New password</mat-label>
+          <input
+            matInput
+            type="password"
+            id="password"
+            name="password"
+            maxlength="255"
+            required
+            ngModel
+          />
+        </mat-form-field>
+        <mat-form-field [appearance]="inputAppearance" class="max-width">
+          <mat-label>Confirm new password</mat-label>
+          <input
+            matInput
+            type="password"
+            id="confirmPassword"
+            name="confirmPassword"
+            maxlength="255"
+            required
+            ngModel
+          />
+        </mat-form-field>
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="submittingUsernameForm"
+        >
+          Change password
+        </button>
+        <small
+          class="success-message"
+          [ngClass]="{ 'success-show': showPasswordSuccess === true }"
+        >
+          <mat-icon>check</mat-icon>
+        </small>
+        <div *ngIf="setPasswordError" class="form-error-text">
+          <small>
+            {{ setPasswordError }}
+          </small>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+  <mat-card class="settings-card">
+    <mat-card-title>Log out everywhere</mat-card-title>
+    <mat-card-content>
+      <p class="logout-everywhere-info">
+        This will log you out of your account everywhere, on all devices.
+      </p>
       <button
         mat-raised-button
         color="primary"
-        type="submit"
-        [disabled]="submittingUsernameForm"
+        type="button"
+        (click)="logoutEverywhere()"
+        [disabled]="logoutEverywhereClicked"
       >
-        Change username
+        Log out everywhere
       </button>
-      <small
-        class="success-message"
-        [ngClass]="{ 'success-show': showUsernameSuccess === true }"
-      >
-        <mat-icon>check</mat-icon>
-      </small>
-      <div *ngIf="setUsernameError" class="form-error-text">
+      <div *ngIf="logoutEverywhereError" class="form-error-text">
         <small>
-          {{ setUsernameError }}
+          {{ logoutEverywhereError }}
         </small>
       </div>
-    </form>
-  </mat-card>
-  <mat-card class="settings-card">
-    <h2>Change your password</h2>
-    <form
-      #setPasswordForm="ngForm"
-      (ngSubmit)="onSetPassword(setPasswordForm.value)"
-    >
-      <mat-form-field [appearance]="inputAppearance" class="max-width">
-        <mat-label>New password</mat-label>
-        <input
-          matInput
-          type="password"
-          id="password"
-          name="password"
-          maxlength="255"
-          required
-          ngModel
-        />
-      </mat-form-field>
-      <mat-form-field [appearance]="inputAppearance" class="max-width">
-        <mat-label>Confirm new password</mat-label>
-        <input
-          matInput
-          type="password"
-          id="confirmPassword"
-          name="confirmPassword"
-          maxlength="255"
-          required
-          ngModel
-        />
-      </mat-form-field>
-      <button
-        mat-raised-button
-        color="primary"
-        type="submit"
-        [disabled]="submittingUsernameForm"
-      >
-        Change password
-      </button>
-      <small
-        class="success-message"
-        [ngClass]="{ 'success-show': showPasswordSuccess === true }"
-      >
-        <mat-icon>check</mat-icon>
-      </small>
-      <div *ngIf="setPasswordError" class="form-error-text">
-        <small>
-          {{ setPasswordError }}
-        </small>
-      </div>
-    </form>
-  </mat-card>
-  <mat-card class="settings-card">
-    <h2>Log out everywhere</h2>
-    <p class="logout-everywhere-info">
-      This will log you out of your account everywhere, on all devices.
-    </p>
-    <button
-      mat-raised-button
-      color="primary"
-      type="button"
-      (click)="logoutEverywhere()"
-      [disabled]="logoutEverywhereClicked"
-    >
-      Log out everywhere
-    </button>
-    <div *ngIf="logoutEverywhereError" class="form-error-text">
-      <small>
-        {{ logoutEverywhereError }}
-      </small>
-    </div>
+    </mat-card-content>
   </mat-card>
 </ng-template>
 

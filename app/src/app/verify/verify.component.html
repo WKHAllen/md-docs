@@ -1,10 +1,12 @@
 <mat-card class="verify-card">
-  <h1>Verify Account</h1>
-  <div *ngIf="!error; else verifyErrorMessage">
-    <div *ngIf="!verifySuccess; else verifySuccessMessage" class="verifying">
-      <mat-spinner class="spinner"></mat-spinner>
+  <mat-card-title>Verify Account</mat-card-title>
+  <mat-card-content>
+    <div *ngIf="!error; else verifyErrorMessage">
+      <div *ngIf="!verifySuccess; else verifySuccessMessage" class="verifying">
+        <mat-spinner class="spinner"></mat-spinner>
+      </div>
     </div>
-  </div>
+  </mat-card-content>
 </mat-card>
 
 <ng-template #verifyErrorMessage>
