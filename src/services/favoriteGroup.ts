@@ -139,7 +139,8 @@ export class FavoriteGroupService extends BaseService {
         FROM app_group
         JOIN favorite_group
           ON app_group.id = favorite_group.favorite_group_id
-      WHERE favorite_group.user_id = ?;`;
+      WHERE favorite_group.user_id = ?
+      ORDER BY favorite_group.favorite_time ASC;`;
     const params = [userID];
     const res = await this.dbm.execute<Group>(sql, params);
 

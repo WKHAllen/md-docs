@@ -129,7 +129,8 @@ export class FavoriteUserService extends BaseService {
         FROM app_user
         JOIN favorite_user
           ON app_user.id = favorite_user.favorite_user_id
-      WHERE favorite_user.user_id = ?;`;
+      WHERE favorite_user.user_id = ?
+      ORDER BY favorite_user.favorite_time ASC;`;
     const params = [userID];
     const res = await this.dbm.execute<User>(sql, params);
 

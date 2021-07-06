@@ -3,7 +3,7 @@
  * @packageDocumentation
  */
 
-import { BaseService, ServiceError } from "./util";
+import { BaseService, ServiceError, SortOrder } from "./util";
 import { User } from "./user";
 
 /**
@@ -103,7 +103,10 @@ export class VerifyService extends BaseService {
    * @returns All verification records.
    */
   public async getVerifications(): Promise<Verify[]> {
-    return await this.list<Verify>();
+    return await this.list<Verify>({
+      fieldName: "create_time",
+      sortOrder: SortOrder.ascending,
+    });
   }
 
   /**

@@ -3,7 +3,7 @@
  * @packageDocumentation
  */
 
-import { BaseService, ServiceError } from "./util";
+import { BaseService, ServiceError, SortOrder } from "./util";
 import {
   User,
   USER_PASSWORD_MIN_LENGTH,
@@ -109,7 +109,10 @@ export class PasswordResetService extends BaseService {
    * @returns All password reset records.
    */
   public async getPasswordResets(): Promise<PasswordReset[]> {
-    return await this.list<PasswordReset>();
+    return await this.list<PasswordReset>({
+      fieldName: "create_time",
+      sortOrder: SortOrder.ascending,
+    });
   }
 
   /**

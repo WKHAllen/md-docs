@@ -349,7 +349,8 @@ export class UserService extends BaseService {
           FROM app_group
           JOIN app_user
             ON app_group.owner_user_id = app_user.id
-        WHERE app_user.id = ?;`;
+        WHERE app_user.id = ?
+        ORDER BY app_group.create_time ASC;`;
       const params = [userID];
       return await this.dbm.execute<Group>(sql, params);
     } else {

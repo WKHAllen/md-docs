@@ -118,7 +118,8 @@ export class GroupAccessService extends BaseService {
           FROM app_user
           JOIN group_access
             ON app_user.id = group_access.user_id
-        WHERE group_access.group_id = ?;`;
+        WHERE group_access.group_id = ?
+        ORDER BY group_access.access_grant_time ASC;`;
       const params = [groupID];
       return await this.dbm.execute<User>(sql, params);
     } else {
