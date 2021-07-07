@@ -6,6 +6,7 @@ export interface DocumentEditInfo {
   id: string;
   document_id: string;
   editor_user_id: string;
+  description: string;
   new_content: string;
   edit_request_time: number;
 }

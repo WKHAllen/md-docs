@@ -211,6 +211,7 @@ documentRouter.post(
     const user = await getLoggedInUser(req);
     const documentID = getBodyParam(req, "document_id", "string");
     const newContent = getBodyParam(req, "new_content", "string");
+    const description = getBodyParam(req, "description", "string");
 
     const group = await dbm.documentService.getDocumentGroup(documentID);
     const canEdit = await dbm.permissionService.canEditDocuments(
@@ -222,7 +223,8 @@ documentRouter.post(
       const documentEdit = await dbm.documentEditService.createDocumentEdit(
         documentID,
         user.id,
-        newContent
+        newContent,
+        description
       );
 
       respond(res, documentEdit);

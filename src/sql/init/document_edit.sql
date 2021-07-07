@@ -2,6 +2,7 @@ CREATE TABLE IF NOT EXISTS document_edit (
   id                CHAR(16)       NOT NULL DEFAULT SUBSTR(MD5(RANDOM()::TEXT), 0, 16),
   document_id       CHAR(16)       NOT NULL,
   editor_user_id    CHAR(16)       NOT NULL,
+  description       VARCHAR(255)   NOT NULL,
   new_content       VARCHAR(65535) NOT NULL,
   edit_request_time TIMESTAMP      NOT NULL DEFAULT NOW(),
 

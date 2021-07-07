@@ -37,12 +37,14 @@
   opacity: 1;
 }
 
-.groups-owned {
+.groups-owned,
+.document-edit-requests {
   padding: 16px;
   @include styles.flex-grid(20em, 16px);
 }
 
-.group-owned {
+.group-owned,
+.document-edit-request {
   a {
     text-decoration: none;
     width: 100%;
@@ -55,7 +57,18 @@
       }
 
       mat-card-title {
-        line-height: 1em;
+        line-height: 1.2em;
+        padding-bottom: 0;
+        margin-bottom: 20px;
+        @include styles.line-cutoff(2);
+      }
+
+      mat-card-subtitle {
+        @include styles.line-cutoff(1);
+      }
+
+      mat-card-content {
+        @include styles.line-cutoff(3);
       }
     }
   }

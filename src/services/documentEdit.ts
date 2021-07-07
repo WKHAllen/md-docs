@@ -14,12 +14,18 @@ import { Document, DOCUMENT_CONTENT_MAX_LENGTH } from "./document";
 export const MAX_DOCUMENT_EDITS_PER_USER = 64;
 
 /**
+ * The maximum length of a document edit request's description.
+ */
+export const DOCUMENT_EDIT_DESCRIPTION_MAX_LENGTH = 255;
+
+/**
  * Document edit architecture.
  */
 export interface DocumentEdit {
   id: string;
   document_id: string;
   editor_user_id: string;
+  description: string;
   new_content: string;
   edit_request_time: number;
 }
@@ -33,46 +39,55 @@ export class DocumentEditService extends BaseService {
    *
    * @param documentID The document's ID.
    * @param editorUserID The ID of the user requesting the edit.
+   * @param description The description of the edit.
    * @param newContent The new document content.
    * @returns The new document edit request.
    */
   public async createDocumentEdit(
     documentID: string,
     editorUserID: string,
+    description: string,
     newContent: string
   ): Promise<DocumentEdit> {
     if (newContent.length <= DOCUMENT_CONTENT_MAX_LENGTH) {
-      const documentExists = await this.dbm.documentService.documentExists(
-        documentID
-      );
-
-      if (documentExists) {
-        const editorUserExists = await this.dbm.userService.userExists(
-          editorUserID
+      if (description.length <= DOCUMENT_EDIT_DESCRIPTION_MAX_LENGTH) {
+        const documentExists = await this.dbm.documentService.documentExists(
+          documentID
         );
 
-        if (editorUserExists) {
-          const userDocumentEdits =
-            await this.dbm.userService.getUserDocumentEditRequests(
-              editorUserID
-            );
+        if (documentExists) {
+          const editorUserExists = await this.dbm.userService.userExists(
+            editorUserID
+          );
 
-          if (userDocumentEdits.length < MAX_DOCUMENT_EDITS_PER_USER) {
-            return await this.create<DocumentEdit>({
-              document_id: documentID,
-              editor_user_id: editorUserID,
-              new_content: newContent,
-            });
+          if (editorUserExists) {
+            const userDocumentEdits =
+              await this.dbm.userService.getUserDocumentEditRequests(
+                editorUserID
+              );
+
+            if (userDocumentEdits.length < MAX_DOCUMENT_EDITS_PER_USER) {
+              return await this.create<DocumentEdit>({
+                document_id: documentID,
+                editor_user_id: editorUserID,
+                description,
+                new_content: newContent,
+              });
+            } else {
+              throw new ServiceError(
+                "Maximum number of document edit requests reached for user"
+              );
+            }
           } else {
-            throw new ServiceError(
-              "Maximum number of document edit requests reached for user"
-            );
+            throw new ServiceError("Editor user does not exist");
           }
         } else {
-          throw new ServiceError("Editor user does not exist");
+          throw new ServiceError("Document does not exist");
         }
       } else {
-        throw new ServiceError("Document does not exist");
+        throw new ServiceError(
+          `Document description must be no more than ${DOCUMENT_EDIT_DESCRIPTION_MAX_LENGTH} characters`
+        );
       }
     } else {
       throw new ServiceError(

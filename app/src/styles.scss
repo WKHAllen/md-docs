@@ -87,3 +87,12 @@ a.standard-link {
     flex: 0 1 $width;
   }
 }
+
+@mixin line-cutoff($num-lines) {
+  -webkit-box-orient: vertical;
+  display: -webkit-box;
+  -webkit-line-clamp: $num-lines;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+}

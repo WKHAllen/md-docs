@@ -182,9 +182,10 @@
 <ng-template #yourGroupsTemplate>
   <div class="groups-owned">
     <div *ngFor="let group of userGroupsOwned" class="group-owned">
-      <a href="/group/{{ group.id }}">
+      <a routerLink="/group/{{ group.id }}">
         <mat-card>
           <mat-card-title>{{ group.name }}</mat-card-title>
+          <mat-card-subtitle>{{ group.create_time | date }}</mat-card-subtitle>
           <mat-card-content>{{ group.description }}</mat-card-content>
         </mat-card>
       </a>
@@ -192,7 +193,24 @@
   </div>
 </ng-template>
 
-<ng-template #documentEditRequestsTemplate></ng-template>
+<ng-template #documentEditRequestsTemplate>
+  <div class="document-edit-requests">
+    <div
+      *ngFor="let editRequest of userDocumentEditRequests"
+      class="document-edit-request"
+    >
+      <a routerLink="/document-edit-request/{{ editRequest.id }}">
+        <mat-card>
+          <mat-card-title>{{ editRequest.description }}</mat-card-title>
+          <mat-card-subtitle>{{
+            editRequest.edit_request_time | date
+          }}</mat-card-subtitle>
+          <mat-card-content>{{ editRequest.new_content }}</mat-card-content>
+        </mat-card>
+      </a>
+    </div>
+  </div>
+</ng-template>
 
 <ng-template #favoriteUsersTemplate></ng-template>
 
