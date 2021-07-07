@@ -89,3 +89,9 @@
   @include styles.grayscale();
   @include styles.hover-zoom(1.25);
 }
+
+.add-favorite-user-card {
+  max-width: 600px;
+  margin: 8px auto;
+  padding: 20px;
+}
