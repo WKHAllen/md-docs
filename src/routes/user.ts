@@ -135,6 +135,48 @@ userRouter.post(
   })
 );
 
+// Favorites a user given the user's username
+userRouter.post(
+  "/favorite_user_by_username",
+  wrapRoute(async (req, res) => {
+    const dbm = getDBM(req);
+    const user = await getLoggedInUser(req);
+    const favoriteUserUsername = getBodyParam(
+      req,
+      "favorite_user_username",
+      "string"
+    );
+
+    const favoriteUser = await dbm.userService.getUserByUsername(
+      favoriteUserUsername
+    );
+    await dbm.favoriteUserService.favoriteUser(user.id, favoriteUser.id);
+
+    respond(res);
+  })
+);
+
+// Unfavorites a user given the user's username
+userRouter.post(
+  "/unfavorite_user_by_username",
+  wrapRoute(async (req, res) => {
+    const dbm = getDBM(req);
+    const user = await getLoggedInUser(req);
+    const favoriteUserUsername = getBodyParam(
+      req,
+      "favorite_user_username",
+      "string"
+    );
+
+    const favoriteUser = await dbm.userService.getUserByUsername(
+      favoriteUserUsername
+    );
+    await dbm.favoriteUserService.unfavoriteUser(user.id, favoriteUser.id);
+
+    respond(res);
+  })
+);
+
 // Returns whether or not a user is favorited
 userRouter.get(
   "/user_is_favorite",

@@ -212,6 +212,75 @@
   </div>
 </ng-template>
 
-<ng-template #favoriteUsersTemplate></ng-template>
+<ng-template #favoriteUsersTemplate>
+  <table class="favorite-users-table">
+    <thead>
+      <tr>
+        <th>User ID</th>
+        <th>Username</th>
+        <th>Date joined</th>
+        <th>Favorite</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let favoriteUser of userFavoriteUsers">
+        <td>{{ favoriteUser.id }}</td>
+        <td>{{ favoriteUser.username }}</td>
+        <td>{{ favoriteUser.join_time | date }}</td>
+        <td>
+          <button mat-icon-button (click)="toggleFavoriteUser(favoriteUser.id)">
+            <mat-icon *ngIf="favoriteUser.favorite" class="star-icon"
+              >star</mat-icon
+            >
+            <mat-icon *ngIf="!favoriteUser.favorite" class="border-star-icon"
+              >star_border</mat-icon
+            >
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <mat-card class="settings-card">
+    <mat-card-title>Add favorite user</mat-card-title>
+    <mat-card-content>
+      <form
+        #addFavoriteUser="ngForm"
+        (ngSubmit)="onAddFavoriteUser(addFavoriteUser.value)"
+      >
+        <mat-form-field [appearance]="inputAppearance" class="max-width">
+          <mat-label>Username</mat-label>
+          <input
+            matInput
+            type="text"
+            id="username"
+            name="username"
+            maxlength="63"
+            required
+            ngModel
+          />
+        </mat-form-field>
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="submittingAddFavoriteUserForm"
+        >
+          Favorite user
+        </button>
+        <small
+          class="success-message"
+          [ngClass]="{ 'success-show': showAddFavoriteUserSuccess === true }"
+        >
+          <mat-icon>check</mat-icon>
+        </small>
+        <div *ngIf="addFavoriteUserError" class="form-error-text">
+          <small>
+            {{ addFavoriteUserError }}
+          </small>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</ng-template>
 
 <ng-template #favoriteGroupsTemplate></ng-template>

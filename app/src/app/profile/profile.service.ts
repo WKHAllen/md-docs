@@ -5,7 +5,7 @@ import { DocumentEditInfo } from '../document/document.service';
 import { apiGet, apiPost } from '../api';
 
 export interface UserInfo {
-  id: number;
+  id: string;
   username: string;
   email: string;
   image_id: string;
@@ -50,6 +50,22 @@ export class ProfileService {
   public async unfavoriteUser(favoriteUserID: string): Promise<void> {
     await apiPost(this.http, '/unfavorite_user', {
       favorite_user_id: favoriteUserID,
+    });
+  }
+
+  public async favoriteUserByUsername(
+    favoriteUserUsername: string
+  ): Promise<void> {
+    await apiPost(this.http, '/favorite_user_by_username', {
+      favorite_user_username: favoriteUserUsername,
+    });
+  }
+
+  public async unfavoriteUserByUsername(
+    favoriteUserUsername: string
+  ): Promise<void> {
+    await apiPost(this.http, '/unfavorite_user_by_username', {
+      favorite_user_username: favoriteUserUsername,
     });
   }
 

@@ -50,11 +50,7 @@
     width: 100%;
 
     mat-card {
-      transition: transform 0.2s;
-
-      &:hover {
-        transform: scale(1.05);
-      }
+      @include styles.hover-zoom();
 
       mat-card-title {
         line-height: 1.2em;
@@ -72,4 +68,24 @@
       }
     }
   }
+}
+
+.favorite-users-table {
+  width: 100%;
+  padding: 20px;
+
+  th {
+    text-align: left;
+  }
+}
+
+.star-icon {
+  color: gold;
+  @include styles.hover-zoom(1.25);
+}
+
+.border-star-icon {
+  color: gold;
+  @include styles.grayscale();
+  @include styles.hover-zoom(1.25);
 }

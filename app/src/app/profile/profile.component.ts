@@ -4,6 +4,7 @@ import { ProfileService, UserInfo } from './profile.service';
 import { LoginRegisterService } from '../login-register/login-register.service';
 import { GroupInfo } from '../group/group.service';
 import { DocumentEditInfo } from '../document/document.service';
+import { OtherUserInfo } from '../user/user.service';
 import { inputAppearance } from '../constants';
 
 interface SetUsernameForm {
@@ -15,6 +16,14 @@ interface SetPasswordForm {
   confirmPassword: string;
 }
 
+interface AddFavoriteUserForm {
+  username: string;
+}
+
+interface FavoriteUserInfo extends OtherUserInfo {
+  favorite: boolean;
+}
+
 @Component({
   selector: 'mdd-profile',
   templateUrl: './profile.component.html',
@@ -22,7 +31,7 @@ interface SetPasswordForm {
 })
 export class ProfileComponent implements OnInit {
   public userInfo: UserInfo = {
-    id: 0,
+    id: '',
     username: '',
     email: '',
     image_id: '',
@@ -30,7 +39,7 @@ export class ProfileComponent implements OnInit {
   };
   public userGroupsOwned: GroupInfo[] = [];
   public userDocumentEditRequests: DocumentEditInfo[] = [];
-  public userFavoriteUsers: UserInfo[] = [];
+  public userFavoriteUsers: FavoriteUserInfo[] = [];
   public userFavoriteGroups: GroupInfo[] = [];
   public newUsername: string = '';
   public gotUserInfo: boolean = false;
@@ -46,12 +55,15 @@ export class ProfileComponent implements OnInit {
   public userFavoriteGroupsError: string = '';
   public submittingUsernameForm: boolean = false;
   public submittingPasswordForm: boolean = false;
+  public submittingAddFavoriteUserForm: boolean = false;
   public logoutEverywhereClicked: boolean = false;
   public setUsernameError: string = '';
   public setPasswordError: string = '';
   public logoutEverywhereError: string = '';
+  public addFavoriteUserError: string = '';
   public showUsernameSuccess: boolean = false;
   public showPasswordSuccess: boolean = false;
+  public showAddFavoriteUserSuccess: boolean = false;
   public inputAppearance = inputAppearance;
 
   constructor(
@@ -92,7 +104,10 @@ export class ProfileComponent implements OnInit {
 
       try {
         const userFavoriteUsers = await this.profileService.getFavoriteUsers();
-        this.userFavoriteUsers = userFavoriteUsers;
+        this.userFavoriteUsers = userFavoriteUsers.map((favoriteUser) => ({
+          ...favoriteUser,
+          favorite: true,
+        }));
         this.gotUserFavoriteUsers = true;
       } catch (err) {
         this.userFavoriteUsersError = err;
@@ -177,6 +192,39 @@ export class ProfileComponent implements OnInit {
     } catch (err) {
       this.logoutEverywhereClicked = false;
       this.logoutEverywhereError = err;
+    }
+  }
+
+  public async toggleFavoriteUser(userID: string): Promise<void> {
+    const favoriteUserIndex = this.userFavoriteUsers.findIndex(
+      (favoriteUser) => favoriteUser.id === userID
+    );
+
+    if (this.userFavoriteUsers[favoriteUserIndex].favorite) {
+      await this.profileService.unfavoriteUser(userID);
+      this.userFavoriteUsers[favoriteUserIndex].favorite = false;
+    } else {
+      await this.profileService.favoriteUser(userID);
+      this.userFavoriteUsers[favoriteUserIndex].favorite = true;
+    }
+  }
+
+  public async onAddFavoriteUser(form: AddFavoriteUserForm): Promise<void> {
+    this.addFavoriteUserError = '';
+    this.submittingAddFavoriteUserForm = true;
+
+    try {
+      await this.profileService.favoriteUserByUsername(form.username);
+      this.submittingAddFavoriteUserForm = false;
+      this.ngOnInit();
+      this.showAddFavoriteUserSuccess = true;
+
+      setTimeout(() => {
+        this.showAddFavoriteUserSuccess = false;
+      }, 3000);
+    } catch (err) {
+      this.submittingAddFavoriteUserForm = false;
+      this.addFavoriteUserError = err;
     }
   }
 }
