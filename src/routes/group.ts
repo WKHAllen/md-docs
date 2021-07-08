@@ -61,7 +61,12 @@ groupRouter.get(
 
     const groupCreator = await dbm.groupService.getGroupCreator(groupID);
 
-    respond(res, groupCreator);
+    respond(res, {
+      id: groupCreator.id,
+      username: groupCreator.username,
+      image_id: groupCreator.image_id,
+      join_time: groupCreator.join_time,
+    });
   })
 );
 
@@ -74,7 +79,12 @@ groupRouter.get(
 
     const groupOwner = await dbm.groupService.getGroupOwner(groupID);
 
-    respond(res, groupOwner);
+    respond(res, {
+      id: groupOwner.id,
+      username: groupOwner.username,
+      image_id: groupOwner.image_id,
+      join_time: groupOwner.join_time,
+    });
   })
 );
 
@@ -85,7 +95,7 @@ groupRouter.post(
     const dbm = getDBM(req);
     const user = await getLoggedInUser(req);
     const groupID = getBodyParam(req, "group_id", "string");
-    const newName = getBodyParam(req, "name", "string");
+    const newName = getBodyParam(req, "new_name", "string");
 
     const group = await dbm.groupService.getGroup(groupID);
 
@@ -108,7 +118,7 @@ groupRouter.post(
     const dbm = getDBM(req);
     const user = await getLoggedInUser(req);
     const groupID = getBodyParam(req, "group_id", "string");
-    const newDescription = getBodyParam(req, "description", "string");
+    const newDescription = getBodyParam(req, "new_description", "string");
 
     const group = await dbm.groupService.getGroup(groupID);
 
