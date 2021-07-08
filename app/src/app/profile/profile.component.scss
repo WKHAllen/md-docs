@@ -38,46 +38,45 @@
 }
 
 .groups-owned,
-.document-edit-requests {
+.document-edit-requests,
+.favorite-users,
+.favorite-groups {
   padding: 16px;
   @include styles.flex-grid(20em, 16px);
 }
 
 .group-owned,
-.document-edit-request {
+.document-edit-request,
+.favorite-user,
+.favorite-group {
   a {
     text-decoration: none;
     width: 100%;
+  }
 
-    mat-card {
-      @include styles.hover-zoom();
+  mat-card {
+    @include styles.hover-zoom();
 
-      mat-card-title {
-        line-height: 1.2em;
-        padding-bottom: 0;
-        margin-bottom: 20px;
-        @include styles.line-cutoff(2);
-      }
+    mat-card-title {
+      line-height: 1.2em;
+      padding-bottom: 0;
+      margin-bottom: 20px;
+      @include styles.line-cutoff(2);
+    }
 
-      mat-card-subtitle {
-        @include styles.line-cutoff(1);
-      }
+    mat-card-subtitle {
+      @include styles.line-cutoff(1);
+    }
 
-      mat-card-content {
-        @include styles.line-cutoff(3);
-      }
+    mat-card-content {
+      @include styles.line-cutoff(3);
     }
   }
 }
 
-.favorite-users-table,
-.favorite-groups-table {
-  width: 100%;
-  padding: 20px;
-
-  th {
-    text-align: left;
-  }
+.favorite-users mat-card-content,
+.favorite-groups mat-card-content {
+  text-align: center;
 }
 
 .star-icon {

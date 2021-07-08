@@ -68,6 +68,7 @@ export class ProfileComponent implements OnInit {
   public showUsernameSuccess: boolean = false;
   public showPasswordSuccess: boolean = false;
   public showAddFavoriteUserSuccess: boolean = false;
+  public togglingFavoriteGroup: boolean = false;
   public inputAppearance = inputAppearance;
 
   constructor(
@@ -223,7 +224,7 @@ export class ProfileComponent implements OnInit {
     try {
       await this.profileService.favoriteUserByUsername(form.username);
       this.submittingAddFavoriteUserForm = false;
-      this.ngOnInit();
+      await this.ngOnInit();
       this.showAddFavoriteUserSuccess = true;
 
       setTimeout(() => {
@@ -236,6 +237,8 @@ export class ProfileComponent implements OnInit {
   }
 
   public async toggleFavoriteGroup(groupID: string): Promise<void> {
+    this.togglingFavoriteGroup = true;
+
     const favoriteGroupIndex = this.userFavoriteGroups.findIndex(
       (favoriteGroup) => favoriteGroup.id === groupID
     );
@@ -247,5 +250,7 @@ export class ProfileComponent implements OnInit {
       await this.profileService.favoriteGroup(groupID);
       this.userFavoriteGroups[favoriteGroupIndex].favorite = true;
     }
+
+    this.togglingFavoriteGroup = false;
   }
 }

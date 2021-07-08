@@ -213,21 +213,14 @@
 </ng-template>
 
 <ng-template #favoriteUsersTemplate>
-  <table class="favorite-users-table">
-    <thead>
-      <tr>
-        <th>User ID</th>
-        <th>Username</th>
-        <th>Date joined</th>
-        <th>Favorite</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let favoriteUser of userFavoriteUsers">
-        <td>{{ favoriteUser.id }}</td>
-        <td>{{ favoriteUser.username }}</td>
-        <td>{{ favoriteUser.join_time | date }}</td>
-        <td>
+  <div class="favorite-users">
+    <div *ngFor="let favoriteUser of userFavoriteUsers" class="favorite-user">
+      <mat-card>
+        <mat-card-title>{{ favoriteUser.username }}</mat-card-title>
+        <mat-card-subtitle>{{
+          favoriteUser.join_time | date
+        }}</mat-card-subtitle>
+        <mat-card-content>
           <button mat-icon-button (click)="toggleFavoriteUser(favoriteUser.id)">
             <mat-icon *ngIf="favoriteUser.favorite" class="star-icon"
               >star</mat-icon
@@ -236,10 +229,10 @@
               >star_border</mat-icon
             >
           </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
   <mat-card class="add-favorite-user-card">
     <mat-card-title>Add favorite user</mat-card-title>
     <mat-card-content>
@@ -284,38 +277,34 @@
 </ng-template>
 
 <ng-template #favoriteGroupsTemplate>
-  <table class="favorite-groups-table">
-    <thead>
-      <tr>
-        <th>Group ID</th>
-        <th>Name</th>
-        <th>Date created</th>
-        <th>Favorite</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let favoriteGroup of userFavoriteGroups">
-        <td>
-          <a routerLink="/group/{{ favoriteGroup.id }}" class="standard-link">
-            {{ favoriteGroup.id }}
-          </a>
-        </td>
-        <td>{{ favoriteGroup.name }}</td>
-        <td>{{ favoriteGroup.create_time | date }}</td>
-        <td>
-          <button
-            mat-icon-button
-            (click)="toggleFavoriteGroup(favoriteGroup.id)"
-          >
-            <mat-icon *ngIf="favoriteGroup.favorite" class="star-icon"
-              >star</mat-icon
+  <div class="favorite-groups">
+    <div
+      *ngFor="let favoriteGroup of userFavoriteGroups"
+      class="favorite-group"
+    >
+      <a
+        [routerLink]="togglingFavoriteGroup ? [] : '/group/' + favoriteGroup.id"
+      >
+        <mat-card>
+          <mat-card-title>{{ favoriteGroup.name }}</mat-card-title>
+          <mat-card-subtitle>{{
+            favoriteGroup.create_time | date
+          }}</mat-card-subtitle>
+          <mat-card-content>
+            <button
+              mat-icon-button
+              (click)="toggleFavoriteGroup(favoriteGroup.id)"
             >
-            <mat-icon *ngIf="!favoriteGroup.favorite" class="border-star-icon"
-              >star_border</mat-icon
-            >
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+              <mat-icon *ngIf="favoriteGroup.favorite" class="star-icon"
+                >star</mat-icon
+              >
+              <mat-icon *ngIf="!favoriteGroup.favorite" class="border-star-icon"
+                >star_border</mat-icon
+              >
+            </button>
+          </mat-card-content>
+        </mat-card>
+      </a>
+    </div>
+  </div>
 </ng-template>
