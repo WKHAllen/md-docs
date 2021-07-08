@@ -283,4 +283,39 @@
   </mat-card>
 </ng-template>
 
-<ng-template #favoriteGroupsTemplate></ng-template>
+<ng-template #favoriteGroupsTemplate>
+  <table class="favorite-groups-table">
+    <thead>
+      <tr>
+        <th>Group ID</th>
+        <th>Name</th>
+        <th>Date created</th>
+        <th>Favorite</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let favoriteGroup of userFavoriteGroups">
+        <td>
+          <a routerLink="/group/{{ favoriteGroup.id }}" class="standard-link">
+            {{ favoriteGroup.id }}
+          </a>
+        </td>
+        <td>{{ favoriteGroup.name }}</td>
+        <td>{{ favoriteGroup.create_time | date }}</td>
+        <td>
+          <button
+            mat-icon-button
+            (click)="toggleFavoriteGroup(favoriteGroup.id)"
+          >
+            <mat-icon *ngIf="favoriteGroup.favorite" class="star-icon"
+              >star</mat-icon
+            >
+            <mat-icon *ngIf="!favoriteGroup.favorite" class="border-star-icon"
+              >star_border</mat-icon
+            >
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</ng-template>

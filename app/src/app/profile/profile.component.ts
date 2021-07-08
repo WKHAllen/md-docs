@@ -24,6 +24,10 @@ interface FavoriteUserInfo extends OtherUserInfo {
   favorite: boolean;
 }
 
+interface FavoriteGroupInfo extends GroupInfo {
+  favorite: boolean;
+}
+
 @Component({
   selector: 'mdd-profile',
   templateUrl: './profile.component.html',
@@ -40,7 +44,7 @@ export class ProfileComponent implements OnInit {
   public userGroupsOwned: GroupInfo[] = [];
   public userDocumentEditRequests: DocumentEditInfo[] = [];
   public userFavoriteUsers: FavoriteUserInfo[] = [];
-  public userFavoriteGroups: GroupInfo[] = [];
+  public userFavoriteGroups: FavoriteGroupInfo[] = [];
   public newUsername: string = '';
   public gotUserInfo: boolean = false;
   public gotUserPolls: boolean = false;
@@ -116,7 +120,10 @@ export class ProfileComponent implements OnInit {
       try {
         const userFavoriteGroups =
           await this.profileService.getFavoriteGroups();
-        this.userFavoriteGroups = userFavoriteGroups;
+        this.userFavoriteGroups = userFavoriteGroups.map((favoriteGroup) => ({
+          ...favoriteGroup,
+          favorite: true,
+        }));
         this.gotUserFavoriteGroups = true;
       } catch (err) {
         this.userFavoriteGroupsError = err;
@@ -225,6 +232,20 @@ export class ProfileComponent implements OnInit {
     } catch (err) {
       this.submittingAddFavoriteUserForm = false;
       this.addFavoriteUserError = err;
+    }
+  }
+
+  public async toggleFavoriteGroup(groupID: string): Promise<void> {
+    const favoriteGroupIndex = this.userFavoriteGroups.findIndex(
+      (favoriteGroup) => favoriteGroup.id === groupID
+    );
+
+    if (this.userFavoriteGroups[favoriteGroupIndex].favorite) {
+      await this.profileService.unfavoriteGroup(groupID);
+      this.userFavoriteGroups[favoriteGroupIndex].favorite = false;
+    } else {
+      await this.profileService.favoriteGroup(groupID);
+      this.userFavoriteGroups[favoriteGroupIndex].favorite = true;
     }
   }
 }
