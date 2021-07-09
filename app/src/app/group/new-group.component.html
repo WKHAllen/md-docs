@@ -1,0 +1,48 @@
+<div class="new-group-page">
+  <mat-card class="new-group-card">
+    <mat-card-title>New group</mat-card-title>
+    <mat-card-content>
+      <form
+        #newGroupForm="ngForm"
+        (ngSubmit)="onCreateGroup(newGroupForm.value)"
+      >
+        <mat-form-field [appearance]="inputAppearance" class="max-width">
+          <mat-label>Group name</mat-label>
+          <input
+            matInput
+            type="text"
+            id="name"
+            name="name"
+            maxlength="255"
+            required
+            ngModel
+          />
+        </mat-form-field>
+        <mat-form-field [appearance]="inputAppearance" class="max-width">
+          <mat-label>Description</mat-label>
+          <input
+            matInput
+            type="text"
+            id="description"
+            name="description"
+            maxlength="1023"
+            ngModel
+          />
+        </mat-form-field>
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="submittingNewGroup"
+        >
+          Create group
+        </button>
+        <div *ngIf="errors" class="new-group-error">
+          <div *ngFor="let error of errors">
+            <small class="error-text">{{ error }}</small>
+          </div>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

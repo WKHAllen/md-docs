@@ -77,7 +77,7 @@ export class ProfileComponent implements OnInit {
     private router: Router
   ) {}
 
-  public async ngOnInit() {
+  public async ngOnInit(): Promise<void> {
     if (!this.loginRegisterService.loggedIn()) {
       this.router.navigate(['login'], { queryParams: { after: 'profile' } });
     } else {
@@ -132,7 +132,7 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  public async onSetUsername(form: SetUsernameForm) {
+  public async onSetUsername(form: SetUsernameForm): Promise<void> {
     this.setUsernameError = '';
 
     if (form.username === this.userInfo.username) {
@@ -161,7 +161,7 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  public async onSetPassword(form: SetPasswordForm) {
+  public async onSetPassword(form: SetPasswordForm): Promise<void> {
     this.setPasswordError = '';
 
     if (form.password.length < 8 || form.password.length > 255) {
@@ -190,7 +190,7 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  public async logoutEverywhere() {
+  public async logoutEverywhere(): Promise<void> {
     this.logoutEverywhereError = '';
     this.logoutEverywhereClicked = true;
 

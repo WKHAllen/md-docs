@@ -16,7 +16,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -30,6 +29,7 @@ import { VerifyComponent } from './verify/verify.component';
 import { PasswordResetComponent } from './password-reset/password-reset.component';
 import { NotFoundComponent } from './error/not-found.component';
 import { ProfileComponent } from './profile/profile.component';
+import { NewGroupComponent } from './group/new-group.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +43,7 @@ import { ProfileComponent } from './profile/profile.component';
     PasswordResetComponent,
     NotFoundComponent,
     ProfileComponent,
+    NewGroupComponent,
   ],
   imports: [
     CommonModule,
@@ -63,7 +64,6 @@ import { ProfileComponent } from './profile/profile.component';
     MatIconModule,
     MatInputModule,
     MatProgressSpinnerModule,
-    MatTableModule,
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
