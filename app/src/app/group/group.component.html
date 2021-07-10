@@ -49,6 +49,55 @@
     <mat-accordion>
       <mat-expansion-panel>
         <mat-expansion-panel-header>
+          <mat-panel-title>General</mat-panel-title>
+          <mat-panel-description
+            >Configure the group name and description</mat-panel-description
+          >
+        </mat-expansion-panel-header>
+        <div class="config-section">
+          <p>You can customize the name and description of the group below.</p>
+          <form #generalConfigForm="ngForm" (ngSubmit)="onSetGeneralConfig()">
+            <mat-form-field [appearance]="inputAppearance" class="max-width">
+              <mat-label>Name</mat-label>
+              <input
+                matInput
+                type="text"
+                id="name"
+                name="name"
+                maxlength="255"
+                required
+                [(ngModel)]="groupName"
+              />
+            </mat-form-field>
+            <mat-form-field [appearance]="inputAppearance" class="max-width">
+              <mat-label>Description</mat-label>
+              <input
+                matInput
+                type="text"
+                id="description"
+                name="description"
+                maxlength="1023"
+                [(ngModel)]="groupDescription"
+              />
+            </mat-form-field>
+            <button
+              mat-raised-button
+              color="primary"
+              type="submit"
+              [disabled]="submittingGeneralConfigForm"
+            >
+              Save
+            </button>
+            <div *ngIf="generalConfigErrors" class="general-config-error">
+              <div *ngFor="let error of generalConfigErrors">
+                <small class="error-text">{{ error }}</small>
+              </div>
+            </div>
+          </form>
+        </div>
+      </mat-expansion-panel>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
           <mat-panel-title>Visibility</mat-panel-title>
           <mat-panel-description
             >Set the visibility of the group</mat-panel-description

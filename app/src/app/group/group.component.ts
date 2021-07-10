@@ -30,6 +30,8 @@ export class GroupComponent implements OnInit {
     approve_edits_permission_id: PermissionType.OwnerOnly,
     create_time: 0,
   };
+  public groupName: string = '';
+  public groupDescription: string = '';
   public groupInfoError: string = '';
   public isGroupOwner: boolean = false;
   public canViewDetails: boolean = false;
@@ -37,9 +39,11 @@ export class GroupComponent implements OnInit {
   public canApproveDocumentEdits: boolean = false;
   public loggedIn: boolean = false;
   public usersWithAccess: OtherUserInfo[] = [];
+  public submittingGeneralConfigForm: boolean = false;
   public submittingVisibilityForm: boolean = false;
   public submittingSearchabilityForm: boolean = false;
   public submittingPermissionsForm: boolean = false;
+  public generalConfigErrors: string[] = [];
   public setVisibilityError: string = '';
   public setSearchabilityError: string = '';
   public setPermissionsError: string = '';
@@ -62,6 +66,8 @@ export class GroupComponent implements OnInit {
 
       try {
         this.groupInfo = await this.groupService.getGroupInfo(this.groupID);
+        this.groupName = this.groupInfo.name;
+        this.groupDescription = this.groupInfo.description;
 
         if (this.loggedIn) {
           const user = await this.profileService.getUserInfo();
@@ -87,6 +93,39 @@ export class GroupComponent implements OnInit {
         this.groupInfoError = err;
       }
     });
+  }
+
+  public async onSetGeneralConfig(): Promise<void> {
+    this.generalConfigErrors = [];
+
+    if (this.groupName.length < 1 || this.groupName.length > 255) {
+      this.generalConfigErrors.push(
+        'Group name must be between 1 and 255 characters'
+      );
+    }
+    if (this.groupDescription.length > 1023) {
+      this.generalConfigErrors.push(
+        'Group description must be no more than 1023 characters'
+      );
+    }
+
+    if (this.generalConfigErrors.length === 0) {
+      this.submittingGeneralConfigForm = true;
+
+      try {
+        await this.groupService.setGroupName(this.groupID, this.groupName);
+        await this.groupService.setGroupDescription(
+          this.groupID,
+          this.groupDescription
+        );
+
+        this.groupInfo = await this.groupService.getGroupInfo(this.groupID);
+      } catch (err) {
+        this.generalConfigErrors.push(err);
+      }
+
+      this.submittingGeneralConfigForm = false;
+    }
   }
 
   public async onSetVisibility(): Promise<void> {
