@@ -54,13 +54,13 @@ export class GroupService {
   }
 
   public async getGroupCreator(groupID: string): Promise<OtherUserInfo | null> {
-    return await apiGet<OtherUserInfo | null>(this.http, 'get_group_creator', {
+    return await apiGet<OtherUserInfo | null>(this.http, '/get_group_creator', {
       group_id: groupID,
     });
   }
 
   public async getGroupOwner(groupID: string): Promise<OtherUserInfo> {
-    return await apiGet<OtherUserInfo>(this.http, 'get_group_owner', {
+    return await apiGet<OtherUserInfo>(this.http, '/get_group_owner', {
       group_id: groupID,
     });
   }

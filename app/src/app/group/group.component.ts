@@ -37,6 +37,13 @@ export class GroupComponent implements OnInit {
   public canViewDetails: boolean = false;
   public canEditDocuments: boolean = false;
   public canApproveDocumentEdits: boolean = false;
+  public groupCreator: OtherUserInfo | null = null;
+  public groupOwner: OtherUserInfo = {
+    id: '',
+    username: '',
+    image_id: '',
+    join_time: 0,
+  };
   public loggedIn: boolean = false;
   public usersWithAccess: OtherUserInfo[] = [];
   public submittingGeneralConfigForm: boolean = false;
@@ -85,6 +92,13 @@ export class GroupComponent implements OnInit {
 
           if (this.canViewDetails) {
             this.usersWithAccess = await this.groupService.getUsersWithAccess(
+              this.groupID
+            );
+
+            this.groupCreator = await this.groupService.getGroupCreator(
+              this.groupID
+            );
+            this.groupOwner = await this.groupService.getGroupOwner(
               this.groupID
             );
           }

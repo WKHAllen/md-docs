@@ -7,17 +7,17 @@
   text-align: center;
 }
 
-.users-with-access-card {
+.item-list-card {
   max-width: 600px;
   margin: auto;
 
-  .users-with-access {
-    .username {
+  .item-list {
+    .item-primary {
       font-size: 1.2em;
       padding-right: 12px;
     }
 
-    .join-time {
+    .item-secondary {
       font-size: 0.9em;
       color: rgba(0, 0, 0, 0.54);
     }
