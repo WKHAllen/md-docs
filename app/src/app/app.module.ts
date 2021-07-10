@@ -30,6 +30,7 @@ import { PasswordResetComponent } from './password-reset/password-reset.componen
 import { NotFoundComponent } from './error/not-found.component';
 import { ProfileComponent } from './profile/profile.component';
 import { NewGroupComponent } from './group/new-group.component';
+import { GroupComponent } from './group/group.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { NewGroupComponent } from './group/new-group.component';
     NotFoundComponent,
     ProfileComponent,
     NewGroupComponent,
+    GroupComponent,
   ],
   imports: [
     CommonModule,

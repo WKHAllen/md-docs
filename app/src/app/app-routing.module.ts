@@ -10,6 +10,7 @@ import { PasswordResetComponent } from './password-reset/password-reset.componen
 import { NotFoundComponent } from './error/not-found.component';
 import { ProfileComponent } from './profile/profile.component';
 import { NewGroupComponent } from './group/new-group.component';
+import { GroupComponent } from './group/group.component';
 
 const routes: Routes = [
   { path: '', component: IndexComponent },
@@ -21,6 +22,7 @@ const routes: Routes = [
   { path: 'password-reset/:resetID', component: PasswordResetComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'group', component: NewGroupComponent },
+  { path: 'group/:groupID', component: GroupComponent },
   { path: '**', component: NotFoundComponent },
 ];
 

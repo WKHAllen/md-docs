@@ -1,0 +1,25 @@
+<div *ngIf="groupInfo.id === ''; else groupInfoTemplate">
+  <div *ngIf="!groupInfoError; else groupInfoErrorTemplate">
+    <mat-spinner class="spinner"></mat-spinner>
+  </div>
+</div>
+
+<ng-template #groupInfoTemplate>
+  <div class="group-title">
+    <h1>{{ groupInfo.name }}</h1>
+    <span>{{ groupInfo.description }}</span>
+  </div>
+  <mat-tab-group dynamicHeight mat-align-tabs="center">
+    <mat-tab label="Documents">Documents and directories here.</mat-tab>
+    <mat-tab label="Details" [disabled]="!groupInfo.details_visible"
+      >Group details here.</mat-tab
+    >
+    <mat-tab label="Configuration" [disabled]="!isGroupOwner"
+      >Group configuration here.</mat-tab
+    >
+  </mat-tab-group>
+</ng-template>
+
+<ng-template #groupInfoErrorTemplate>
+  <span class="group-info-error error-text">Error: {{ groupInfoError }}</span>
+</ng-template>
