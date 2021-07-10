@@ -11,6 +11,12 @@ export enum PermissionType {
   OwnerOnly = 'OWNER_ONLY',
 }
 
+export const permissionNames: { [permissionType in PermissionType]: string } = {
+  ANYONE: 'Anyone',
+  THOSE_WITH_ACCESS: 'Those with access',
+  OWNER_ONLY: 'Owner only',
+};
+
 export interface GroupInfo {
   id: string;
   creator_user_id?: string;

@@ -138,6 +138,45 @@
             Users can be granted the ability to edit documents and approve
             edits. You can configure which class of user can do each below.
           </p>
+          <form #setPermissions="ngForm" (ngSubmit)="onSetPermissions()">
+            <section>
+              <mat-form-field [appearance]="inputAppearance">
+                <mat-label>Permission to edit documents</mat-label>
+                <mat-select [(value)]="groupInfo.edit_documents_permission_id">
+                  <mat-option
+                    *ngFor="let permissionType of permissionNames | keyvalue"
+                    [value]="permissionType.key"
+                    >{{ permissionType.value }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </section>
+            <section>
+              <mat-form-field [appearance]="inputAppearance">
+                <mat-label>Permission to approve edits</mat-label>
+                <mat-select [(value)]="groupInfo.approve_edits_permission_id">
+                  <mat-option
+                    *ngFor="let permissionType of permissionNames | keyvalue"
+                    [value]="permissionType.key"
+                    >{{ permissionType.value }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </section>
+            <button
+              mat-raised-button
+              color="primary"
+              type="submit"
+              [disabled]="submittingPermissionsForm"
+            >
+              Save
+            </button>
+            <div *ngIf="setPermissionsError" class="form-error-text">
+              <small>
+                {{ setPermissionsError }}
+              </small>
+            </div>
+          </form>
         </div>
       </mat-expansion-panel>
       <mat-expansion-panel>

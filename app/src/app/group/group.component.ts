@@ -1,9 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { GroupService, GroupInfo, PermissionType } from './group.service';
+import {
+  GroupService,
+  GroupInfo,
+  PermissionType,
+  permissionNames,
+} from './group.service';
 import { LoginRegisterService } from '../login-register/login-register.service';
 import { ProfileService } from '../profile/profile.service';
 import { OtherUserInfo } from '../user/user.service';
+import { inputAppearance } from '../constants';
 
 @Component({
   selector: 'mdd-group',
@@ -33,8 +39,12 @@ export class GroupComponent implements OnInit {
   public usersWithAccess: OtherUserInfo[] = [];
   public submittingVisibilityForm: boolean = false;
   public submittingSearchabilityForm: boolean = false;
+  public submittingPermissionsForm: boolean = false;
   public setVisibilityError: string = '';
   public setSearchabilityError: string = '';
+  public setPermissionsError: string = '';
+  public inputAppearance = inputAppearance;
+  public permissionNames = permissionNames;
 
   constructor(
     private groupService: GroupService,
@@ -109,5 +119,25 @@ export class GroupComponent implements OnInit {
     }
 
     this.submittingSearchabilityForm = false;
+  }
+
+  public async onSetPermissions(): Promise<void> {
+    this.setPermissionsError = '';
+    this.submittingPermissionsForm = true;
+
+    try {
+      await this.groupService.setEditPermissions(
+        this.groupID,
+        this.groupInfo.edit_documents_permission_id
+      );
+      await this.groupService.setApproveEditsPermissions(
+        this.groupID,
+        this.groupInfo.approve_edits_permission_id
+      );
+    } catch (err) {
+      this.setPermissionsError = err;
+    }
+
+    this.submittingPermissionsForm = false;
   }
 }
