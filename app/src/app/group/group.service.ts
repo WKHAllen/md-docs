@@ -189,4 +189,24 @@ export class GroupService {
       group_id: groupID,
     });
   }
+
+  public async canViewGroupDetails(groupID: string): Promise<boolean> {
+    return await apiGet<boolean>(this.http, '/can_view_group_details', {
+      group_id: groupID,
+    });
+  }
+
+  public async canEditGroupDocuments(groupID: string): Promise<boolean> {
+    return await apiGet<boolean>(this.http, '/can_edit_group_documents', {
+      group_id: groupID,
+    });
+  }
+
+  public async canApproveGroupDocumentEdits(groupID: string): Promise<boolean> {
+    return await apiGet<boolean>(
+      this.http,
+      '/can_approve_group_document_edits',
+      { group_id: groupID }
+    );
+  }
 }

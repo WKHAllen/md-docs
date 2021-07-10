@@ -477,3 +477,54 @@ groupRouter.get(
     }
   })
 );
+
+// Returns whether or not the current user can view a group's details
+groupRouter.get(
+  "/can_view_group_details",
+  wrapRoute(async (req, res) => {
+    const dbm = getDBM(req);
+    const user = await getLoggedInUser(req, false);
+    const groupID = getQueryParam(req, "group_id", "string");
+
+    const canView = await dbm.permissionService.canViewGroupDetails(
+      user?.id,
+      groupID
+    );
+
+    respond(res, canView);
+  })
+);
+
+// Returns whether or not the current user can edit a group's documents
+groupRouter.get(
+  "/can_edit_group_documents",
+  wrapRoute(async (req, res) => {
+    const dbm = getDBM(req);
+    const user = await getLoggedInUser(req, false);
+    const groupID = getQueryParam(req, "group_id", "string");
+
+    const canEdit = await dbm.permissionService.canEditDocuments(
+      user?.id,
+      groupID
+    );
+
+    respond(res, canEdit);
+  })
+);
+
+// Returns whether or not the current user can approve a group's document edit requests
+groupRouter.get(
+  "/can_approve_group_document_edits",
+  wrapRoute(async (req, res) => {
+    const dbm = getDBM(req);
+    const user = await getLoggedInUser(req, false);
+    const groupID = getQueryParam(req, "group_id", "string");
+
+    const canApproveEdits = await dbm.permissionService.canApproveEdits(
+      user?.id,
+      groupID
+    );
+
+    respond(res, canApproveEdits);
+  })
+);

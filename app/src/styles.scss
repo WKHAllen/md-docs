@@ -57,6 +57,10 @@ a.standard-link {
   margin-bottom: 16px;
 }
 
+.card-container {
+  padding: 16px;
+}
+
 @mixin centerer($horizontal: true, $vertical: true) {
   position: absolute;
 

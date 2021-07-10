@@ -11,9 +11,11 @@
   </div>
   <mat-tab-group dynamicHeight mat-align-tabs="center">
     <mat-tab label="Documents">Documents and directories here.</mat-tab>
-    <mat-tab label="Details" [disabled]="!groupInfo.details_visible"
-      >Group details here.</mat-tab
-    >
+    <mat-tab label="Details" [disabled]="!canViewDetails">
+      <div *ngIf="!usersWithAccess; else usersWithAccessTemplate">
+        <mat-spinner class="spinner"></mat-spinner>
+      </div>
+    </mat-tab>
     <mat-tab label="Configuration" [disabled]="!isGroupOwner"
       >Group configuration here.</mat-tab
     >
@@ -22,4 +24,20 @@
 
 <ng-template #groupInfoErrorTemplate>
   <span class="group-info-error error-text">Error: {{ groupInfoError }}</span>
+</ng-template>
+
+<ng-template #usersWithAccessTemplate>
+  <div class="card-container users-with-access-card">
+    <mat-card>
+      <mat-card-title>Users with access</mat-card-title>
+      <mat-card-content>
+        <mat-list class="users-with-access">
+          <mat-list-item *ngFor="let user of usersWithAccess">
+            <span class="username">{{ user.username }}</span>
+            <span class="join-time">{{ user.join_time | date }}</span>
+          </mat-list-item>
+        </mat-list>
+      </mat-card-content>
+    </mat-card>
+  </div>
 </ng-template>
