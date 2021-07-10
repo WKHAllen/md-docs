@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS app_user (
-  id        CHAR(16)     NOT NULL DEFAULT SUBSTR(MD5(RANDOM()::TEXT), 0, 16),
+  id        CHAR(16)     NOT NULL DEFAULT SUBSTR(MD5(RANDOM()::TEXT), 0, 17),
   username  VARCHAR(63)  NOT NULL,
   email     VARCHAR(63)  NOT NULL,
   password  VARCHAR(255) NOT NULL,

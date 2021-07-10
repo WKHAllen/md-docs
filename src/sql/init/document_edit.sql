@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS document_edit (
-  id                CHAR(16)       NOT NULL DEFAULT SUBSTR(MD5(RANDOM()::TEXT), 0, 16),
+  id                CHAR(16)       NOT NULL DEFAULT SUBSTR(MD5(RANDOM()::TEXT), 0, 17),
   document_id       CHAR(16)       NOT NULL,
   editor_user_id    CHAR(16)       NOT NULL,
   description       VARCHAR(255)   NOT NULL,
