@@ -12,13 +12,15 @@
   <mat-tab-group dynamicHeight mat-align-tabs="center">
     <mat-tab label="Documents">Documents and directories here.</mat-tab>
     <mat-tab label="Details" [disabled]="!canViewDetails">
-      <div *ngIf="!usersWithAccess; else usersWithAccessTemplate">
+      <div *ngIf="!usersWithAccess; else groupDetailsTemplate">
         <mat-spinner class="spinner"></mat-spinner>
       </div>
     </mat-tab>
-    <mat-tab label="Configuration" [disabled]="!isGroupOwner"
-      >Group configuration here.</mat-tab
-    >
+    <mat-tab label="Configuration" [disabled]="!isGroupOwner">
+      <div *ngIf="groupInfo.id === ''; else groupConfigTemplate">
+        <mat-spinner class="spinner"></mat-spinner>
+      </div>
+    </mat-tab>
   </mat-tab-group>
 </ng-template>
 
@@ -26,7 +28,7 @@
   <span class="group-info-error error-text">Error: {{ groupInfoError }}</span>
 </ng-template>
 
-<ng-template #usersWithAccessTemplate>
+<ng-template #groupDetailsTemplate>
   <div class="card-container users-with-access-card">
     <mat-card>
       <mat-card-title>Users with access</mat-card-title>
@@ -39,5 +41,134 @@
         </mat-list>
       </mat-card-content>
     </mat-card>
+  </div>
+</ng-template>
+
+<ng-template #groupConfigTemplate>
+  <div class="card-container config-card">
+    <mat-accordion>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>Visibility</mat-panel-title>
+          <mat-panel-description
+            >Set the visibility of the group</mat-panel-description
+          >
+        </mat-expansion-panel-header>
+        <div class="config-section">
+          <p>
+            With visibility enabled, people outside the group will be able to
+            see group documents, users with access, and configured options.
+          </p>
+          <form #setVisibilityForm="ngForm" (ngSubmit)="onSetVisibility()">
+            <section>
+              <mat-checkbox
+                color="primary"
+                id="visibility"
+                name="visibility"
+                [(ngModel)]="groupInfo.details_visible"
+                >Details visible</mat-checkbox
+              >
+            </section>
+            <button
+              mat-raised-button
+              color="primary"
+              type="submit"
+              [disabled]="submittingVisibilityForm"
+            >
+              Save
+            </button>
+            <div *ngIf="setVisibilityError" class="form-error-text">
+              <small>
+                {{ setVisibilityError }}
+              </small>
+            </div>
+          </form>
+        </div>
+      </mat-expansion-panel>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>Searchability</mat-panel-title>
+          <mat-panel-description
+            >Set the searchability of the group</mat-panel-description
+          >
+        </mat-expansion-panel-header>
+        <div class="config-section">
+          <p>
+            With searchability enabled, people will be able to see the group in
+            search results.
+          </p>
+          <form
+            #setSearchabilityForm="ngForm"
+            (ngSubmit)="onSetSearchability()"
+          >
+            <section>
+              <mat-checkbox
+                color="primary"
+                id="searchability"
+                name="searchability"
+                [(ngModel)]="groupInfo.searchable"
+                >Group searchable</mat-checkbox
+              >
+            </section>
+            <button
+              mat-raised-button
+              color="primary"
+              type="submit"
+              [disabled]="submittingSearchabilityForm"
+            >
+              Save
+            </button>
+            <div *ngIf="setSearchabilityError" class="form-error-text">
+              <small>
+                {{ setSearchabilityError }}
+              </small>
+            </div>
+          </form>
+        </div>
+      </mat-expansion-panel>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>Permissions</mat-panel-title>
+          <mat-panel-description
+            >Configure group permissions</mat-panel-description
+          >
+        </mat-expansion-panel-header>
+        <div class="config-section">
+          <p>
+            Users can be granted the ability to edit documents and approve
+            edits. You can configure which class of user can do each below.
+          </p>
+        </div>
+      </mat-expansion-panel>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>Group access</mat-panel-title>
+          <mat-panel-description
+            >Give or deny users access</mat-panel-description
+          >
+        </mat-expansion-panel-header>
+        <div class="config-section">
+          <p>
+            Depending on the group permissions set, a specific group of users
+            can be allowed to edit documents or approve document edits. You can
+            configure this who is in this group of users below.
+          </p>
+        </div>
+      </mat-expansion-panel>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>Pass ownership</mat-panel-title>
+          <mat-panel-description
+            >Give ownership to another user</mat-panel-description
+          >
+        </mat-expansion-panel-header>
+        <div class="config-section">
+          <p>
+            You have the option to pass ownership of this group to another user.
+            Note that you can only regain ownership if it is given back to you.
+          </p>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
   </div>
 </ng-template>

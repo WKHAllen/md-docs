@@ -31,6 +31,10 @@ export class GroupComponent implements OnInit {
   public canApproveDocumentEdits: boolean = false;
   public loggedIn: boolean = false;
   public usersWithAccess: OtherUserInfo[] = [];
+  public submittingVisibilityForm: boolean = false;
+  public submittingSearchabilityForm: boolean = false;
+  public setVisibilityError: string = '';
+  public setSearchabilityError: string = '';
 
   constructor(
     private groupService: GroupService,
@@ -73,5 +77,37 @@ export class GroupComponent implements OnInit {
         this.groupInfoError = err;
       }
     });
+  }
+
+  public async onSetVisibility(): Promise<void> {
+    this.setVisibilityError = '';
+    this.submittingVisibilityForm = true;
+
+    try {
+      await this.groupService.setDetailsVisible(
+        this.groupID,
+        this.groupInfo.details_visible
+      );
+    } catch (err) {
+      this.setVisibilityError = err;
+    }
+
+    this.submittingVisibilityForm = false;
+  }
+
+  public async onSetSearchability(): Promise<void> {
+    this.setSearchabilityError = '';
+    this.submittingSearchabilityForm = true;
+
+    try {
+      await this.groupService.setSearchable(
+        this.groupID,
+        this.groupInfo.searchable
+      );
+    } catch (err) {
+      this.setSearchabilityError = err;
+    }
+
+    this.submittingSearchabilityForm = false;
   }
 }

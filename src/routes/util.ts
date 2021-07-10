@@ -131,14 +131,18 @@ function getParam<T extends QueryParamTypeName>(
   } else {
     switch (paramType) {
       case "boolean":
-        if (paramValue === "true") {
-          return true as QueryParamType<T>;
-        } else if (paramValue === "false") {
-          return false as QueryParamType<T>;
+        if (typeof paramValue === "boolean") {
+          return paramValue;
         } else {
-          throw new ServiceError(
-            `Expected boolean value for query parameter '${paramName}'`
-          );
+          if (paramValue === "true") {
+            return true as QueryParamType<T>;
+          } else if (paramValue === "false") {
+            return false as QueryParamType<T>;
+          } else {
+            throw new ServiceError(
+              `Expected boolean value for query parameter '${paramName}'`
+            );
+          }
         }
       case "number":
         const numberParamValue = parseFloat(paramValue);
