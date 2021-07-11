@@ -12,12 +12,26 @@
   <mat-tab-group dynamicHeight mat-align-tabs="center">
     <mat-tab label="Documents">Documents and directories here.</mat-tab>
     <mat-tab label="Details" [disabled]="!canViewDetails">
-      <div *ngIf="!usersWithAccess; else groupDetailsTemplate">
+      <div *ngIf="!gotDetails; else groupDetailsTemplate">
         <mat-spinner class="spinner"></mat-spinner>
       </div>
     </mat-tab>
     <mat-tab label="Configuration" [disabled]="!isGroupOwner">
       <div *ngIf="groupInfo.id === ''; else groupConfigTemplate">
+        <mat-spinner class="spinner"></mat-spinner>
+      </div>
+    </mat-tab>
+    <mat-tab [disabled]="!canViewDetails">
+      <ng-template mat-tab-label>
+        <span
+          *ngIf="editRequests.length > 0"
+          [matBadge]="editRequests.length"
+          matBadgeOverlap="false"
+          >Edit requests</span
+        >
+        <span *ngIf="editRequests.length === 0">Edit requests</span>
+      </ng-template>
+      <div *ngIf="!gotEditRequests; else editRequestsTemplate">
         <mat-spinner class="spinner"></mat-spinner>
       </div>
     </mat-tab>
@@ -275,5 +289,21 @@
         </div>
       </mat-expansion-panel>
     </mat-accordion>
+  </div>
+</ng-template>
+
+<ng-template #editRequestsTemplate>
+  <div class="document-edit-requests">
+    <div *ngFor="let editRequest of editRequests" class="document-edit-request">
+      <a routerLink="/document-edit-request/{{ editRequest.id }}">
+        <mat-card>
+          <mat-card-title>{{ editRequest.description }}</mat-card-title>
+          <mat-card-subtitle>{{
+            editRequest.edit_request_time | date
+          }}</mat-card-subtitle>
+          <mat-card-content>{{ editRequest.new_content }}</mat-card-content>
+        </mat-card>
+      </a>
+    </div>
   </div>
 </ng-template>

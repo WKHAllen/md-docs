@@ -9,6 +9,7 @@ import {
 import { LoginRegisterService } from '../login-register/login-register.service';
 import { ProfileService } from '../profile/profile.service';
 import { OtherUserInfo } from '../user/user.service';
+import { DocumentEditInfo } from '../document/document.service';
 import { inputAppearance } from '../constants';
 
 @Component({
@@ -44,8 +45,10 @@ export class GroupComponent implements OnInit {
     image_id: '',
     join_time: 0,
   };
-  public loggedIn: boolean = false;
   public usersWithAccess: OtherUserInfo[] = [];
+  public gotDetails: boolean = false;
+  public editRequests: DocumentEditInfo[] = [];
+  public gotEditRequests: boolean = false;
   public submittingGeneralConfigForm: boolean = false;
   public submittingVisibilityForm: boolean = false;
   public submittingSearchabilityForm: boolean = false;
@@ -56,6 +59,7 @@ export class GroupComponent implements OnInit {
   public setPermissionsError: string = '';
   public inputAppearance = inputAppearance;
   public permissionNames = permissionNames;
+  public loggedIn: boolean = false;
 
   constructor(
     private groupService: GroupService,
@@ -91,16 +95,22 @@ export class GroupComponent implements OnInit {
             await this.groupService.canApproveGroupDocumentEdits(this.groupID);
 
           if (this.canViewDetails) {
-            this.usersWithAccess = await this.groupService.getUsersWithAccess(
-              this.groupID
-            );
-
             this.groupCreator = await this.groupService.getGroupCreator(
               this.groupID
             );
             this.groupOwner = await this.groupService.getGroupOwner(
               this.groupID
             );
+            this.usersWithAccess = await this.groupService.getUsersWithAccess(
+              this.groupID
+            );
+            this.gotDetails = true;
+
+            this.editRequests =
+              await this.groupService.getGroupDocumentEditRequests(
+                this.groupID
+              );
+            this.gotEditRequests = true;
           }
         }
       } catch (err) {
