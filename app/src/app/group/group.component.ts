@@ -12,6 +12,14 @@ import { OtherUserInfo } from '../user/user.service';
 import { DocumentEditInfo } from '../document/document.service';
 import { inputAppearance } from '../constants';
 
+interface GiveAccessViaSearchForm {
+  username: string;
+}
+
+interface FavoriteUsersInfo extends OtherUserInfo {
+  hasAccess: boolean;
+}
+
 @Component({
   selector: 'mdd-group',
   templateUrl: './group.component.html',
@@ -49,14 +57,18 @@ export class GroupComponent implements OnInit {
   public gotDetails: boolean = false;
   public editRequests: DocumentEditInfo[] = [];
   public gotEditRequests: boolean = false;
+  public favoriteUsers: FavoriteUsersInfo[] = [];
   public submittingGeneralConfigForm: boolean = false;
   public submittingVisibilityForm: boolean = false;
   public submittingSearchabilityForm: boolean = false;
   public submittingPermissionsForm: boolean = false;
+  public submittingGiveAccessViaSearch: boolean = false;
   public generalConfigErrors: string[] = [];
   public setVisibilityError: string = '';
   public setSearchabilityError: string = '';
   public setPermissionsError: string = '';
+  public giveAccessViaSearchError: string = '';
+  public showGiveAccessViaSearchSuccess: boolean = false;
   public inputAppearance = inputAppearance;
   public permissionNames = permissionNames;
   public loggedIn: boolean = false;
@@ -111,6 +123,17 @@ export class GroupComponent implements OnInit {
                 this.groupID
               );
             this.gotEditRequests = true;
+          }
+
+          if (this.isGroupOwner) {
+            this.favoriteUsers = (
+              await this.profileService.getFavoriteUsers()
+            ).map((favoriteUser) => ({
+              ...favoriteUser,
+              hasAccess: this.usersWithAccess.some(
+                (user) => user.id === favoriteUser.id
+              ),
+            }));
           }
         }
       } catch (err) {
@@ -202,5 +225,55 @@ export class GroupComponent implements OnInit {
     }
 
     this.submittingPermissionsForm = false;
+  }
+
+  public async onGiveAccessViaSearch(
+    form: GiveAccessViaSearchForm
+  ): Promise<void> {
+    this.giveAccessViaSearchError = '';
+    this.submittingGiveAccessViaSearch = true;
+
+    try {
+      await this.groupService.grantGroupAccessByUsername(
+        this.groupID,
+        form.username
+      );
+      this.submittingGiveAccessViaSearch = false;
+      this.usersWithAccess = await this.groupService.getUsersWithAccess(
+        this.groupID
+      );
+      this.showGiveAccessViaSearchSuccess = true;
+
+      setTimeout(() => {
+        this.showGiveAccessViaSearchSuccess = false;
+      }, 3000);
+    } catch (err) {
+      this.submittingGiveAccessViaSearch = false;
+      this.giveAccessViaSearchError = err;
+    }
+  }
+
+  public async onRevokeAccess(userID: string): Promise<void> {
+    await this.groupService.revokeGroupAccess(this.groupID, userID);
+    await this.updateUsersWithAccess();
+  }
+
+  public async onGrantAccess(userID: string): Promise<void> {
+    await this.groupService.grantGroupAccess(this.groupID, userID);
+    await this.updateUsersWithAccess();
+  }
+
+  private async updateUsersWithAccess(): Promise<void> {
+    this.usersWithAccess = await this.groupService.getUsersWithAccess(
+      this.groupID
+    );
+    this.favoriteUsers = (await this.profileService.getFavoriteUsers()).map(
+      (favoriteUser) => ({
+        ...favoriteUser,
+        hasAccess: this.usersWithAccess.some(
+          (user) => user.id === favoriteUser.id
+        ),
+      })
+    );
   }
 }

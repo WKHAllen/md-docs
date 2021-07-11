@@ -36,7 +36,7 @@ export class GroupAccessService extends BaseService {
       const userExists = await this.dbm.userService.userExists(userID);
 
       if (userExists) {
-        const hasAccess = this.hasAccess(groupID, userID);
+        const hasAccess = await this.hasAccess(groupID, userID);
 
         if (!hasAccess) {
           return await this.create<GroupAccess>({

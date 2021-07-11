@@ -61,6 +61,25 @@ a.standard-link {
   padding: 16px;
 }
 
+.item-list {
+  .item-primary {
+    font-size: 1.2em;
+    padding-right: 12px;
+  }
+
+  .item-secondary {
+    font-size: 0.9em;
+    color: rgba(0, 0, 0, 0.54);
+  }
+}
+
+.space-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
 @mixin centerer($horizontal: true, $vertical: true) {
   position: absolute;
 

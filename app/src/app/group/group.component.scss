@@ -12,18 +12,6 @@
 .item-list-card {
   max-width: 600px;
   margin: auto;
-
-  .item-list {
-    .item-primary {
-      font-size: 1.2em;
-      padding-right: 12px;
-    }
-
-    .item-secondary {
-      font-size: 0.9em;
-      color: rgba(0, 0, 0, 0.54);
-    }
-  }
 }
 
 .config-card {
@@ -41,6 +29,20 @@
 
 .general-config-error {
   margin-top: 8px;
+}
+
+.give-access {
+  margin-top: 12px;
+}
+
+.success-message {
+  padding-left: 0.75rem;
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+.success-message.success-show {
+  opacity: 1;
 }
 
 .document-edit-requests {

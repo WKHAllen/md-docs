@@ -311,6 +311,54 @@ groupRouter.post(
   })
 );
 
+// Grants a user access to a group given the user's username
+groupRouter.post(
+  "/grant_group_access_by_username",
+  wrapRoute(async (req, res) => {
+    const dbm = getDBM(req);
+    const user = await getLoggedInUser(req);
+    const groupID = getBodyParam(req, "group_id", "string");
+    const username = getBodyParam(req, "username", "string");
+
+    const group = await dbm.groupService.getGroup(groupID);
+
+    if (user.id === group.owner_user_id) {
+      const otherUser = await dbm.userService.getUserByUsername(username);
+      await dbm.groupAccessService.grantAccess(groupID, otherUser.id);
+
+      respond(res);
+    } else {
+      throw new ServiceError(
+        "You do not have permission to grant access to this group"
+      );
+    }
+  })
+);
+
+// Revokes a user's access to a group given the user's username
+groupRouter.post(
+  "/revoke_group_access_by_username",
+  wrapRoute(async (req, res) => {
+    const dbm = getDBM(req);
+    const user = await getLoggedInUser(req);
+    const groupID = getBodyParam(req, "group_id", "string");
+    const username = getBodyParam(req, "username", "string");
+
+    const group = await dbm.groupService.getGroup(groupID);
+
+    if (user.id === group.owner_user_id) {
+      const otherUser = await dbm.userService.getUserByUsername(username);
+      await dbm.groupAccessService.revokeAccess(groupID, otherUser.id);
+
+      respond(res);
+    } else {
+      throw new ServiceError(
+        "You do not have permission to revoke access to this group"
+      );
+    }
+  })
+);
+
 // Returns whether or not the user has access to a group
 groupRouter.get(
   "/has_group_access",

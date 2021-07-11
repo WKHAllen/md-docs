@@ -152,6 +152,26 @@ export class GroupService {
     });
   }
 
+  public async grantGroupAccessByUsername(
+    groupID: string,
+    username: string
+  ): Promise<void> {
+    await apiPost(this.http, '/grant_group_access_by_username', {
+      group_id: groupID,
+      username,
+    });
+  }
+
+  public async revokeGroupAccessByUsername(
+    groupID: string,
+    username: string
+  ): Promise<void> {
+    await apiPost(this.http, '/revoke_group_access_by_username', {
+      group_id: groupID,
+      username,
+    });
+  }
+
   public async hasGroupAccess(groupID: string): Promise<boolean> {
     return await apiGet<boolean>(this.http, '/has_group_access', {
       group_id: groupID,

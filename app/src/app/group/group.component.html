@@ -270,8 +270,132 @@
           <p>
             Depending on the group permissions set, a specific group of users
             can be allowed to edit documents or approve document edits. You can
-            configure this who is in this group of users below.
+            configure this who is in this group of users below. Search for users
+            by username or select from your list of favorite users to grant
+            access.
           </p>
+          <mat-tab-group dynamicHeight mat-align-tabs="center">
+            <mat-tab label="Search">
+              <div class="card-container">
+                <mat-accordion>
+                  <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                      <mat-panel-title>Grant access</mat-panel-title>
+                      <mat-panel-description
+                        >Grant group access by username</mat-panel-description
+                      >
+                    </mat-expansion-panel-header>
+                    <form
+                      #searchGiveAccess="ngForm"
+                      (ngSubmit)="onGiveAccessViaSearch(searchGiveAccess.value)"
+                      class="give-access"
+                    >
+                      <mat-form-field
+                        [appearance]="inputAppearance"
+                        class="max-width"
+                      >
+                        <mat-label>Username</mat-label>
+                        <input
+                          matInput
+                          type="text"
+                          id="username"
+                          name="username"
+                          maxlength="63"
+                          required
+                          ngModel
+                        />
+                      </mat-form-field>
+                      <button
+                        mat-raised-button
+                        color="primary"
+                        type="submit"
+                        [disabled]="submittingGiveAccessViaSearch"
+                      >
+                        Give access
+                      </button>
+                      <small
+                        class="success-message"
+                        [ngClass]="{
+                          'success-show':
+                            showGiveAccessViaSearchSuccess === true
+                        }"
+                      >
+                        <mat-icon>check</mat-icon>
+                      </small>
+                      <div
+                        *ngIf="giveAccessViaSearchError"
+                        class="form-error-text"
+                      >
+                        <small>
+                          {{ giveAccessViaSearchError }}
+                        </small>
+                      </div>
+                    </form>
+                  </mat-expansion-panel>
+                  <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                      <mat-panel-title>Revoke access</mat-panel-title>
+                      <mat-panel-description
+                        >Revoke group access</mat-panel-description
+                      >
+                    </mat-expansion-panel-header>
+                    <mat-list class="item-list">
+                      <mat-list-item *ngFor="let user of usersWithAccess">
+                        <div class="space-between">
+                          <div>
+                            <span class="item-primary">{{
+                              user.username
+                            }}</span>
+                            <span class="item-secondary">{{
+                              user.join_time | date
+                            }}</span>
+                          </div>
+                          <button
+                            mat-icon-button
+                            matTooltip="Revoke access"
+                            (click)="onRevokeAccess(user.id)"
+                          >
+                            <mat-icon>person_remove</mat-icon>
+                          </button>
+                        </div>
+                      </mat-list-item>
+                    </mat-list>
+                  </mat-expansion-panel>
+                </mat-accordion>
+              </div>
+            </mat-tab>
+            <mat-tab label="Favorites">
+              <mat-list class="item-list">
+                <mat-list-item *ngFor="let user of favoriteUsers">
+                  <div class="space-between">
+                    <div>
+                      <span class="item-primary">{{ user.username }}</span>
+                      <span class="item-secondary">{{
+                        user.join_time | date
+                      }}</span>
+                    </div>
+                    <button
+                      *ngIf="user.hasAccess"
+                      mat-icon-button
+                      matTooltip="Revoke access"
+                      color="primary"
+                      (click)="onRevokeAccess(user.id)"
+                    >
+                      <mat-icon>person_remove</mat-icon>
+                    </button>
+                    <button
+                      *ngIf="!user.hasAccess"
+                      mat-icon-button
+                      matTooltip="Grant access"
+                      (click)="onGrantAccess(user.id)"
+                    >
+                      <mat-icon>person_add</mat-icon>
+                    </button>
+                  </div>
+                </mat-list-item>
+              </mat-list>
+            </mat-tab>
+          </mat-tab-group>
         </div>
       </mat-expansion-panel>
       <mat-expansion-panel>
