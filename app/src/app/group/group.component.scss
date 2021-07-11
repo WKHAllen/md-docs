@@ -45,6 +45,14 @@
   opacity: 1;
 }
 
+.pass-ownership-radio {
+  margin: 16px 0;
+
+  mat-radio-button {
+    margin-bottom: 8px;
+  }
+}
+
 .document-edit-requests {
   padding: 16px;
   @include styles.flex-grid(20em, 16px);

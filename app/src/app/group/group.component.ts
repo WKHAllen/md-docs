@@ -16,6 +16,10 @@ interface GiveAccessViaSearchForm {
   username: string;
 }
 
+interface PassOwnershipForm {
+  newOwner: string;
+}
+
 interface FavoriteUsersInfo extends OtherUserInfo {
   hasAccess: boolean;
 }
@@ -63,11 +67,13 @@ export class GroupComponent implements OnInit {
   public submittingSearchabilityForm: boolean = false;
   public submittingPermissionsForm: boolean = false;
   public submittingGiveAccessViaSearch: boolean = false;
+  public submittingPassOwnershipForm: boolean = false;
   public generalConfigErrors: string[] = [];
   public setVisibilityError: string = '';
   public setSearchabilityError: string = '';
   public setPermissionsError: string = '';
   public giveAccessViaSearchError: string = '';
+  public passOwnershipError: string = '';
   public showGiveAccessViaSearchSuccess: boolean = false;
   public inputAppearance = inputAppearance;
   public permissionNames = permissionNames;
@@ -275,5 +281,27 @@ export class GroupComponent implements OnInit {
         ),
       })
     );
+  }
+
+  public async onPassOwnership(form: PassOwnershipForm): Promise<void> {
+    this.passOwnershipError = '';
+
+    if (!form.newOwner) {
+      this.passOwnershipError =
+        'Please select a user to give group ownership to';
+    }
+
+    if (!this.passOwnershipError) {
+      this.submittingPassOwnershipForm = true;
+
+      try {
+        await this.groupService.passGroupOwnership(this.groupID, form.newOwner);
+        await this.router.navigateByUrl('/', { skipLocationChange: true });
+        await this.router.navigate(['group', this.groupID]);
+      } catch (err) {
+        this.submittingPassOwnershipForm = false;
+        this.passOwnershipError = err;
+      }
+    }
   }
 }

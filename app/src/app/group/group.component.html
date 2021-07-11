@@ -408,8 +408,36 @@
         <div class="config-section">
           <p>
             You have the option to pass ownership of this group to another user.
-            Note that you can only regain ownership if it is given back to you.
+            The user must be one of your favorited users. Note that you can only
+            regain ownership if it is given back to you.
           </p>
+          <form
+            #passOwnershipForm="ngForm"
+            (ngSubmit)="onPassOwnership(passOwnershipForm.value)"
+          >
+            <div class="pass-ownership-radio">
+              <mat-radio-group id="newOwner" name="newOwner" required ngModel>
+                <mat-radio-button
+                  *ngFor="let user of favoriteUsers"
+                  value="{{ user.id }}"
+                  color="primary"
+                  class="block"
+                  >{{ user.username }}</mat-radio-button
+                >
+              </mat-radio-group>
+            </div>
+            <button
+              mat-raised-button
+              color="primary"
+              type="submit"
+              [disabled]="submittingPassOwnershipForm"
+            >
+              Pass ownership
+            </button>
+            <div *ngIf="passOwnershipError" class="form-error-text">
+              <small>{{ passOwnershipError }}</small>
+            </div>
+          </form>
         </div>
       </mat-expansion-panel>
     </mat-accordion>

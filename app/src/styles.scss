@@ -1,5 +1,3 @@
-@use '~@angular/material' as mat;
-
 html,
 body {
   height: 100%;
@@ -78,6 +76,10 @@ a.standard-link {
   justify-content: space-between;
   align-items: center;
   width: 100%;
+}
+
+.block {
+  display: block;
 }
 
 @mixin centerer($horizontal: true, $vertical: true) {
