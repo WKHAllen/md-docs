@@ -37,6 +37,8 @@ import { NotFoundComponent } from './error/not-found.component';
 import { ProfileComponent } from './profile/profile.component';
 import { NewGroupComponent } from './group/new-group.component';
 import { GroupComponent } from './group/group.component';
+import { DirectoryComponent } from './directory/directory.component';
+import { DirectoryPageComponent } from './directory/directory-page.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +54,8 @@ import { GroupComponent } from './group/group.component';
     ProfileComponent,
     NewGroupComponent,
     GroupComponent,
+    DirectoryComponent,
+    DirectoryPageComponent,
   ],
   imports: [
     CommonModule,

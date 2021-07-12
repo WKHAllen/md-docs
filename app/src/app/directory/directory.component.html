@@ -1,0 +1,61 @@
+<div *ngIf="!gotDetails; else directoryTemplate">
+  <div *ngIf="!directoryInfoError; else directoryInfoErrorTemplate">
+    <mat-spinner class="spinner"></mat-spinner>
+  </div>
+</div>
+
+<ng-template #directoryTemplate>
+  <div class="directory-container">
+    <div class="directory">
+      <div class="directory-toolbar">
+        <div class="directory-toolbar-title">
+          <h2 *ngIf="isRoot">/</h2>
+          <h2 *ngIf="!isRoot">{{ directoryInfo?.name }}</h2>
+        </div>
+        <div class="directory-toolbar-items">
+          <a
+            mat-icon-button
+            matTooltip="Go to group"
+            routerLink="/group/{{ directoryInfo?.group_id || groupID }}"
+          >
+            <mat-icon>group</mat-icon>
+          </a>
+          <a
+            mat-icon-button
+            matTooltip="Open parent directory"
+            routerLink="/directory/{{ directoryInfo?.parent_directory_id }}"
+            [disabled]="isRoot"
+          >
+            <mat-icon>north</mat-icon>
+          </a>
+          <button
+            mat-icon-button
+            matTooltip="New directory"
+            (click)="newDirectory()"
+          >
+            <mat-icon>create_new_folder</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            matTooltip="New document"
+            (click)="newDocument()"
+          >
+            <mat-icon>note_add</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            matTooltip="Copy link to directory"
+            (click)="copyDirectoryLink()"
+          >
+            <mat-icon>link</mat-icon>
+          </button>
+        </div>
+      </div>
+      <div class="directory-content">Directory content here</div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #directoryInfoErrorTemplate>
+  <div class="centered-text error-text">Error: {{ directoryInfoError }}</div>
+</ng-template>

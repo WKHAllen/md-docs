@@ -1,0 +1,40 @@
+$directory-border: 1px solid rgba(0, 0, 0, 0.15);
+
+.directory-container {
+  padding: 16px 0;
+
+  .directory {
+    border: $directory-border;
+    border-radius: 6px;
+
+    .directory-toolbar {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: 4px;
+      border-bottom: $directory-border;
+
+      .directory-toolbar-title {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        padding-left: 8px;
+
+        & > * {
+          margin: 0;
+        }
+      }
+
+      .directory-toolbar-items {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        padding-right: 4px;
+      }
+    }
+
+    .directory-content {
+    }
+  }
+}

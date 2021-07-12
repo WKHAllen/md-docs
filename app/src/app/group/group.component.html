@@ -10,7 +10,11 @@
     <span>{{ groupInfo.description }}</span>
   </div>
   <mat-tab-group dynamicHeight mat-align-tabs="center">
-    <mat-tab label="Documents">Documents and directories here.</mat-tab>
+    <mat-tab label="Documents">
+      <div *ngIf="canViewDetails; else cannotViewDetailsTemplate">
+        <mdd-directory root [groupID]="groupID"></mdd-directory>
+      </div>
+    </mat-tab>
     <mat-tab label="Details" [disabled]="!canViewDetails">
       <div *ngIf="!gotDetails; else groupDetailsTemplate">
         <mat-spinner class="spinner"></mat-spinner>
@@ -457,5 +461,11 @@
         </mat-card>
       </a>
     </div>
+  </div>
+</ng-template>
+
+<ng-template #cannotViewDetailsTemplate>
+  <div class="invalid-permissions-text">
+    You do not have permission to view the contents of this group.
   </div>
 </ng-template>

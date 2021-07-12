@@ -2,6 +2,7 @@ html,
 body {
   height: 100%;
 }
+
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
@@ -80,6 +81,11 @@ a.standard-link {
 
 .block {
   display: block;
+}
+
+.invalid-permissions-text {
+  text-align: center;
+  margin: 24px 0;
 }
 
 @mixin centerer($horizontal: true, $vertical: true) {

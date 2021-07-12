@@ -1,0 +1,8 @@
+<mdd-directory
+  *ngIf="directoryID; else loadingDirectoryTemplate"
+  [directoryID]="directoryID"
+></mdd-directory>
+
+<ng-template #loadingDirectoryTemplate>
+  <mat-spinner class="spinner"></mat-spinner>
+</ng-template>
