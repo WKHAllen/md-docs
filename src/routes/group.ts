@@ -576,3 +576,23 @@ groupRouter.get(
     respond(res, canApproveEdits);
   })
 );
+
+// Deletes a group
+groupRouter.post(
+  "/delete_group",
+  wrapRoute(async (req, res) => {
+    const dbm = getDBM(req);
+    const user = await getLoggedInUser(req);
+    const groupID = getBodyParam(req, "group_id", "string");
+
+    const group = await dbm.groupService.getGroup(groupID);
+
+    if (user.id === group.owner_user_id) {
+      await dbm.groupService.deleteGroup(groupID);
+
+      respond(res);
+    } else {
+      throw new ServiceError("You do not have permission to delete this group");
+    }
+  })
+);

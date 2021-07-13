@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import {
   GroupService,
@@ -11,6 +11,7 @@ import { ProfileService } from '../profile/profile.service';
 import { OtherUserInfo } from '../user/user.service';
 import { DocumentEditInfo } from '../document/document.service';
 import { inputAppearance } from '../constants';
+import { ConfirmComponent } from '../confirm/confirm.component';
 
 interface GiveAccessViaSearchForm {
   username: string;
@@ -78,6 +79,7 @@ export class GroupComponent implements OnInit {
   public inputAppearance = inputAppearance;
   public permissionNames = permissionNames;
   public loggedIn: boolean = false;
+  @ViewChild(ConfirmComponent) deleteConfirmDialog!: ConfirmComponent;
 
   constructor(
     private groupService: GroupService,
@@ -302,6 +304,17 @@ export class GroupComponent implements OnInit {
         this.submittingPassOwnershipForm = false;
         this.passOwnershipError = err;
       }
+    }
+  }
+
+  public deleteGroupConfirmation(): void {
+    this.deleteConfirmDialog.openDialog();
+  }
+
+  public async onDeleteGroup(confirmed: boolean): Promise<void> {
+    if (confirmed) {
+      await this.groupService.deleteGroup(this.groupID);
+      await this.router.navigate(['/']);
     }
   }
 }

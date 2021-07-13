@@ -444,6 +444,32 @@
           </form>
         </div>
       </mat-expansion-panel>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>Delete group</mat-panel-title>
+          <mat-panel-description
+            >Delete the group and all contents within</mat-panel-description
+          >
+        </mat-expansion-panel-header>
+        <div class="config-section">
+          <p>
+            This will delete the group and all documents contained within in.
+            Please be certain.
+          </p>
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="deleteGroupConfirmation()"
+          >
+            Delete group
+          </button>
+          <mdd-confirm
+            title="Delete group"
+            confirm-message="Are you sure you want to delete this group and all documents within in?"
+            (close)="onDeleteGroup($event)"
+          ></mdd-confirm>
+        </div>
+      </mat-expansion-panel>
     </mat-accordion>
   </div>
 </ng-template>

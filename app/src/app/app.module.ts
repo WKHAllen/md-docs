@@ -14,6 +14,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -39,6 +40,10 @@ import { NewGroupComponent } from './group/new-group.component';
 import { GroupComponent } from './group/group.component';
 import { DirectoryComponent } from './directory/directory.component';
 import { DirectoryPageComponent } from './directory/directory-page.component';
+import {
+  ConfirmComponent,
+  ConfirmDialogComponent,
+} from './confirm/confirm.component';
 
 @NgModule({
   declarations: [
@@ -56,6 +61,8 @@ import { DirectoryPageComponent } from './directory/directory-page.component';
     GroupComponent,
     DirectoryComponent,
     DirectoryPageComponent,
+    ConfirmComponent,
+    ConfirmDialogComponent,
   ],
   imports: [
     CommonModule,
@@ -74,6 +81,7 @@ import { DirectoryPageComponent } from './directory/directory-page.component';
     MatButtonModule,
     MatCardModule,
     MatCheckboxModule,
+    MatDialogModule,
     MatExpansionModule,
     MatFormFieldModule,
     MatIconModule,

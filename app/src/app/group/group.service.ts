@@ -235,4 +235,8 @@ export class GroupService {
       { group_id: groupID }
     );
   }
+
+  public async deleteGroup(groupID: string): Promise<void> {
+    await apiPost(this.http, '/delete_group', { group_id: groupID });
+  }
 }
