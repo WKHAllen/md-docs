@@ -16,6 +16,7 @@
         </div>
         <div class="directory-toolbar-items">
           <a
+            *ngIf="!isRoot"
             mat-icon-button
             matTooltip="Go to group"
             routerLink="/group/{{ directoryInfo?.group_id || groupID }}"
@@ -23,10 +24,13 @@
             <mat-icon>group</mat-icon>
           </a>
           <a
+            *ngIf="
+              directoryInfo?.parent_directory_id;
+              else rootParentButtonTemplate
+            "
             mat-icon-button
             matTooltip="Open parent directory"
             routerLink="/directory/{{ directoryInfo?.parent_directory_id }}"
-            [disabled]="isRoot"
           >
             <mat-icon>north</mat-icon>
           </a>
@@ -60,4 +64,15 @@
 
 <ng-template #directoryInfoErrorTemplate>
   <div class="centered-text error-text">Error: {{ directoryInfoError }}</div>
+</ng-template>
+
+<ng-template #rootParentButtonTemplate>
+  <a
+    *ngIf="!isRoot"
+    mat-icon-button
+    matTooltip="Open parent directory"
+    routerLink="/group/{{ directoryInfo?.group_id }}"
+  >
+    <mat-icon>north</mat-icon>
+  </a>
 </ng-template>
