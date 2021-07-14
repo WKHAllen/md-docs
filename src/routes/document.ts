@@ -181,6 +181,34 @@ documentRouter.get(
   })
 );
 
+// Returns the full path to the document
+documentRouter.get(
+  "/get_document_path",
+  wrapRoute(async (req, res) => {
+    const dbm = getDBM(req);
+    const user = await getLoggedInUser(req, false);
+    const documentID = getQueryParam(req, "document_id", "string");
+
+    const document = await dbm.documentService.getDocument(documentID);
+    const canView = await dbm.permissionService.canViewGroupDetails(
+      user?.id,
+      document.group_id
+    );
+
+    if (canView) {
+      const documentPath = await dbm.documentService.getDocumentPath(
+        documentID
+      );
+
+      respond(res, documentPath);
+    } else {
+      throw new ServiceError(
+        "You do not have permission to view the full path to this document"
+      );
+    }
+  })
+);
+
 // Deletes a document
 documentRouter.post(
   "/delete_document",

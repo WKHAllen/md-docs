@@ -83,6 +83,12 @@ export class DirectoryService {
     );
   }
 
+  public async getDirectoryPath(directoryID: string): Promise<DirectoryInfo[]> {
+    return await apiGet<DirectoryInfo[]>(this.http, '/get_directory_path', {
+      directory_id: directoryID,
+    });
+  }
+
   public async deleteDirectory(directoryID: string): Promise<void> {
     await apiPost(this.http, '/delete_directory', {
       directory_id: directoryID,

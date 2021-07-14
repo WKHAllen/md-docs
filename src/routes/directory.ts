@@ -209,6 +209,34 @@ directoryRouter.get(
   })
 );
 
+// Returns the full path to the directory
+directoryRouter.get(
+  "/get_directory_path",
+  wrapRoute(async (req, res) => {
+    const dbm = getDBM(req);
+    const user = await getLoggedInUser(req, false);
+    const directoryID = getQueryParam(req, "directory_id", "string");
+
+    const directory = await dbm.directoryService.getDirectory(directoryID);
+    const canView = await dbm.permissionService.canViewGroupDetails(
+      user?.id,
+      directory.group_id
+    );
+
+    if (canView) {
+      const directoryPath = await dbm.directoryService.getDirectoryPath(
+        directoryID
+      );
+
+      respond(res, directoryPath);
+    } else {
+      throw new ServiceError(
+        "You do not have permission to view the full path to this directory"
+      );
+    }
+  })
+);
+
 // Deletes a directory and all documents and directories within it
 directoryRouter.post(
   "/delete_directory",

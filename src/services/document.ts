@@ -292,6 +292,32 @@ export class DocumentService extends BaseService {
   }
 
   /**
+   * Returns a document's full path as a list of parent directories.
+   *
+   * @param documentID The document's ID.
+   * @returns The full path to the document as a list of parent directories.
+   */
+  public async getDocumentPath(documentID: string): Promise<Directory[]> {
+    const documentExists = await this.documentExists(documentID);
+
+    if (documentExists) {
+      let path: Directory[] = [];
+      let nextParent = await this.getContainingDirectory(documentID);
+
+      while (nextParent) {
+        path.unshift(nextParent);
+        nextParent = await this.dbm.directoryService.getParentDirectory(
+          nextParent.id
+        );
+      }
+
+      return path;
+    } else {
+      throw new ServiceError("Document does not exist");
+    }
+  }
+
+  /**
    * Deletes the document.
    *
    * @param documentID The document's ID.

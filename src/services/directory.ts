@@ -245,6 +245,30 @@ export class DirectoryService extends BaseService {
   }
 
   /**
+   * Returns a directory's full path as a list of parent directories.
+   *
+   * @param directoryID The directory's ID.
+   * @returns The full path to the directory as a list of parent directories.
+   */
+  public async getDirectoryPath(directoryID: string): Promise<Directory[]> {
+    const directoryExists = await this.directoryExists(directoryID);
+
+    if (directoryExists) {
+      let path: Directory[] = [];
+      let nextParent = await this.getParentDirectory(directoryID);
+
+      while (nextParent) {
+        path.unshift(nextParent);
+        nextParent = await this.getParentDirectory(nextParent.id);
+      }
+
+      return path;
+    } else {
+      throw new ServiceError("Directory does not exist");
+    }
+  }
+
+  /**
    * Deletes a directory and all child directories and documents.
    *
    * @param directoryID The directory's ID.
