@@ -16,7 +16,7 @@ interface DialogData {
 })
 export class ConfirmComponent {
   @Input() title: string = 'Confirm';
-  @Input('confirm-message') confirmMessage: string = 'Are you sure?';
+  @Input() confirmMessage: string = 'Are you sure?';
   @Input() width: string = '400px';
   @Output() close = new EventEmitter<boolean>();
 

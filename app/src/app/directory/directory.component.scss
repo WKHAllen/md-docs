@@ -1,8 +1,10 @@
 $directory-border: 1px solid rgba(0, 0, 0, 0.15);
 
-.directory-container {
-  padding: 16px 0;
+.directory-container-root {
+  padding-top: 16px;
+}
 
+.directory-container {
   .directory {
     border: $directory-border;
     border-radius: 6px;

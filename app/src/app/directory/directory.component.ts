@@ -1,4 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DirectoryService, DirectoryInfo } from './directory.service';
 import { DocumentInfo } from '../document/document.service';
@@ -10,7 +16,7 @@ import { copyMessage } from '../util';
   templateUrl: './directory.component.html',
   styleUrls: ['./directory.component.scss'],
 })
-export class DirectoryComponent implements OnInit {
+export class DirectoryComponent implements OnInit, OnChanges {
   @Input() public root: string = 'false';
   @Input() public groupID: string = '';
   @Input() public directoryID: string = '';
@@ -54,6 +60,24 @@ export class DirectoryComponent implements OnInit {
     } catch (err) {
       this.directoryInfoError = err;
     }
+  }
+
+  public async ngOnChanges(changes: SimpleChanges): Promise<void> {
+    for (let propName in changes) {
+      switch (propName) {
+        case 'root':
+          this.root = changes.root.currentValue;
+          break;
+        case 'groupID':
+          this.groupID = changes.groupID.currentValue;
+          break;
+        case 'directoryID':
+          this.directoryID = changes.directoryID.currentValue;
+          break;
+      }
+    }
+
+    await this.ngOnInit();
   }
 
   public newDirectory(): void {}

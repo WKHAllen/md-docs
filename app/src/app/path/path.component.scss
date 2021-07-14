@@ -1,0 +1,15 @@
+.path-segment {
+  padding-right: 2px;
+
+  .path-separator {
+    font-size: 1.5em;
+  }
+
+  .path-name {
+    font-size: 1.25em;
+  }
+
+  .current-object-segment {
+    font-weight: bold;
+  }
+}

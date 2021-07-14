@@ -44,6 +44,7 @@ import {
   ConfirmComponent,
   ConfirmDialogComponent,
 } from './confirm/confirm.component';
+import { PathComponent } from './path/path.component';
 
 @NgModule({
   declarations: [
@@ -63,6 +64,7 @@ import {
     DirectoryPageComponent,
     ConfirmComponent,
     ConfirmDialogComponent,
+    PathComponent,
   ],
   imports: [
     CommonModule,

@@ -1,0 +1,31 @@
+<span *ngIf="isRoot; else fullPathTemplate" class="path-segment">
+  <span class="path-separator">/</span>
+</span>
+
+<ng-template #fullPathTemplate>
+  <span *ngFor="let segment of path" class="path-segment">
+    <span class="path-separator">/</span>
+    <span class="path-name">
+      <a routerLink="/directory/{{ segment.id }}" class="standard-link">{{
+        segment.name
+      }}</a>
+    </span>
+  </span>
+  <span *ngIf="showCurrentObject" class="path-segment">
+    <span class="path-separator">/</span>
+    <span class="path-name current-object-segment">
+      <a
+        *ngIf="directoryID !== '' && documentID === ''"
+        routerLink="/directory/{{ currentObject?.id }}"
+        class="standard-link"
+        >{{ currentObject?.name }}</a
+      >
+      <a
+        *ngIf="directoryID === '' && documentID !== ''"
+        routerLink="/document/{{ currentObject?.id }}"
+        class="standard-link"
+        >{{ currentObject?.name }}</a
+      >
+    </span>
+  </span>
+</ng-template>

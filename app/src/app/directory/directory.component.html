@@ -5,12 +5,14 @@
 </div>
 
 <ng-template #directoryTemplate>
-  <div class="directory-container">
+  <div
+    class="directory-container"
+    [ngClass]="{ 'directory-container-root': isRoot }"
+  >
     <div class="directory">
       <div class="directory-toolbar">
         <div class="directory-toolbar-title">
-          <h2 *ngIf="isRoot">/</h2>
-          <h2 *ngIf="!isRoot">{{ directoryInfo?.name }}</h2>
+          <mdd-path [root]="root" [directoryID]="directoryID"></mdd-path>
         </div>
         <div class="directory-toolbar-items">
           <a

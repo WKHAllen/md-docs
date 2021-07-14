@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'mdd-document-page',
+  selector: 'mdd-directory-page',
   templateUrl: './directory-page.component.html',
 })
 export class DirectoryPageComponent implements OnInit {

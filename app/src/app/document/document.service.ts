@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { apiGet, apiPost } from '../api';
+import { DirectoryInfo } from '../directory/directory.service';
 
 export interface DocumentInfo {
   id: string;
@@ -28,4 +29,16 @@ export interface DocumentEditInfo {
 })
 export class DocumentService {
   constructor(private http: HttpClient) {}
+
+  public async getDocumentInfo(documentID: string): Promise<DocumentInfo> {
+    return await apiGet<DocumentInfo>(this.http, '/get_document_info', {
+      document_id: documentID,
+    });
+  }
+
+  public async getDocumentPath(documentID: string): Promise<DirectoryInfo[]> {
+    return await apiGet<DirectoryInfo[]>(this.http, '/get_document_path', {
+      document_id: documentID,
+    });
+  }
 }
