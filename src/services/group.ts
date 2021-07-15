@@ -349,12 +349,9 @@ export class GroupService extends BaseService {
 
     if (groupExists) {
       const sql = `
-        SELECT directory.*
-          FROM directory
-          JOIN app_group
-            ON directory.group_id = app_group.id
-        WHERE app_group.id = ?
-          AND directory.parent_directory_id = NULL
+        SELECT * FROM directory
+          WHERE group_id = ?
+            AND parent_directory_id IS NULL
         ORDER BY directory.name ASC;`;
       const params = [groupID];
       return await this.dbm.execute<Directory>(sql, params);
@@ -374,12 +371,9 @@ export class GroupService extends BaseService {
 
     if (groupExists) {
       const sql = `
-        SELECT document.*
-          FROM document
-          JOIN app_group
-            ON document.group_id = app_group.id
-        WHERE app_group.id = ?
-          AND document.directory_id = NULL
+        SELECT * FROM document
+          WHERE group_id = ?
+            AND directory_id IS NULL
         ORDER BY document.name ASC;`;
       const params = [groupID];
       return await this.dbm.execute<Document>(sql, params);

@@ -8,6 +8,7 @@ $directory-border: 1px solid rgba(0, 0, 0, 0.15);
   .directory {
     border: $directory-border;
     border-radius: 6px;
+    overflow: hidden;
 
     .directory-toolbar {
       display: flex;
@@ -38,6 +39,36 @@ $directory-border: 1px solid rgba(0, 0, 0, 0.15);
     }
 
     .directory-content {
+      overflow: hidden;
+
+      .directory-item {
+        padding: 4px;
+        display: flex;
+        align-items: center;
+
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .directory-item-icon {
+          display: flex;
+          align-items: center;
+          padding-right: 4px;
+        }
+
+        .directory-icon {
+          color: #e4b300;
+        }
+
+        .document-icon {
+          color: #adadb9;
+        }
+      }
     }
   }
+}
+
+.no-items-message {
+  text-align: center;
+  padding: 16px;
 }

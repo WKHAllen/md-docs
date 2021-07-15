@@ -57,7 +57,39 @@
           </button>
         </div>
       </div>
-      <div class="directory-content">Directory content here</div>
+      <div class="directory-content">
+        <div
+          *ngIf="
+            directories.length > 0 || documents.length > 0;
+            else noItemsTemplate
+          "
+        >
+          <div *ngFor="let directory of directories" class="directory-item">
+            <span class="directory-item-icon">
+              <mat-icon class="directory-icon">folder</mat-icon>
+            </span>
+            <span>
+              <a
+                routerLink="/directory/{{ directory.id }}"
+                class="standard-link"
+                >{{ directory.name }}</a
+              >
+            </span>
+          </div>
+          <div *ngFor="let document of documents" class="directory-item">
+            <span class="directory-item-icon">
+              <mat-icon class="document-icon">insert_drive_file</mat-icon>
+            </span>
+            <span>
+              <a
+                routerLink="/document/{{ document.id }}"
+                class="standard-link"
+                >{{ document.name }}</a
+              >
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </ng-template>
@@ -75,4 +107,8 @@
   >
     <mat-icon>north</mat-icon>
   </a>
+</ng-template>
+
+<ng-template #noItemsTemplate>
+  <div class="no-items-message">This directory is empty.</div>
 </ng-template>
