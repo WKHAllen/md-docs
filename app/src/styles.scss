@@ -88,6 +88,12 @@ a.standard-link {
   margin: 24px 0;
 }
 
+.alert-panel-center {
+  span {
+    margin: auto;
+  }
+}
+
 @mixin centerer($horizontal: true, $vertical: true) {
   position: absolute;
 

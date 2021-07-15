@@ -5,7 +5,7 @@ import {
   OnChanges,
   SimpleChanges,
 } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { DirectoryService, DirectoryInfo } from './directory.service';
 import { DocumentInfo } from '../document/document.service';
 import { GroupService } from '../group/group.service';
@@ -30,8 +30,7 @@ export class DirectoryComponent implements OnInit, OnChanges {
   constructor(
     private directoryService: DirectoryService,
     private groupService: GroupService,
-    private router: Router,
-    private activatedRoute: ActivatedRoute
+    private snackBar: MatSnackBar
   ) {}
 
   public async ngOnInit(): Promise<void> {
@@ -86,5 +85,10 @@ export class DirectoryComponent implements OnInit, OnChanges {
 
   public copyDirectoryLink(): void {
     copyMessage(window.location.href);
+
+    this.snackBar.open('Link copied to clipboard', undefined, {
+      duration: 3000,
+      panelClass: 'alert-panel-center',
+    });
   }
 }
