@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DirectoryService, DirectoryInfo } from './directory.service';
-import { DocumentInfo } from '../document/document.service';
+import { DocumentService, DocumentInfo } from '../document/document.service';
 import { GroupService } from '../group/group.service';
 import { copyMessage } from '../util';
 
@@ -29,6 +29,7 @@ export class DirectoryComponent implements OnInit, OnChanges {
 
   constructor(
     private directoryService: DirectoryService,
+    private documentService: DocumentService,
     private groupService: GroupService,
     private snackBar: MatSnackBar
   ) {}
@@ -79,9 +80,13 @@ export class DirectoryComponent implements OnInit, OnChanges {
     await this.ngOnInit();
   }
 
-  public newDirectory(): void {}
+  public newDirectoryDialog(): void {}
 
-  public newDocument(): void {}
+  public async createDirectory(): Promise<void> {}
+
+  public newDocumentDialog(): void {}
+
+  public async createDocument(): Promise<void> {}
 
   public copyDirectoryLink(): void {
     copyMessage(window.location.href);
