@@ -57,4 +57,8 @@ export class NewItemDialogComponent {
   public cancel(): void {
     this.dialogRef.close();
   }
+
+  public done(): void {
+    this.dialogRef.close(this.value);
+  }
 }

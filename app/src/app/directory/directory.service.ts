@@ -22,7 +22,7 @@ export class DirectoryService {
   public async createDirectory(
     name: string,
     groupID: string,
-    directoryID?: string
+    directoryID: string | null = null
   ): Promise<DirectoryInfo> {
     return await apiPost<DirectoryInfo>(this.http, '/create_directory', {
       name,

@@ -112,3 +112,19 @@
 <ng-template #noItemsTemplate>
   <div class="no-items-message">This directory is empty.</div>
 </ng-template>
+
+<mdd-new-item
+  #newDirectory
+  title="New directory"
+  fieldName="Directory name"
+  doneButtonLabel="Create"
+  (close)="createDirectory($event)"
+></mdd-new-item>
+
+<mdd-new-item
+  #newDocument
+  title="New document"
+  fieldName="Document name"
+  doneButtonLabel="Create"
+  (close)="createDocument($event)"
+></mdd-new-item>

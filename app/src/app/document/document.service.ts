@@ -35,7 +35,7 @@ export class DocumentService {
   public async createDocument(
     name: string,
     groupID: string,
-    directoryID?: string
+    directoryID: string | null = null
   ): Promise<DocumentInfo> {
     return await apiPost<DocumentInfo>(this.http, '/create_document', {
       name,

@@ -1,13 +1,18 @@
 <h1 mat-dialog-title>{{ data.title }}</h1>
 <div mat-dialog-content>
-  <mat-form-field [appearance]="inputAppearance">
+  <mat-form-field class="max-width" [appearance]="inputAppearance">
     <mat-label>{{ data.fieldName }}</mat-label>
-    <input matInput [(ngModel)]="value" />
+    <input matInput required [(ngModel)]="value" (keyup.enter)="done()" />
   </mat-form-field>
 </div>
 <div mat-dialog-actions class="new-item-actions">
-  <button mat-button (click)="cancel()">Cancel</button>
-  <button mat-raised-button color="primary" [mat-dialog-close]="value">
+  <button mat-button type="button" (click)="cancel()">Cancel</button>
+  <button
+    mat-raised-button
+    type="submit"
+    color="primary"
+    [mat-dialog-close]="value"
+  >
     {{ data.doneButtonLabel }}
   </button>
 </div>

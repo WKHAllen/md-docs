@@ -4,11 +4,13 @@ import {
   OnInit,
   OnChanges,
   SimpleChanges,
+  ViewChild,
 } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DirectoryService, DirectoryInfo } from './directory.service';
 import { DocumentService, DocumentInfo } from '../document/document.service';
 import { GroupService } from '../group/group.service';
+import { NewItemComponent } from '../new-item/new-item.component';
 import { copyMessage } from '../util';
 
 @Component({
@@ -26,6 +28,8 @@ export class DirectoryComponent implements OnInit, OnChanges {
   public documents: DocumentInfo[] = [];
   public gotDetails: boolean = false;
   public directoryInfoError: string = '';
+  @ViewChild('newDirectory') createDirectoryDialog!: NewItemComponent;
+  @ViewChild('newDocument') createDocumentDialog!: NewItemComponent;
 
   constructor(
     private directoryService: DirectoryService,
@@ -44,6 +48,11 @@ export class DirectoryComponent implements OnInit, OnChanges {
         );
         this.documents = await this.groupService.getRootDocuments(this.groupID);
       } else {
+        const group = await this.directoryService.getDirectoryGroup(
+          this.directoryID
+        );
+
+        this.groupID = group.id;
         this.directoryInfo = await this.directoryService.getDirectoryInfo(
           this.directoryID
         );
@@ -80,13 +89,78 @@ export class DirectoryComponent implements OnInit, OnChanges {
     await this.ngOnInit();
   }
 
-  public newDirectoryDialog(): void {}
+  public newDirectoryDialog(): void {
+    this.createDirectoryDialog.openDialog();
+  }
 
-  public async createDirectory(): Promise<void> {}
+  public async createDirectory(directoryName: string): Promise<void> {
+    if (directoryName) {
+      try {
+        await this.directoryService.createDirectory(
+          directoryName,
+          this.groupID,
+          this.directoryID || undefined
+        );
 
-  public newDocumentDialog(): void {}
+        this.snackBar.open('Directory created', undefined, {
+          duration: 3000,
+          panelClass: 'alert-panel-center',
+        });
 
-  public async createDocument(): Promise<void> {}
+        if (this.isRoot) {
+          this.directories = await this.groupService.getRootDirectories(
+            this.groupID
+          );
+        } else {
+          this.directories = await this.directoryService.getSubdirectories(
+            this.directoryID
+          );
+        }
+      } catch (err) {
+        this.snackBar.open(`Error: ${err}`, undefined, {
+          duration: 5000,
+          panelClass: 'alert-panel-center',
+        });
+      }
+    }
+  }
+
+  public newDocumentDialog(): void {
+    this.createDocumentDialog.openDialog();
+  }
+
+  public async createDocument(documentName: string): Promise<void> {
+    if (documentName) {
+      try {
+        await this.documentService.createDocument(
+          documentName,
+          this.groupID,
+          this.directoryID || undefined
+        );
+
+        this.snackBar.open('Document created', undefined, {
+          duration: 3000,
+          panelClass: 'alert-panel-center',
+        });
+
+        if (this.isRoot) {
+          this.documents = await this.groupService.getRootDocuments(
+            this.groupID
+          );
+        } else {
+          this.documents =
+            await this.directoryService.getDocumentsWithinDirectory(
+              this.directoryID
+            );
+        }
+      } catch (err) {
+        this.snackBar.open(`Error: ${err}`, undefined, {
+          duration: 5000,
+          panelClass: 'alert-panel-center',
+        });
+      }
+    }
+  }
 
   public copyDirectoryLink(): void {
     copyMessage(window.location.href);

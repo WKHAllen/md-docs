@@ -10,8 +10,8 @@ import { LoginRegisterService } from '../login-register/login-register.service';
 import { ProfileService } from '../profile/profile.service';
 import { OtherUserInfo } from '../user/user.service';
 import { DocumentEditInfo } from '../document/document.service';
-import { inputAppearance } from '../constants';
 import { ConfirmComponent } from '../confirm/confirm.component';
+import { inputAppearance } from '../constants';
 
 interface GiveAccessViaSearchForm {
   username: string;
