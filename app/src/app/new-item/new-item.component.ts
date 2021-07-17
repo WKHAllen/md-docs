@@ -10,6 +10,7 @@ import { inputAppearance } from '../constants';
 interface DialogData {
   title: string;
   fieldName: string;
+  value: string;
   doneButtonLabel: string;
 }
 
@@ -20,6 +21,7 @@ interface DialogData {
 export class NewItemComponent {
   @Input() title: string = 'New item';
   @Input() fieldName: string = 'Item name';
+  @Input() value: string = '';
   @Input() doneButtonLabel: string = 'Create';
   @Input() width: string = '400px';
   @Output() close = new EventEmitter<string>();
@@ -32,6 +34,7 @@ export class NewItemComponent {
       data: {
         title: this.title,
         fieldName: this.fieldName,
+        value: this.value,
         doneButtonLabel: this.doneButtonLabel,
       },
     });
@@ -46,7 +49,6 @@ export class NewItemComponent {
   styleUrls: ['./new-item.component.scss'],
 })
 export class NewItemDialogComponent {
-  public value: string = '';
   public inputAppearance: MatFormFieldAppearance = inputAppearance;
 
   constructor(
@@ -59,6 +61,6 @@ export class NewItemDialogComponent {
   }
 
   public done(): void {
-    this.dialogRef.close(this.value);
+    this.dialogRef.close(this.data.value);
   }
 }

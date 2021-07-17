@@ -2,7 +2,7 @@
 <div mat-dialog-content>
   <mat-form-field class="max-width" [appearance]="inputAppearance">
     <mat-label>{{ data.fieldName }}</mat-label>
-    <input matInput required [(ngModel)]="value" (keyup.enter)="done()" />
+    <input matInput required [(ngModel)]="data.value" (keyup.enter)="done()" />
   </mat-form-field>
 </div>
 <div mat-dialog-actions class="new-item-actions">
@@ -11,7 +11,7 @@
     mat-raised-button
     type="submit"
     color="primary"
-    [mat-dialog-close]="value"
+    [mat-dialog-close]="data.value"
   >
     {{ data.doneButtonLabel }}
   </button>

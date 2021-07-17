@@ -11,6 +11,7 @@ import { DatePipe } from '@angular/common';
 import { DirectoryService, DirectoryInfo } from './directory.service';
 import { DocumentService, DocumentInfo } from '../document/document.service';
 import { GroupService } from '../group/group.service';
+import { ConfirmComponent } from '../confirm/confirm.component';
 import { NewItemComponent } from '../new-item/new-item.component';
 import {
   EntityInfoComponent,
@@ -48,12 +49,31 @@ export class DirectoryComponent implements OnInit, OnChanges {
   public documents: DocumentInfo[] = [];
   public gotDetails: boolean = false;
   public directoryInfoError: string = '';
+  public selectedDirectory: DirectoryInfo = {
+    id: '',
+    name: '',
+    group_id: '',
+    depth: 0,
+    create_time: 0,
+  };
+  public selectedDocument: DocumentInfo = {
+    id: '',
+    creator_user_id: '',
+    group_id: '',
+    name: '',
+    content: '',
+    create_time: 0,
+  };
   public selectedDirectoryInfo: EntityInfo[] = [];
   public selectedDocumentInfo: EntityInfo[] = [];
   @ViewChild('newDirectory') createDirectoryDialog!: NewItemComponent;
   @ViewChild('newDocument') createDocumentDialog!: NewItemComponent;
   @ViewChild('directoryInfoDialog') directoryInfoDialog!: EntityInfoComponent;
+  @ViewChild('renameDirectoryDialog') renameDirectoryDialog!: NewItemComponent;
+  @ViewChild('deleteDirectoryDialog') deleteDirectoryDialog!: ConfirmComponent;
   @ViewChild('documentInfoDialog') documentInfoDialog!: EntityInfoComponent;
+  @ViewChild('renameDocumentDialog') renameDocumentDialog!: NewItemComponent;
+  @ViewChild('deleteDocumentDialog') deleteDocumentDialog!: ConfirmComponent;
 
   constructor(
     private directoryService: DirectoryService,
@@ -198,6 +218,10 @@ export class DirectoryComponent implements OnInit, OnChanges {
   }
 
   public async viewDirectoryInfo(directoryID: string): Promise<void> {
+    this.selectedDirectory = await this.directoryService.getDirectoryInfo(
+      directoryID
+    );
+
     const directoryInfo = await this.directoryService.getDirectoryInfo(
       directoryID
     );
@@ -227,11 +251,90 @@ export class DirectoryComponent implements OnInit, OnChanges {
     }, 100);
   }
 
-  public renameDirectoryDialog(directoryID: string): void {}
+  public async openRenameDirectoryDialog(directoryID: string): Promise<void> {
+    this.selectedDirectory = await this.directoryService.getDirectoryInfo(
+      directoryID
+    );
 
-  public deleteDirectoryDialog(directoryID: string): void {}
+    setTimeout(() => {
+      this.renameDirectoryDialog.openDialog();
+    }, 100);
+  }
+
+  public async renameDirectory(newName: string): Promise<void> {
+    if (newName) {
+      try {
+        await this.directoryService.renameDirectory(
+          this.selectedDirectory.id,
+          newName
+        );
+
+        this.snackBar.open('Directory renamed', undefined, {
+          duration: 3000,
+          panelClass: 'alert-panel-center',
+        });
+
+        if (this.isRoot) {
+          this.directories = await this.groupService.getRootDirectories(
+            this.groupID
+          );
+        } else {
+          this.directories = await this.directoryService.getSubdirectories(
+            this.directoryID
+          );
+        }
+      } catch (err) {
+        this.snackBar.open(`Error: ${err}`, undefined, {
+          duration: 5000,
+          panelClass: 'alert-panel-center',
+        });
+      }
+    }
+  }
+
+  public async openDeleteDirectoryDialog(directoryID: string): Promise<void> {
+    this.selectedDirectory = await this.directoryService.getDirectoryInfo(
+      directoryID
+    );
+
+    setTimeout(() => {
+      this.deleteDirectoryDialog.openDialog();
+    }, 100);
+  }
+
+  public async deleteDirectory(confirmed: boolean): Promise<void> {
+    if (confirmed) {
+      try {
+        await this.directoryService.deleteDirectory(this.selectedDirectory.id);
+
+        this.snackBar.open('Directory deleted', undefined, {
+          duration: 3000,
+          panelClass: 'alert-panel-center',
+        });
+
+        if (this.isRoot) {
+          this.directories = await this.groupService.getRootDirectories(
+            this.groupID
+          );
+        } else {
+          this.directories = await this.directoryService.getSubdirectories(
+            this.directoryID
+          );
+        }
+      } catch (err) {
+        this.snackBar.open(`Error: ${err}`, undefined, {
+          duration: 5000,
+          panelClass: 'alert-panel-center',
+        });
+      }
+    }
+  }
 
   public async viewDocumentInfo(documentID: string): Promise<void> {
+    this.selectedDocument = await this.documentService.getDocumentInfo(
+      documentID
+    );
+
     const documentInfo = await this.documentService.getDocumentInfo(documentID);
     const documentPath = await this.documentService.getDocumentPath(documentID);
     const documentPathStr = documentPath
@@ -267,7 +370,84 @@ export class DirectoryComponent implements OnInit, OnChanges {
     }, 100);
   }
 
-  public renameDocumentDialog(documentID: string): void {}
+  public async openRenameDocumentDialog(documentID: string): Promise<void> {
+    this.selectedDocument = await this.documentService.getDocumentInfo(
+      documentID
+    );
 
-  public deleteDocumentDialog(documentID: string): void {}
+    setTimeout(() => {
+      this.renameDocumentDialog.openDialog();
+    }, 100);
+  }
+
+  public async renameDocument(newName: string): Promise<void> {
+    if (newName) {
+      try {
+        await this.documentService.renameDocument(
+          this.selectedDocument.id,
+          newName
+        );
+
+        this.snackBar.open('Document renamed', undefined, {
+          duration: 3000,
+          panelClass: 'alert-panel-center',
+        });
+
+        if (this.isRoot) {
+          this.documents = await this.groupService.getRootDocuments(
+            this.groupID
+          );
+        } else {
+          this.documents =
+            await this.directoryService.getDocumentsWithinDirectory(
+              this.directoryID
+            );
+        }
+      } catch (err) {
+        this.snackBar.open(`Error: ${err}`, undefined, {
+          duration: 5000,
+          panelClass: 'alert-panel-center',
+        });
+      }
+    }
+  }
+
+  public async openDeleteDocumentDialog(documentID: string): Promise<void> {
+    this.selectedDocument = await this.documentService.getDocumentInfo(
+      documentID
+    );
+
+    setTimeout(() => {
+      this.deleteDocumentDialog.openDialog();
+    }, 100);
+  }
+
+  public async deleteDocument(confirmed: boolean): Promise<void> {
+    if (confirmed) {
+      try {
+        await this.documentService.deleteDocument(this.selectedDocument.id);
+
+        this.snackBar.open('Document deleted', undefined, {
+          duration: 3000,
+          panelClass: 'alert-panel-center',
+        });
+
+        if (this.isRoot) {
+          this.documents = await this.groupService.getRootDocuments(
+            this.groupID
+          );
+        } else {
+          this.documents =
+            await this.directoryService.getDocumentsWithinDirectory(
+              this.directoryID
+            );
+        }
+      } catch (err) {
+        this.snackBar.open(`Error: ${err}`, undefined, {
+          duration: 5000,
+          panelClass: 'alert-panel-center',
+        });
+      }
+    }
+  }
 }

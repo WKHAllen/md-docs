@@ -21,6 +21,11 @@ CREATE TABLE IF NOT EXISTS document (
       REFERENCES app_group(id)
         ON DELETE CASCADE,
 
+  CONSTRAINT fk_document_directory
+    FOREIGN KEY (directory_id)
+      REFERENCES directory(id)
+        ON DELETE CASCADE,
+
   CONSTRAINT fk_document_editor
     FOREIGN KEY (last_edit_user_id)
       REFERENCES app_user(id)
