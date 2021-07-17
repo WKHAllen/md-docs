@@ -65,28 +65,52 @@
           "
         >
           <div *ngFor="let directory of directories" class="directory-item">
-            <span class="directory-item-icon">
-              <mat-icon class="directory-icon">folder</mat-icon>
-            </span>
-            <span>
-              <a
-                routerLink="/directory/{{ directory.id }}"
-                class="standard-link"
-                >{{ directory.name }}</a
+            <div class="directory-item-label">
+              <span class="directory-item-icon">
+                <mat-icon class="directory-icon">folder</mat-icon>
+              </span>
+              <span>
+                <a
+                  routerLink="/directory/{{ directory.id }}"
+                  class="standard-link"
+                  >{{ directory.name }}</a
+                >
+              </span>
+            </div>
+            <div class="directory-item-menu">
+              <button
+                mat-icon-button
+                matTooltip="Directory options"
+                [matMenuTriggerFor]="directoryMenu"
+                [matMenuTriggerData]="{ directoryID: directory.id }"
               >
-            </span>
+                <mat-icon>menu</mat-icon>
+              </button>
+            </div>
           </div>
           <div *ngFor="let document of documents" class="directory-item">
-            <span class="directory-item-icon">
-              <mat-icon class="document-icon">insert_drive_file</mat-icon>
-            </span>
-            <span>
-              <a
-                routerLink="/document/{{ document.id }}"
-                class="standard-link"
-                >{{ document.name }}</a
+            <div class="directory-item-label">
+              <span class="directory-item-icon">
+                <mat-icon class="document-icon">insert_drive_file</mat-icon>
+              </span>
+              <span>
+                <a
+                  routerLink="/document/{{ document.id }}"
+                  class="standard-link"
+                  >{{ document.name }}</a
+                >
+              </span>
+            </div>
+            <div class="directory-item-menu">
+              <button
+                mat-icon-button
+                matTooltip="Document options"
+                [matMenuTriggerFor]="documentMenu"
+                [matMenuTriggerData]="{ documentID: document.id }"
               >
-            </span>
+                <mat-icon>menu</mat-icon>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -128,3 +152,55 @@
   doneButtonLabel="Create"
   (close)="createDocument($event)"
 ></mdd-new-item>
+
+<mat-menu #directoryMenu="matMenu" xPosition="before">
+  <ng-template matMenuContent let-directoryID="directoryID">
+    <button
+      mat-icon-button
+      matTooltip="View directory details"
+      (click)="viewDirectoryInfo(directoryID)"
+    >
+      <mat-icon>info</mat-icon>
+    </button>
+    <button
+      mat-icon-button
+      matTooltip="Rename directory"
+      (click)="renameDirectoryDialog(directoryID)"
+    >
+      <mat-icon>edit</mat-icon>
+    </button>
+    <button
+      mat-icon-button
+      matTooltip="Delete directory"
+      (click)="deleteDirectoryDialog(directoryID)"
+    >
+      <mat-icon>delete</mat-icon>
+    </button>
+  </ng-template>
+</mat-menu>
+
+<mat-menu #documentMenu="matMenu" xPosition="before">
+  <ng-template matMenuContent let-documentID="documentID">
+    <button
+      mat-icon-button
+      matTooltip="View document details"
+      (click)="viewDocumentInfo(documentID)"
+    >
+      <mat-icon>info</mat-icon>
+    </button>
+    <button
+      mat-icon-button
+      matTooltip="Rename document"
+      (click)="renameDocumentDialog(documentID)"
+    >
+      <mat-icon>edit</mat-icon>
+    </button>
+    <button
+      mat-icon-button
+      matTooltip="Delete document"
+      (click)="deleteDocumentDialog(documentID)"
+    >
+      <mat-icon>delete</mat-icon>
+    </button>
+  </ng-template>
+</mat-menu>

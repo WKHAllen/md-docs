@@ -17,6 +17,14 @@ mat-card-title {
   padding-bottom: 12px;
 }
 
+.mat-menu-panel {
+  min-height: 0 !important;
+
+  .mat-menu-content {
+    padding: 0 !important;
+  }
+}
+
 a.standard-link {
   color: blue;
   text-decoration: none;

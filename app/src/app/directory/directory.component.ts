@@ -170,4 +170,16 @@ export class DirectoryComponent implements OnInit, OnChanges {
       panelClass: 'alert-panel-center',
     });
   }
+
+  public viewDirectoryInfo(directoryID: string): void {}
+
+  public renameDirectoryDialog(directoryID: string): void {}
+
+  public deleteDirectoryDialog(directoryID: string): void {}
+
+  public viewDocumentInfo(documentID: string): void {}
+
+  public renameDocumentDialog(documentID: string): void {}
+
+  public deleteDocumentDialog(documentID: string): void {}
 }

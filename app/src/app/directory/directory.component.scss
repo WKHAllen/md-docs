@@ -42,26 +42,32 @@ $directory-border: 1px solid rgba(0, 0, 0, 0.15);
       overflow: hidden;
 
       .directory-item {
-        padding: 4px;
         display: flex;
+        justify-content: space-between;
         align-items: center;
 
         &:hover {
           background-color: rgba(0, 0, 0, 0.05);
         }
 
-        .directory-item-icon {
+        .directory-item-label {
           display: flex;
           align-items: center;
-          padding-right: 4px;
+
+          .directory-item-icon {
+            padding: 0 6px;
+          }
+
+          .directory-icon {
+            color: #e4b300;
+          }
+
+          .document-icon {
+            color: #adadb9;
+          }
         }
 
-        .directory-icon {
-          color: #e4b300;
-        }
-
-        .document-icon {
-          color: #adadb9;
+        .directory-item-menu {
         }
       }
     }
