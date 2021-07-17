@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -50,7 +50,13 @@ import {
   NewItemComponent,
   NewItemDialogComponent,
 } from './new-item/new-item.component';
+import {
+  EntityInfoComponent,
+  EntityInfoDialogComponent,
+} from './entity-info/entity-info.component';
 import { PathComponent } from './path/path.component';
+
+import { FileSizePipe } from './pipes/file-size.pipe';
 
 @NgModule({
   declarations: [
@@ -72,6 +78,8 @@ import { PathComponent } from './path/path.component';
     ConfirmDialogComponent,
     NewItemComponent,
     NewItemDialogComponent,
+    EntityInfoComponent,
+    EntityInfoDialogComponent,
     PathComponent,
   ],
   imports: [
@@ -106,7 +114,7 @@ import { PathComponent } from './path/path.component';
     MatToolbarModule,
     MatTooltipModule,
   ],
-  providers: [],
+  providers: [DatePipe, FileSizePipe],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
