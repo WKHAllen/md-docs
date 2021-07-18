@@ -29,7 +29,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
-import { MarkdownModule } from 'ngx-markdown';
+import { MarkdownModule, MarkedOptions, MarkedRenderer } from 'ngx-markdown';
 
 import { HeaderComponent } from './header/header.component';
 import { IndexComponent } from './index/index.component';
@@ -60,6 +60,28 @@ import {
 import { PathComponent } from './path/path.component';
 
 import { FileSizePipe } from './pipes/file-size.pipe';
+
+function markedOptionsFactory(): MarkedOptions {
+  const renderer = new MarkedRenderer();
+  const linkRenderer = renderer.link;
+
+  renderer.link = (href, title, text) => {
+    const html = linkRenderer.call(renderer, href, title, text);
+    const hrefURL = new URL(href || '');
+
+    if (href && hrefURL.host !== window.location.host) {
+      return html.replace(/^<a /, '<a target="_blank" rel="nofollow" ');
+    } else if (href && hrefURL.host === window.location.host) {
+      return html.replace(/^<a href=".*"/, `<a href="${hrefURL.pathname}"`);
+    } else {
+      return html;
+    }
+  };
+
+  return {
+    renderer,
+  };
+}
 
 @NgModule({
   declarations: [
@@ -117,7 +139,12 @@ import { FileSizePipe } from './pipes/file-size.pipe';
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
-    MarkdownModule.forRoot(),
+    MarkdownModule.forRoot({
+      markedOptions: {
+        provide: MarkedOptions,
+        useFactory: markedOptionsFactory,
+      },
+    }),
   ],
   providers: [DatePipe, FileSizePipe],
   bootstrap: [AppComponent],
