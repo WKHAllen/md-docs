@@ -1,8 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { MatFormFieldAppearance } from '@angular/material/form-field';
 import { DocumentService, DocumentInfo } from './document.service';
 import { GroupService } from '../group/group.service';
 import { DocumentEditHelpComponent } from './document-edit-help.component';
+import { inputAppearance } from '../constants';
 
 @Component({
   selector: 'mdd-document-edit',
@@ -24,6 +26,8 @@ export class DocumentEditComponent implements OnInit {
   public canViewDetails: boolean = false;
   public canEditDocuments: boolean = false;
   public canApproveDocumentEdits: boolean = false;
+  public newContent: string = '';
+  public inputAppearance: MatFormFieldAppearance = inputAppearance;
   @ViewChild('helpDialog') helpDialog!: DocumentEditHelpComponent;
 
   constructor(
@@ -51,6 +55,8 @@ export class DocumentEditComponent implements OnInit {
           await this.groupService.canApproveGroupDocumentEdits(
             this.documentInfo.group_id
           );
+
+        this.newContent = this.documentInfo.content;
 
         this.gotDetails = true;
       } catch (err) {
