@@ -31,7 +31,9 @@ export class DocumentComponent implements OnInit {
   public gotDetails: boolean = false;
   public documentInfoError: string = '';
   public isGroupOwner: boolean = false;
+  public canViewDetails: boolean = false;
   public canEditDocuments: boolean = false;
+  public canApproveDocumentEdits: boolean = false;
   public visibleDocumentInfo: EntityInfo[] = [];
   public loggedIn: boolean = false;
   @ViewChild('documentInfoDialog') documentInfoDialog!: EntityInfoComponent;
@@ -59,6 +61,17 @@ export class DocumentComponent implements OnInit {
           this.documentID
         );
 
+        this.canViewDetails = await this.groupService.canViewGroupDetails(
+          this.documentInfo.group_id
+        );
+        this.canEditDocuments = await this.groupService.canEditGroupDocuments(
+          this.documentInfo.group_id
+        );
+        this.canApproveDocumentEdits =
+          await this.groupService.canApproveGroupDocumentEdits(
+            this.documentInfo.group_id
+          );
+
         if (this.loggedIn) {
           const user = await this.profileService.getUserInfo();
           const group = await this.documentService.getDocumentGroup(
@@ -66,15 +79,16 @@ export class DocumentComponent implements OnInit {
           );
 
           this.isGroupOwner = user.id === group.owner_user_id;
-
-          this.canEditDocuments = await this.groupService.canEditGroupDocuments(
-            this.documentInfo.group_id
-          );
         }
 
         this.gotDetails = true;
       } catch (err) {
-        this.documentInfoError = err;
+        if (err === 'You do not have permission to view this document') {
+          this.canViewDetails = false;
+          this.gotDetails = true;
+        } else {
+          this.documentInfoError = err;
+        }
       }
     });
   }

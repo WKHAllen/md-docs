@@ -29,6 +29,8 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
+import { MarkdownModule } from 'ngx-markdown';
+
 import { HeaderComponent } from './header/header.component';
 import { IndexComponent } from './index/index.component';
 import { LoginComponent } from './login-register/login.component';
@@ -115,6 +117,7 @@ import { FileSizePipe } from './pipes/file-size.pipe';
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
+    MarkdownModule.forRoot(),
   ],
   providers: [DatePipe, FileSizePipe],
   bootstrap: [AppComponent],

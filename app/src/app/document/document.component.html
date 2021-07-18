@@ -5,7 +5,10 @@
 </div>
 
 <ng-template #documentTemplate>
-  <div class="document-container">
+  <div
+    *ngIf="canViewDetails; else cannotViewDetailsTemplate"
+    class="document-container"
+  >
     <div class="document">
       <div class="document-toolbar">
         <div class="document-toolbar-title">
@@ -59,7 +62,9 @@
           </button>
         </div>
       </div>
-      <div class="document-content">Document content here</div>
+      <div class="document-content">
+        <markdown ngPreserveWhitespaces>{{ documentInfo.content }}</markdown>
+      </div>
     </div>
   </div>
 </ng-template>
@@ -83,3 +88,9 @@
   title="Document info"
   [info]="visibleDocumentInfo"
 ></mdd-entity-info>
+
+<ng-template #cannotViewDetailsTemplate>
+  <div class="invalid-permissions-text">
+    You do not have permission to view this document.
+  </div>
+</ng-template>

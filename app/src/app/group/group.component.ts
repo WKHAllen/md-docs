@@ -100,19 +100,19 @@ export class GroupComponent implements OnInit {
         this.groupName = this.groupInfo.name;
         this.groupDescription = this.groupInfo.description;
 
+        this.canViewDetails = await this.groupService.canViewGroupDetails(
+          this.groupID
+        );
+        this.canEditDocuments = await this.groupService.canEditGroupDocuments(
+          this.groupID
+        );
+        this.canApproveDocumentEdits =
+          await this.groupService.canApproveGroupDocumentEdits(this.groupID);
+
         if (this.loggedIn) {
           const user = await this.profileService.getUserInfo();
 
           this.isGroupOwner = user.id === this.groupInfo.owner_user_id;
-
-          this.canViewDetails = await this.groupService.canViewGroupDetails(
-            this.groupID
-          );
-          this.canEditDocuments = await this.groupService.canEditGroupDocuments(
-            this.groupID
-          );
-          this.canApproveDocumentEdits =
-            await this.groupService.canApproveGroupDocumentEdits(this.groupID);
 
           if (this.canViewDetails) {
             this.groupCreator = await this.groupService.getGroupCreator(
