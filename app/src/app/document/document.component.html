@@ -49,7 +49,7 @@
             *ngIf="isGroupOwner"
             mat-icon-button
             matTooltip="Delete document"
-            (click)="deleteDocument()"
+            (click)="openDeleteDocumentDialog()"
           >
             <mat-icon>delete</mat-icon>
           </button>
@@ -96,3 +96,10 @@
     You do not have permission to view this document.
   </div>
 </ng-template>
+
+<mdd-confirm
+  #deleteDocumentDialog
+  title="Delete document"
+  confirmMessage="Are you sure you want to delete this document?"
+  (close)="deleteDocument($event)"
+></mdd-confirm>

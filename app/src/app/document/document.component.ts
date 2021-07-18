@@ -6,6 +6,7 @@ import { DocumentService, DocumentInfo } from './document.service';
 import { GroupService } from '../group/group.service';
 import { ProfileService } from '../profile/profile.service';
 import { LoginRegisterService } from '../login-register/login-register.service';
+import { ConfirmComponent } from '../confirm/confirm.component';
 import {
   EntityInfoComponent,
   EntityInfo,
@@ -37,6 +38,7 @@ export class DocumentComponent implements OnInit {
   public visibleDocumentInfo: EntityInfo[] = [];
   public loggedIn: boolean = false;
   @ViewChild('documentInfoDialog') documentInfoDialog!: EntityInfoComponent;
+  @ViewChild('deleteDocumentDialog') deleteDocumentDialog!: ConfirmComponent;
 
   constructor(
     private documentService: DocumentService,
@@ -130,7 +132,33 @@ export class DocumentComponent implements OnInit {
     }, 100);
   }
 
-  public async deleteDocument(): Promise<void> {}
+  public async openDeleteDocumentDialog(): Promise<void> {
+    this.deleteDocumentDialog.openDialog();
+  }
+
+  public async deleteDocument(confirmed: boolean): Promise<void> {
+    if (confirmed) {
+      try {
+        await this.documentService.deleteDocument(this.documentID);
+
+        this.snackBar.open('Document deleted', undefined, {
+          duration: 3000,
+          panelClass: 'alert-panel-center',
+        });
+
+        if (this.documentInfo.directory_id) {
+          this.router.navigate(['directory', this.documentInfo.directory_id]);
+        } else {
+          this.router.navigate(['group', this.documentInfo.group_id]);
+        }
+      } catch (err) {
+        this.snackBar.open(`Error: ${err}`, undefined, {
+          duration: 5000,
+          panelClass: 'alert-panel-center',
+        });
+      }
+    }
+  }
 
   public copyDocumentLink(): void {
     copyMessage(window.location.href);
