@@ -39,15 +39,15 @@ export class DocumentEditService extends BaseService {
    *
    * @param documentID The document's ID.
    * @param editorUserID The ID of the user requesting the edit.
-   * @param description The description of the edit.
    * @param newContent The new document content.
+   * @param description The description of the edit.
    * @returns The new document edit request.
    */
   public async createDocumentEdit(
     documentID: string,
     editorUserID: string,
-    description: string,
-    newContent: string
+    newContent: string,
+    description: string
   ): Promise<DocumentEdit> {
     if (newContent.length <= DOCUMENT_CONTENT_MAX_LENGTH) {
       if (description.length <= DOCUMENT_EDIT_DESCRIPTION_MAX_LENGTH) {

@@ -79,7 +79,9 @@ export class ProfileComponent implements OnInit {
 
   public async ngOnInit(): Promise<void> {
     if (!this.loginRegisterService.loggedIn()) {
-      this.router.navigate(['login'], { queryParams: { after: 'profile' } });
+      await this.router.navigate(['login'], {
+        queryParams: { after: 'profile' },
+      });
     } else {
       try {
         const userInfo = await this.profileService.getUserInfo();

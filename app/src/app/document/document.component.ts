@@ -147,9 +147,12 @@ export class DocumentComponent implements OnInit {
         });
 
         if (this.documentInfo.directory_id) {
-          this.router.navigate(['directory', this.documentInfo.directory_id]);
+          await this.router.navigate([
+            'directory',
+            this.documentInfo.directory_id,
+          ]);
         } else {
-          this.router.navigate(['group', this.documentInfo.group_id]);
+          await this.router.navigate(['group', this.documentInfo.group_id]);
         }
       } catch (err) {
         this.snackBar.open(`Error: ${err}`, undefined, {

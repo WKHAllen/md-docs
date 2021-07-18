@@ -26,7 +26,8 @@
           <button
             mat-icon-button
             matTooltip="Submit changes for review"
-            (click)="requestDocumentEdit()"
+            (click)="openRequestDocumentEditDialog()"
+            [disabled]="documentInfo.content === newContent"
           >
             <mat-icon>check</mat-icon>
           </button>
@@ -70,5 +71,13 @@
   confirmMessage="You have unsaved changes! Are you sure you want to exit and return to the document?"
   (close)="returnToDocument($event)"
 ></mdd-confirm>
+
+<mdd-new-item
+  #requestDocumentEditDialog
+  title="Description of edit"
+  fieldName="Description"
+  doneButtonLabel="Submit"
+  (close)="requestDocumentEdit($event)"
+></mdd-new-item>
 
 <mdd-document-edit-help #helpDialog></mdd-document-edit-help>

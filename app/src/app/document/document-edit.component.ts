@@ -1,9 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatFormFieldAppearance } from '@angular/material/form-field';
 import { DocumentService, DocumentInfo } from './document.service';
 import { GroupService } from '../group/group.service';
 import { ConfirmComponent } from '../confirm/confirm.component';
+import { NewItemComponent } from '../new-item/new-item.component';
 import { DocumentEditHelpComponent } from './document-edit-help.component';
 import { inputAppearance } from '../constants';
 
@@ -31,13 +33,16 @@ export class DocumentEditComponent implements OnInit {
   public inputAppearance: MatFormFieldAppearance = inputAppearance;
   @ViewChild('returnToDocumentDialog')
   returnToDocumentDialog!: ConfirmComponent;
+  @ViewChild('requestDocumentEditDialog')
+  requestDocumentEditDialog!: NewItemComponent;
   @ViewChild('helpDialog') helpDialog!: DocumentEditHelpComponent;
 
   constructor(
     private documentService: DocumentService,
     private groupService: GroupService,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private snackBar: MatSnackBar
   ) {}
 
   public ngOnInit(): void {
@@ -74,21 +79,42 @@ export class DocumentEditComponent implements OnInit {
     });
   }
 
-  public openReturnToDocumentDialog(): void {
+  public async openReturnToDocumentDialog(): Promise<void> {
     if (this.documentInfo.content === this.newContent) {
-      this.returnToDocument(true);
+      await this.returnToDocument(true);
     } else {
       this.returnToDocumentDialog.openDialog();
     }
   }
 
-  public returnToDocument(confirmed: boolean): void {
+  public async returnToDocument(confirmed: boolean): Promise<void> {
     if (confirmed) {
-      this.router.navigate(['document', 'view', this.documentID]);
+      await this.router.navigate(['document', 'view', this.documentID]);
     }
   }
 
-  public async requestDocumentEdit(): Promise<void> {}
+  public openRequestDocumentEditDialog(): void {
+    this.requestDocumentEditDialog.openDialog();
+  }
+
+  public async requestDocumentEdit(description: string): Promise<void> {
+    if (description) {
+      try {
+        const documentEdit = await this.documentService.requestDocumentEdit(
+          this.documentID,
+          this.newContent,
+          description
+        );
+
+        await this.router.navigate(['document-edit', documentEdit.id]);
+      } catch (err) {
+        this.snackBar.open(`Error: ${err}`, undefined, {
+          duration: 5000,
+          panelClass: 'alert-panel-center',
+        });
+      }
+    }
+  }
 
   public openHelpDialog(): void {
     this.helpDialog.openDialog();
