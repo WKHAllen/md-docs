@@ -42,6 +42,7 @@ import { NewGroupComponent } from './group/new-group.component';
 import { GroupComponent } from './group/group.component';
 import { DirectoryComponent } from './directory/directory.component';
 import { DirectoryPageComponent } from './directory/directory-page.component';
+import { DocumentComponent } from './document/document.component';
 import {
   ConfirmComponent,
   ConfirmDialogComponent,
@@ -74,6 +75,7 @@ import { FileSizePipe } from './pipes/file-size.pipe';
     GroupComponent,
     DirectoryComponent,
     DirectoryPageComponent,
+    DocumentComponent,
     ConfirmComponent,
     ConfirmDialogComponent,
     NewItemComponent,

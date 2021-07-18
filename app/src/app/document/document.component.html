@@ -1,0 +1,85 @@
+<div *ngIf="!gotDetails; else documentTemplate">
+  <div *ngIf="!documentInfoError; else documentInfoErrorTemplate">
+    <mat-spinner class="spinner"></mat-spinner>
+  </div>
+</div>
+
+<ng-template #documentTemplate>
+  <div class="document-container">
+    <div class="document">
+      <div class="document-toolbar">
+        <div class="document-toolbar-title">
+          <mdd-path [documentID]="documentID"></mdd-path>
+        </div>
+        <div class="document-toolbar-items">
+          <a
+            mat-icon-button
+            matTooltip="Go to group"
+            routerLink="/group/{{ documentInfo?.group_id }}"
+          >
+            <mat-icon>group</mat-icon>
+          </a>
+          <a
+            *ngIf="documentInfo?.directory_id; else rootParentButtonTemplate"
+            mat-icon-button
+            matTooltip="Open parent directory"
+            routerLink="/directory/{{ documentInfo?.directory_id }}"
+          >
+            <mat-icon>north</mat-icon>
+          </a>
+          <button
+            mat-icon-button
+            matTooltip="View document details"
+            (click)="viewDocumentInfo()"
+          >
+            <mat-icon>info</mat-icon>
+          </button>
+          <a
+            *ngIf="canEditDocuments"
+            mat-icon-button
+            matTooltip="Edit document"
+            routerLink="/document/edit/{{ documentID }}"
+          >
+            <mat-icon>edit</mat-icon>
+          </a>
+          <button
+            *ngIf="isGroupOwner"
+            mat-icon-button
+            matTooltip="Delete document"
+            (click)="deleteDocument()"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            matTooltip="Copy link to document"
+            (click)="copyDocumentLink()"
+          >
+            <mat-icon>link</mat-icon>
+          </button>
+        </div>
+      </div>
+      <div class="document-content">Document content here</div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #documentInfoErrorTemplate>
+  <div class="centered-text error-text">Error: {{ documentInfoError }}</div>
+</ng-template>
+
+<ng-template #rootParentButtonTemplate>
+  <a
+    mat-icon-button
+    matTooltip="Open parent directory"
+    routerLink="/group/{{ documentInfo?.group_id }}"
+  >
+    <mat-icon>north</mat-icon>
+  </a>
+</ng-template>
+
+<mdd-entity-info
+  #documentInfoDialog
+  title="Document info"
+  [info]="visibleDocumentInfo"
+></mdd-entity-info>

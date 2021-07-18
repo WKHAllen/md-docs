@@ -1,0 +1,44 @@
+$document-border: 1px solid rgba(0, 0, 0, 0.15);
+
+.document-container {
+  .document {
+    border: $document-border;
+    border-radius: 6px;
+
+    .document-toolbar {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      padding: 4px;
+      border-bottom: $document-border;
+
+      .document-toolbar-title {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        padding-left: 8px;
+
+        & > * {
+          margin: 0;
+        }
+      }
+
+      .document-toolbar-items {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        padding-right: 4px;
+      }
+    }
+
+    .document-content {
+    }
+  }
+}
+
+.no-items-message {
+  text-align: center;
+  padding: 16px;
+}

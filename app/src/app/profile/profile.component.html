@@ -199,7 +199,7 @@
       *ngFor="let editRequest of userDocumentEditRequests"
       class="document-edit-request"
     >
-      <a routerLink="/document-edit-request/{{ editRequest.id }}">
+      <a routerLink="/document/edit-request/{{ editRequest.id }}">
         <mat-card>
           <mat-card-title>{{ editRequest.description }}</mat-card-title>
           <mat-card-subtitle>{{

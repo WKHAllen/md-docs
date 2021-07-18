@@ -12,6 +12,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { NewGroupComponent } from './group/new-group.component';
 import { GroupComponent } from './group/group.component';
 import { DirectoryPageComponent } from './directory/directory-page.component';
+import { DocumentComponent } from './document/document.component';
 
 const routes: Routes = [
   { path: '', component: IndexComponent },
@@ -25,6 +26,7 @@ const routes: Routes = [
   { path: 'group', component: NewGroupComponent },
   { path: 'group/:groupID', component: GroupComponent },
   { path: 'directory/:directoryID', component: DirectoryPageComponent },
+  { path: 'document/view/:documentID', component: DocumentComponent },
   { path: '**', component: NotFoundComponent },
 ];
 

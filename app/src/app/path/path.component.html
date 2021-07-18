@@ -22,7 +22,7 @@
       >
       <a
         *ngIf="directoryID === '' && documentID !== ''"
-        routerLink="/document/{{ currentObject?.id }}"
+        routerLink="/document/view/{{ currentObject?.id }}"
         class="standard-link"
         >{{ currentObject?.name }}</a
       >
