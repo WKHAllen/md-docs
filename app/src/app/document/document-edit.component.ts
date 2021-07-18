@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { MatFormFieldAppearance } from '@angular/material/form-field';
 import { DocumentService, DocumentInfo } from './document.service';
 import { GroupService } from '../group/group.service';
+import { ConfirmComponent } from '../confirm/confirm.component';
 import { DocumentEditHelpComponent } from './document-edit-help.component';
 import { inputAppearance } from '../constants';
 
@@ -28,11 +29,14 @@ export class DocumentEditComponent implements OnInit {
   public canApproveDocumentEdits: boolean = false;
   public newContent: string = '';
   public inputAppearance: MatFormFieldAppearance = inputAppearance;
+  @ViewChild('returnToDocumentDialog')
+  returnToDocumentDialog!: ConfirmComponent;
   @ViewChild('helpDialog') helpDialog!: DocumentEditHelpComponent;
 
   constructor(
     private documentService: DocumentService,
     private groupService: GroupService,
+    private router: Router,
     private activatedRoute: ActivatedRoute
   ) {}
 
@@ -70,7 +74,19 @@ export class DocumentEditComponent implements OnInit {
     });
   }
 
-  public openReturnToDocumentDialog(): void {}
+  public openReturnToDocumentDialog(): void {
+    if (this.documentInfo.content === this.newContent) {
+      this.returnToDocument(true);
+    } else {
+      this.returnToDocumentDialog.openDialog();
+    }
+  }
+
+  public returnToDocument(confirmed: boolean): void {
+    if (confirmed) {
+      this.router.navigate(['document', 'view', this.documentID]);
+    }
+  }
 
   public async requestDocumentEdit(): Promise<void> {}
 

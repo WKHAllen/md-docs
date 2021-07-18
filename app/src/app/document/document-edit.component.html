@@ -64,4 +64,11 @@
   </div>
 </ng-template>
 
+<mdd-confirm
+  #returnToDocumentDialog
+  title="Return to document"
+  confirmMessage="You have unsaved changes! Are you sure you want to exit and return to the document?"
+  (close)="returnToDocument($event)"
+></mdd-confirm>
+
 <mdd-document-edit-help #helpDialog></mdd-document-edit-help>
