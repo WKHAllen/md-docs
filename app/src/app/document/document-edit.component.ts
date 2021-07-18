@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DocumentService, DocumentInfo } from './document.service';
 import { GroupService } from '../group/group.service';
+import { DocumentEditHelpComponent } from './document-edit-help.component';
 
 @Component({
   selector: 'mdd-document-edit',
@@ -23,6 +24,7 @@ export class DocumentEditComponent implements OnInit {
   public canViewDetails: boolean = false;
   public canEditDocuments: boolean = false;
   public canApproveDocumentEdits: boolean = false;
+  @ViewChild('helpDialog') helpDialog!: DocumentEditHelpComponent;
 
   constructor(
     private documentService: DocumentService,
@@ -66,5 +68,7 @@ export class DocumentEditComponent implements OnInit {
 
   public async requestDocumentEdit(): Promise<void> {}
 
-  public openHelpDialog(): void {}
+  public openHelpDialog(): void {
+    this.helpDialog.openDialog();
+  }
 }

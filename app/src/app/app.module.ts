@@ -58,6 +58,10 @@ import {
   EntityInfoComponent,
   EntityInfoDialogComponent,
 } from './entity-info/entity-info.component';
+import {
+  DocumentEditHelpComponent,
+  DocumentEditHelpDialogComponent,
+} from './document/document-edit-help.component';
 import { PathComponent } from './path/path.component';
 
 import { FileSizePipe } from './pipes/file-size.pipe';
@@ -108,6 +112,8 @@ function markedOptionsFactory(): MarkedOptions {
     NewItemDialogComponent,
     EntityInfoComponent,
     EntityInfoDialogComponent,
+    DocumentEditHelpComponent,
+    DocumentEditHelpDialogComponent,
     PathComponent,
   ],
   imports: [
