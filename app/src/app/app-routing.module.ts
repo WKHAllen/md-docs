@@ -13,6 +13,7 @@ import { NewGroupComponent } from './group/new-group.component';
 import { GroupComponent } from './group/group.component';
 import { DirectoryPageComponent } from './directory/directory-page.component';
 import { DocumentComponent } from './document/document.component';
+import { DocumentEditComponent } from './document/document-edit.component';
 
 const routes: Routes = [
   { path: '', component: IndexComponent },
@@ -27,6 +28,7 @@ const routes: Routes = [
   { path: 'group/:groupID', component: GroupComponent },
   { path: 'directory/:directoryID', component: DirectoryPageComponent },
   { path: 'document/view/:documentID', component: DocumentComponent },
+  { path: 'document/edit/:documentID', component: DocumentEditComponent },
   { path: '**', component: NotFoundComponent },
 ];
 

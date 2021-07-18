@@ -1,0 +1,51 @@
+<div *ngIf="!gotDetails; else documentEditTemplate">
+  <div *ngIf="!documentInfoError; else documentInfoErrorTemplate">
+    <mat-spinner class="spinner"></mat-spinner>
+  </div>
+</div>
+
+<ng-template #documentEditTemplate>
+  <h1>Document Editor</h1>
+  <div
+    *ngIf="canViewDetails; else cannotViewDetailsTemplate"
+    class="document-edit-container"
+  >
+    <div class="document-edit">
+      <div class="document-edit-toolbar">
+        <div class="document-edit-toolbar-title">
+          <mdd-path [documentID]="documentID"></mdd-path>
+        </div>
+        <div class="document-edit-toolbar-items">
+          <button
+            mat-icon-button
+            matTooltip="Return to document"
+            (click)="openReturnToDocumentDialog()"
+          >
+            <mat-icon>arrow_back</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            matTooltip="Submit changes for review"
+            (click)="requestDocumentEdit()"
+          >
+            <mat-icon>check</mat-icon>
+          </button>
+          <button mat-icon-button matTooltip="Help" (click)="openHelpDialog()">
+            <mat-icon>help</mat-icon>
+          </button>
+        </div>
+      </div>
+      <div class="document-edit-content"></div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #documentInfoErrorTemplate>
+  <div class="centered-text error-text">Error: {{ documentInfoError }}</div>
+</ng-template>
+
+<ng-template #cannotViewDetailsTemplate>
+  <div class="invalid-permissions-text">
+    You do not have permission to view this document.
+  </div>
+</ng-template>

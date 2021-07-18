@@ -1,20 +1,20 @@
-$document-border: 1px solid rgba(0, 0, 0, 0.15);
+$document-edit-border: 1px solid rgba(0, 0, 0, 0.15);
 
-.document-container {
-  .document {
-    border: $document-border;
+.document-edit-container {
+  .document-edit {
+    border: $document-edit-border;
     border-radius: 6px;
 
-    .document-toolbar {
+    .document-edit-toolbar {
       display: flex;
       flex-direction: row;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
       padding: 4px;
-      border-bottom: $document-border;
+      border-bottom: $document-edit-border;
 
-      .document-toolbar-title {
+      .document-edit-toolbar-title {
         display: flex;
         justify-content: flex-start;
         align-items: center;
@@ -25,7 +25,7 @@ $document-border: 1px solid rgba(0, 0, 0, 0.15);
         }
       }
 
-      .document-toolbar-items {
+      .document-edit-toolbar-items {
         display: flex;
         justify-content: flex-end;
         align-items: center;
@@ -33,7 +33,7 @@ $document-border: 1px solid rgba(0, 0, 0, 0.15);
       }
     }
 
-    .document-content {
+    .document-edit-content {
       padding: 12px;
     }
   }
