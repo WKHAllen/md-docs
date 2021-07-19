@@ -180,7 +180,10 @@
 </ng-template>
 
 <ng-template #yourGroupsTemplate>
-  <div class="groups-owned">
+  <div
+    *ngIf="userGroupsOwned.length > 0; else noGroupsOwned"
+    class="groups-owned"
+  >
     <div *ngFor="let group of userGroupsOwned" class="group-owned">
       <a routerLink="/group/{{ group.id }}">
         <mat-card>
@@ -194,7 +197,10 @@
 </ng-template>
 
 <ng-template #documentEditRequestsTemplate>
-  <div class="document-edit-requests">
+  <div
+    *ngIf="userDocumentEditRequests.length > 0; else noDocumentEditRequests"
+    class="document-edit-requests"
+  >
     <div
       *ngFor="let editRequest of userDocumentEditRequests"
       class="document-edit-request"
@@ -213,7 +219,10 @@
 </ng-template>
 
 <ng-template #favoriteUsersTemplate>
-  <div class="favorite-users">
+  <div
+    *ngIf="userFavoriteUsers.length > 0; else noFavoriteUsers"
+    class="favorite-users"
+  >
     <div *ngFor="let favoriteUser of userFavoriteUsers" class="favorite-user">
       <mat-card>
         <mat-card-title>{{ favoriteUser.username }}</mat-card-title>
@@ -277,7 +286,10 @@
 </ng-template>
 
 <ng-template #favoriteGroupsTemplate>
-  <div class="favorite-groups">
+  <div
+    *ngIf="userFavoriteGroups.length > 0; else noFavoriteGroups"
+    class="favorite-groups"
+  >
     <div
       *ngFor="let favoriteGroup of userFavoriteGroups"
       class="favorite-group"
@@ -306,5 +318,27 @@
         </mat-card>
       </a>
     </div>
+  </div>
+</ng-template>
+
+<ng-template #noGroupsOwned>
+  <div class="centered-text std-padding-y">You do not own any groups.</div>
+</ng-template>
+
+<ng-template #noDocumentEditRequests>
+  <div class="centered-text std-padding-y">
+    You do not have any active document edit requests.
+  </div>
+</ng-template>
+
+<ng-template #noFavoriteUsers>
+  <div class="centered-text std-padding-y">
+    You do not have any favorite users.
+  </div>
+</ng-template>
+
+<ng-template #noFavoriteGroups>
+  <div class="centered-text std-padding-y">
+    You do not have any favorite groups.
   </div>
 </ng-template>

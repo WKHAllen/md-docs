@@ -63,9 +63,12 @@
         </div>
       </div>
       <div class="document-content">
-        <markdown ngPreserveWhitespaces class="document-markdown">{{
-          documentInfo.content
-        }}</markdown>
+        <markdown
+          *ngIf="documentInfo.content; else noContent"
+          ngPreserveWhitespaces
+          class="document-markdown"
+          >{{ documentInfo.content }}</markdown
+        >
       </div>
     </div>
   </div>
@@ -83,6 +86,10 @@
   >
     <mat-icon>north</mat-icon>
   </a>
+</ng-template>
+
+<ng-template #noContent>
+  <div class="centered-text">This document is empty.</div>
 </ng-template>
 
 <mdd-entity-info

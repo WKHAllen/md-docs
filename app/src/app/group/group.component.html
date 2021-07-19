@@ -68,7 +68,10 @@
     <mat-card>
       <mat-card-title>Users with access</mat-card-title>
       <mat-card-content>
-        <mat-list class="item-list">
+        <mat-list
+          *ngIf="usersWithAccess.length > 0; else noUsersWithAccess"
+          class="item-list"
+        >
           <mat-list-item *ngFor="let user of usersWithAccess">
             <span class="item-primary">{{ user.username }}</span>
             <span class="item-secondary">{{ user.join_time | date }}</span>
@@ -475,7 +478,10 @@
 </ng-template>
 
 <ng-template #editRequestsTemplate>
-  <div class="document-edit-requests">
+  <div
+    *ngIf="editRequests.length > 0; else noEditRequests"
+    class="document-edit-requests"
+  >
     <div *ngFor="let editRequest of editRequests" class="document-edit-request">
       <a routerLink="/document-edit/{{ editRequest.id }}">
         <mat-card>
@@ -493,5 +499,15 @@
 <ng-template #cannotViewDetailsTemplate>
   <div class="invalid-permissions-text">
     You do not have permission to view the contents of this group.
+  </div>
+</ng-template>
+
+<ng-template #noUsersWithAccess>
+  <div class="centered-text">No users have access to this group.</div>
+</ng-template>
+
+<ng-template #noEditRequests>
+  <div class="centered-text std-padding-y">
+    There are currently no edit requests for documents in this group.
   </div>
 </ng-template>
