@@ -1,0 +1,89 @@
+<div *ngIf="!gotDetails; else documentEditInfoTemplate">
+  <div *ngIf="!documentEditInfoError; else documentEditInfoErrorTemplate">
+    <mat-spinner class="spinner"></mat-spinner>
+  </div>
+</div>
+
+<ng-template #documentEditInfoTemplate>
+  <h1>Document Edit Request</h1>
+  <div
+    *ngIf="canViewDetails; else cannotViewDetailsTemplate"
+    class="edit-request-container"
+  >
+    <div class="edit-request">
+      <div class="edit-request-toolbar">
+        <div class="edit-request-toolbar-title">
+          <mdd-path [documentID]="documentInfo.id"></mdd-path>
+          <div class="edit-request-description">
+            {{ documentEditInfo.description }}
+          </div>
+        </div>
+        <div class="edit-request-toolbar-items">
+          <a
+            mat-icon-button
+            matTooltip="View document"
+            routerLink="/document/view/{{ documentInfo.id }}"
+          >
+            <mat-icon>insert_drive_file</mat-icon>
+          </a>
+          <button
+            *ngIf="canApproveDocumentEdits"
+            mat-icon-button
+            matTooltip="Approve edit request"
+            (click)="openApproveEditsDialog()"
+          >
+            <mat-icon>check</mat-icon>
+          </button>
+          <button
+            *ngIf="canApproveDocumentEdits"
+            mat-icon-button
+            matTooltip="Deny edit request"
+            (click)="openDenyEditsDialog()"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            matTooltip="Copy link to edit request"
+            (click)="copyEditRequestLink()"
+          >
+            <mat-icon>link</mat-icon>
+          </button>
+        </div>
+      </div>
+      <div class="edit-request-content">
+        <td-ngx-text-diff
+          [left]="documentInfo.content"
+          [right]="documentEditInfo.new_content"
+          [showToolbar]="false"
+          [showBtnToolbar]="false"
+          outerContainerClass="diff-content"
+        ></td-ngx-text-diff>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #documentEditInfoErrorTemplate>
+  <div class="centered-text error-text">Error: {{ documentEditInfoError }}</div>
+</ng-template>
+
+<ng-template #cannotViewDetailsTemplate>
+  <div class="invalid-permissions-text">
+    You do not have permission to view this document edit request.
+  </div>
+</ng-template>
+
+<mdd-confirm
+  #approveEditsDialog
+  title="Approve document edits"
+  confirmMessage="Are you certain you want to approve these document edits? Please make sure you have seen every change."
+  (close)="approveEdits($event)"
+></mdd-confirm>
+
+<mdd-confirm
+  #denyEditsDialog
+  title="Deny document edits"
+  confirmMessage="Are you certain you want to deny these document edits?"
+  (close)="denyEdits($event)"
+></mdd-confirm>

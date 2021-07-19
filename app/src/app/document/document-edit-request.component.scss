@@ -1,0 +1,44 @@
+$edit-request-border: 1px solid rgba(0, 0, 0, 0.15);
+
+.edit-request-container {
+  .edit-request {
+    border: $edit-request-border;
+    border-radius: 6px;
+    overflow: hidden;
+
+    .edit-request-toolbar {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      padding: 4px;
+      border-bottom: $edit-request-border;
+
+      .edit-request-toolbar-title {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        padding-left: 8px;
+
+        & > * {
+          margin: 0;
+        }
+
+        .edit-request-description {
+          padding: 0 4px;
+        }
+      }
+
+      .edit-request-toolbar-items {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        padding-right: 4px;
+      }
+    }
+
+    .edit-request-content {
+    }
+  }
+}

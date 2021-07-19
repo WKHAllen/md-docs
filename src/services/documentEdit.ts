@@ -208,7 +208,7 @@ export class DocumentEditService extends BaseService {
       const documentEdit = await this.getDocumentEdit(documentEditID);
 
       await this.dbm.documentService.editDocument(
-        documentEdit.id,
+        documentEdit.document_id,
         documentEdit.editor_user_id,
         documentEdit.new_content
       );

@@ -30,6 +30,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { MarkdownModule, MarkedOptions, MarkedRenderer } from 'ngx-markdown';
+import { NgxTextDiffModule } from 'ngx-text-diff';
 
 import { HeaderComponent } from './header/header.component';
 import { IndexComponent } from './index/index.component';
@@ -46,6 +47,7 @@ import { DirectoryComponent } from './directory/directory.component';
 import { DirectoryPageComponent } from './directory/directory-page.component';
 import { DocumentComponent } from './document/document.component';
 import { DocumentEditComponent } from './document/document-edit.component';
+import { DocumentEditRequestComponent } from './document/document-edit-request.component';
 import {
   ConfirmComponent,
   ConfirmDialogComponent,
@@ -106,6 +108,7 @@ function markedOptionsFactory(): MarkedOptions {
     DirectoryPageComponent,
     DocumentComponent,
     DocumentEditComponent,
+    DocumentEditRequestComponent,
     ConfirmComponent,
     ConfirmDialogComponent,
     NewItemComponent,
@@ -153,6 +156,7 @@ function markedOptionsFactory(): MarkedOptions {
         useFactory: markedOptionsFactory,
       },
     }),
+    NgxTextDiffModule,
   ],
   providers: [DatePipe, FileSizePipe],
   bootstrap: [AppComponent],

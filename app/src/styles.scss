@@ -135,6 +135,14 @@ mat-card-title {
   }
 }
 
+.diff-content {
+  grid-template-rows: none !important;
+
+  .td-table {
+    border: 0 !important;
+  }
+}
+
 a.standard-link {
   @include std-link;
 }
