@@ -76,7 +76,7 @@ export class GroupComponent implements OnInit {
   public giveAccessViaSearchError: string = '';
   public passOwnershipError: string = '';
   public showGiveAccessViaSearchSuccess: boolean = false;
-  public inputAppearance = inputAppearance;
+  readonly inputAppearance = inputAppearance;
   public permissionNames = permissionNames;
   public loggedIn: boolean = false;
   @ViewChild(ConfirmComponent) deleteConfirmDialog!: ConfirmComponent;

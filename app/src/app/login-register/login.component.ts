@@ -17,6 +17,7 @@ export class LoginComponent implements OnInit {
   public submittingLogin: boolean = false;
   public error: string = '';
   public after: string = '';
+  public hidePassword: boolean = true;
   readonly inputAppearance = inputAppearance;
 
   constructor(

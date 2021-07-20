@@ -4,7 +4,6 @@ import {
   MatDialogRef,
   MAT_DIALOG_DATA,
 } from '@angular/material/dialog';
-import { MatFormFieldAppearance } from '@angular/material/form-field';
 import { inputAppearance } from '../constants';
 
 interface DialogData {
@@ -49,7 +48,7 @@ export class NewItemComponent {
   styleUrls: ['./new-item.component.scss'],
 })
 export class NewItemDialogComponent {
-  public inputAppearance: MatFormFieldAppearance = inputAppearance;
+  readonly inputAppearance = inputAppearance;
 
   constructor(
     public dialogRef: MatDialogRef<NewItemDialogComponent>,

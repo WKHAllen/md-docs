@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatFormFieldAppearance } from '@angular/material/form-field';
 import { DocumentService, DocumentInfo } from './document.service';
 import { GroupService } from '../group/group.service';
 import { ConfirmComponent } from '../confirm/confirm.component';
@@ -30,7 +29,7 @@ export class DocumentEditComponent implements OnInit {
   public canEditDocuments: boolean = false;
   public canApproveDocumentEdits: boolean = false;
   public newContent: string = '';
-  public inputAppearance: MatFormFieldAppearance = inputAppearance;
+  readonly inputAppearance = inputAppearance;
   @ViewChild('returnToDocumentDialog')
   returnToDocumentDialog!: ConfirmComponent;
   @ViewChild('requestDocumentEditDialog')

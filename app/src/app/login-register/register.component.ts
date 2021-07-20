@@ -18,6 +18,8 @@ export class RegisterComponent {
   public submittingRegistration: boolean = false;
   public registerSuccess: boolean = false;
   public errors: string[] = [];
+  public hidePassword: boolean = true;
+  public hideConfirmPassword: boolean = true;
   readonly inputAppearance = inputAppearance;
 
   constructor(private loginRegisterService: LoginRegisterService) {}

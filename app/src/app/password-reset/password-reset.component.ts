@@ -25,7 +25,9 @@ export class PasswordResetComponent implements OnInit {
   public checkingResetID: boolean = false;
   public validResetID: boolean = true;
   public error: string = '';
-  public inputAppearance = inputAppearance;
+  public hidePassword: boolean = true;
+  public hideConfirmPassword: boolean = true;
+  readonly inputAppearance = inputAppearance;
 
   constructor(
     private passwordResetService: PasswordResetService,

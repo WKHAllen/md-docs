@@ -69,7 +69,9 @@ export class ProfileComponent implements OnInit {
   public showPasswordSuccess: boolean = false;
   public showAddFavoriteUserSuccess: boolean = false;
   public togglingFavoriteGroup: boolean = false;
-  public inputAppearance = inputAppearance;
+  public hidePassword: boolean = true;
+  public hideConfirmPassword: boolean = true;
+  readonly inputAppearance = inputAppearance;
 
   constructor(
     private profileService: ProfileService,
