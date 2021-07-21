@@ -54,6 +54,9 @@
       <p *ngIf="userInfoError" class="user-info-error error-text">
         Error: {{ userInfoError }}
       </p>
+      <div *ngIf="gotUserInfo" class="user-image">
+        <img src="/image/{{ userInfo.image_id }}" alt="user image" />
+      </div>
       <ul *ngIf="gotUserInfo" class="user-info">
         <li>{{ userInfo.username }}</li>
         <li>{{ userInfo.email }}</li>

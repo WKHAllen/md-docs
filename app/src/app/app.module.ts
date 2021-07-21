@@ -65,6 +65,7 @@ import {
   DocumentEditHelpDialogComponent,
 } from './document/document-edit-help.component';
 import { PathComponent } from './path/path.component';
+import { AvatarComponent } from './avatar/avatar.component';
 
 import { FileSizePipe } from './pipes/file-size.pipe';
 
@@ -118,6 +119,7 @@ function markedOptionsFactory(): MarkedOptions {
     DocumentEditHelpComponent,
     DocumentEditHelpDialogComponent,
     PathComponent,
+    AvatarComponent,
   ],
   imports: [
     CommonModule,

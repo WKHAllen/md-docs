@@ -1,5 +1,17 @@
 @use '../../styles';
 
+.user-image {
+  margin: auto;
+  border-radius: 9999px;
+  overflow: hidden;
+
+  &,
+  img {
+    width: 64px;
+    height: 64px;
+  }
+}
+
 .user-info {
   padding-inline-start: 0;
   text-align: center;
