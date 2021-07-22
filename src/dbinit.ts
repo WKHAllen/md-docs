@@ -60,6 +60,7 @@ export default async function initDB(
   prune: boolean = true
 ): Promise<void> {
   const tables = [
+    "image",
     "user",
     "session",
     "verify",

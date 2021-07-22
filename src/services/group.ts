@@ -217,6 +217,34 @@ export class GroupService extends BaseService {
   }
 
   /**
+   * Sets the group's image.
+   *
+   * @param groupID The group's ID.
+   * @param imageData The image data.
+   * @returns The updated group record.
+   */
+  public async setGroupImage(
+    groupID: string,
+    imageData: Buffer
+  ): Promise<Group> {
+    const group = await this.getByID<Group>(groupID);
+
+    if (group) {
+      if (group.image_id) {
+        await this.dbm.imageService.setImageData(group.image_id, imageData);
+
+        return group;
+      } else {
+        const image = await this.dbm.imageService.createImage(imageData);
+
+        return await this.updateByID<Group>(groupID, { image_id: image.id });
+      }
+    } else {
+      throw new ServiceError("Group does not exist");
+    }
+  }
+
+  /**
    * Passes ownership of the group to a new user.
    *
    * @param groupID The group's ID.

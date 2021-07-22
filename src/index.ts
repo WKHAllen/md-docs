@@ -45,6 +45,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname + "/../../app/dist/md-docs")));
 
 // Use routes
+app.use("/image", routes.imageRouter);
 app.use("/api", express.json(), routes.userRouter);
 app.use("/api", express.json(), routes.loginRegisterRouter);
 app.use("/api", express.json(), routes.verificationRouter);

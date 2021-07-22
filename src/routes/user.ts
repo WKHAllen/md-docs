@@ -80,6 +80,21 @@ userRouter.post(
   })
 );
 
+// Sets a user's image
+userRouter.post(
+  "/set_user_image",
+  wrapRoute(async (req, res) => {
+    const dbm = getDBM(req);
+    const user = await getLoggedInUser(req);
+    const imageData = getBodyParam(req, "image_data", "string");
+    const image = Buffer.from(imageData);
+
+    await dbm.userService.setUserImage(user.id, image);
+
+    respond(res);
+  })
+);
+
 // Gets all groups owned by the user
 userRouter.get(
   "/get_user_groups_owned",

@@ -7,5 +7,10 @@ CREATE TABLE IF NOT EXISTS app_user (
   verified  BOOLEAN      NOT NULL DEFAULT FALSE,
   join_time TIMESTAMP    NOT NULL DEFAULT NOW(),
 
-  PRIMARY KEY (id)
+  PRIMARY KEY (id),
+
+  CONSTRAINT fk_user_image
+    FOREIGN KEY (image_id)
+      REFERENCES image(id)
+        ON DELETE CASCADE
 );

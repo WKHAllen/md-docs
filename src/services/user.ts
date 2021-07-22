@@ -310,6 +310,31 @@ export class UserService extends BaseService {
   }
 
   /**
+   * Sets a user's image.
+   *
+   * @param userID The ID of the user.
+   * @param imageData The image data.
+   * @returns The updataed user record.
+   */
+  public async setUserImage(userID: string, imageData: Buffer): Promise<User> {
+    const user = await this.getByID<User>(userID);
+
+    if (user) {
+      if (user.image_id) {
+        await this.dbm.imageService.setImageData(user.image_id, imageData);
+
+        return user;
+      } else {
+        const image = await this.dbm.imageService.createImage(imageData);
+
+        return await this.updateByID<User>(userID, { image_id: image.id });
+      }
+    } else {
+      throw new ServiceError("User does not exist");
+    }
+  }
+
+  /**
    * Logs a user in and returns the new session.
    *
    * @param email The user's email address.

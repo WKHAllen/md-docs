@@ -3,6 +3,7 @@
  * @packageDocumentation
  */
 
+export * from "./image";
 export * from "./user";
 export * from "./loginRegister";
 export * from "./verify";

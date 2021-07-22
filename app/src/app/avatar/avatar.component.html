@@ -1,7 +1,11 @@
 <div class="avatar-container">
   <div class="avatar">
     <div class="avatar-image">
-      <img src="/image/{{ imageID }}" alt="{{ imageEntityType }} image" />
+      <img
+        *ngIf="imageID; else noImageID"
+        src="/image/{{ imageID }}"
+        alt="{{ imageEntityType }} image"
+      />
     </div>
     <div class="avatar-content">
       <div class="avatar-title">{{ title }}</div>
@@ -9,3 +13,21 @@
     </div>
   </div>
 </div>
+
+<ng-template #noImageID>
+  <img
+    *ngIf="imageEntityType === 'user'"
+    src="/assets/images/user.png"
+    alt="user image"
+  />
+  <img
+    *ngIf="imageEntityType === 'group'"
+    src="/assets/images/group.png"
+    alt="user image"
+  />
+  <img
+    *ngIf="imageEntityType === 'unknown'"
+    src="/assets/icons/icon-128x128.png"
+    alt="user image"
+  />
+</ng-template>

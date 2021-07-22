@@ -134,6 +134,30 @@ groupRouter.post(
   })
 );
 
+// Sets the group's image
+groupRouter.post(
+  "/set_group_image",
+  wrapRoute(async (req, res) => {
+    const dbm = getDBM(req);
+    const user = await getLoggedInUser(req);
+    const groupID = getBodyParam(req, "group_id", "string");
+    const imageData = getBodyParam(req, "image_data", "string");
+    const image = Buffer.from(imageData);
+
+    const group = await dbm.groupService.getGroup(groupID);
+
+    if (user.id === group.owner_user_id) {
+      await dbm.groupService.setGroupImage(groupID, image);
+
+      respond(res);
+    } else {
+      throw new ServiceError(
+        "You do not have permission to set this group's image"
+      );
+    }
+  })
+);
+
 // Passes group ownership to another user
 groupRouter.post(
   "/pass_group_ownership",

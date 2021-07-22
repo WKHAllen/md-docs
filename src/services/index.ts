@@ -5,6 +5,7 @@
 
 import { DB } from "../db";
 
+import { ImageService } from "./image";
 import { UserService } from "./user";
 import { SessionService } from "./session";
 import { VerifyService } from "./verify";
@@ -20,6 +21,7 @@ import { DocumentEditService } from "./documentEdit";
 
 export default class DatabaseManager {
   readonly db: DB;
+  readonly imageService: ImageService;
   readonly userService: UserService;
   readonly sessionService: SessionService;
   readonly verifyService: VerifyService;
@@ -35,6 +37,7 @@ export default class DatabaseManager {
 
   constructor(dbURL: string, max: number = 20, sqlPath: string = null) {
     this.db = new DB(dbURL, max, sqlPath);
+    this.imageService = new ImageService(this, "image");
     this.userService = new UserService(this, "app_user");
     this.sessionService = new SessionService(this, "session");
     this.verifyService = new VerifyService(this, "verify");

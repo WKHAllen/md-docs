@@ -29,5 +29,10 @@ CREATE TABLE IF NOT EXISTS app_group (
 
   CONSTRAINT fk_approve_edits_permission
     FOREIGN KEY (approve_edits_permission_id)
-      REFERENCES permission(id)
+      REFERENCES permission(id),
+
+  CONSTRAINT fk_group_image
+    FOREIGN KEY (image_id)
+      REFERENCES image(id)
+        ON DELETE CASCADE
 );
