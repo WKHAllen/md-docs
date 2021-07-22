@@ -30,6 +30,12 @@ export class ProfileService {
     await apiPost(this.http, '/set_password', { new_password: newPassword });
   }
 
+  public async setUserImage(imageData: Buffer): Promise<void> {
+    await apiPost(this.http, '/set_user_image', {
+      image_data: imageData.toString(),
+    });
+  }
+
   public async getGroupsOwned(): Promise<GroupInfo[]> {
     return await apiGet<GroupInfo[]>(this.http, '/get_user_groups_owned');
   }

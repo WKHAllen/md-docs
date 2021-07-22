@@ -1,3 +1,5 @@
+@use '../../styles';
+
 $image-size: 48px;
 
 .avatar-container {
@@ -29,10 +31,12 @@ $image-size: 48px;
 
       .avatar-title {
         color: black;
+        @include styles.line-cutoff(1);
       }
 
       .avatar-subtitle {
         color: rgba(0, 0, 0, 0.54);
+        @include styles.line-cutoff(1);
       }
     }
   }

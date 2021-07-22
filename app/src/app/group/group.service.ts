@@ -82,6 +82,16 @@ export class GroupService {
     });
   }
 
+  public async setGroupImage(
+    groupID: string,
+    imageData: Buffer
+  ): Promise<void> {
+    await apiPost(this.http, '/set_group_image', {
+      group_id: groupID,
+      image_data: imageData.toString(),
+    });
+  }
+
   public async passGroupOwnership(
     groupID: string,
     newOwnerID: string
