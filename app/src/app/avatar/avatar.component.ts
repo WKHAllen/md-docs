@@ -11,6 +11,4 @@ export class AvatarComponent {
   @Input() title: string = '';
   @Input() subtitle: string = '';
   @Input() imageEntityType: ImageEntityType = 'unknown';
-
-  constructor() {}
 }

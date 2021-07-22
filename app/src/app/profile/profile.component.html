@@ -55,7 +55,11 @@
         Error: {{ userInfoError }}
       </p>
       <div *ngIf="gotUserInfo" class="user-image">
-        <img src="/image/{{ userInfo.image_id }}" alt="user image" />
+        <img
+          *ngIf="userInfo.image_id; else defaultUserImage"
+          src="/image/{{ userInfo.image_id }}"
+          alt="user image"
+        />
       </div>
       <ul *ngIf="gotUserInfo" class="user-info">
         <li>{{ userInfo.username }}</li>
@@ -364,4 +368,8 @@
   <div class="centered-text std-padding-y">
     You do not have any favorite groups.
   </div>
+</ng-template>
+
+<ng-template #defaultUserImage>
+  <img src="/assets/images/user.png" alt="user image" />
 </ng-template>
