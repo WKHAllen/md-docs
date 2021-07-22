@@ -30,9 +30,9 @@ export class ProfileService {
     await apiPost(this.http, '/set_password', { new_password: newPassword });
   }
 
-  public async setUserImage(imageData: Buffer): Promise<void> {
+  public async setUserImage(imageData: string): Promise<void> {
     await apiPost(this.http, '/set_user_image', {
-      image_data: imageData.toString(),
+      image_data: imageData,
     });
   }
 
