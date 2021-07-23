@@ -59,6 +59,7 @@
           *ngIf="userInfo.image_id; else defaultUserImage"
           src="/image/{{ userInfo.image_id }}"
           alt="user image"
+          id="user-image"
         />
       </div>
       <ul *ngIf="gotUserInfo" class="user-info">
@@ -66,6 +67,20 @@
         <li>{{ userInfo.email }}</li>
         <li>{{ userInfo.join_time | date }}</li>
       </ul>
+    </mat-card-content>
+  </mat-card>
+  <mat-card class="settings-card">
+    <mat-card-title>Change your avatar</mat-card-title>
+    <mat-card-content>
+      <p>
+        You may choose an image to set as your user avatar. Please use an image
+        of 256 KB or smaller.
+      </p>
+      <mdd-file-input
+        buttonLabel="Choose image"
+        [acceptTypes]="acceptImageTypes"
+        (fileChange)="setUserImage($event)"
+      ></mdd-file-input>
     </mat-card-content>
   </mat-card>
   <mat-card class="settings-card">

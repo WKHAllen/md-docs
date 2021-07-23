@@ -22,14 +22,13 @@ imageRouter.get(
 
     if (imageExists) {
       const image = await dbm.imageService.getImage(imageID);
+      const imageData = Buffer.from(image.data, "base64");
 
-      res.write(image.data, async (err) => {
-        if (err) {
-          throw err;
-        }
-
-        res.end();
+      res.writeHead(200, {
+        "Content-Type": "image/png",
+        "Content-Length": imageData.length,
       });
+      res.end(imageData);
     } else {
       next();
     }

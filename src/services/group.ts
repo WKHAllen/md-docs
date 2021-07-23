@@ -225,7 +225,7 @@ export class GroupService extends BaseService {
    */
   public async setGroupImage(
     groupID: string,
-    imageData: Buffer
+    imageData: string
   ): Promise<Group> {
     const group = await this.getByID<Group>(groupID);
 

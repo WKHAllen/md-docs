@@ -87,9 +87,8 @@ userRouter.post(
     const dbm = getDBM(req);
     const user = await getLoggedInUser(req);
     const imageData = getBodyParam(req, "image_data", "string");
-    const image = Buffer.from(imageData);
 
-    await dbm.userService.setUserImage(user.id, image);
+    await dbm.userService.setUserImage(user.id, imageData);
 
     respond(res);
   })

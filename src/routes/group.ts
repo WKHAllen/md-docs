@@ -142,12 +142,11 @@ groupRouter.post(
     const user = await getLoggedInUser(req);
     const groupID = getBodyParam(req, "group_id", "string");
     const imageData = getBodyParam(req, "image_data", "string");
-    const image = Buffer.from(imageData);
 
     const group = await dbm.groupService.getGroup(groupID);
 
     if (user.id === group.owner_user_id) {
-      await dbm.groupService.setGroupImage(groupID, image);
+      await dbm.groupService.setGroupImage(groupID, imageData);
 
       respond(res);
     } else {

@@ -8,14 +8,14 @@ import { BaseService, ServiceError } from "./util";
 /**
  * The maximum size of an image.
  */
-export const MAX_IMAGE_SIZE = 262144;
+export const MAX_IMAGE_SIZE = 349525; // 2^18 * log(256, 64)
 
 /**
  * Image architecture.
  */
 export interface Image {
   id: string;
-  data: Buffer;
+  data: string;
   create_time: number;
 }
 
@@ -29,7 +29,7 @@ export class ImageService extends BaseService {
    * @param data The image data.
    * @returns The new image record.
    */
-  public async createImage(data: Buffer): Promise<Image> {
+  public async createImage(data: string): Promise<Image> {
     if (data.length < MAX_IMAGE_SIZE) {
       return await this.create<Image>({ data });
     } else {
@@ -73,7 +73,7 @@ export class ImageService extends BaseService {
    * @param newData The new image data.
    * @returns The updated image.
    */
-  public async setImageData(imageID: string, newData: Buffer): Promise<Image> {
+  public async setImageData(imageID: string, newData: string): Promise<Image> {
     if (newData.length < MAX_IMAGE_SIZE) {
       const imageExists = await this.imageExists(imageID);
 

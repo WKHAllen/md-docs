@@ -316,7 +316,7 @@ export class UserService extends BaseService {
    * @param imageData The image data.
    * @returns The updataed user record.
    */
-  public async setUserImage(userID: string, imageData: Buffer): Promise<User> {
+  public async setUserImage(userID: string, imageData: string): Promise<User> {
     const user = await this.getByID<User>(userID);
 
     if (user) {

@@ -44,6 +44,9 @@ app.use(cookieParser());
 // Include static directory for css and js files
 app.use(express.static(path.join(__dirname + "/../../app/dist/md-docs")));
 
+// Set maximum JSON body size
+app.use(express.json({ limit: 349525 }));
+
 // Use routes
 app.use("/image", routes.imageRouter);
 app.use("/api", express.json(), routes.userRouter);

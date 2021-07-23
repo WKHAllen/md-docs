@@ -1,0 +1,15 @@
+<button
+  type="button"
+  mat-raised-button
+  color="primary"
+  (click)="fileInput.click()"
+>
+  {{ buttonLabel }}
+</button>
+<input
+  #fileInput
+  hidden
+  type="file"
+  (change)="onFileSelected($event)"
+  accept="{{ acceptTypesString }}"
+/>

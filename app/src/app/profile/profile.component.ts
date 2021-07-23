@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ProfileService, UserInfo } from './profile.service';
 import { LoginRegisterService } from '../login-register/login-register.service';
 import { GroupInfo } from '../group/group.service';
 import { DocumentEditInfo } from '../document/document.service';
 import { OtherUserInfo } from '../user/user.service';
-import { inputAppearance } from '../constants';
+import { inputAppearance, acceptImageTypes } from '../constants';
 
 interface SetUsernameForm {
   username: string;
@@ -72,11 +73,13 @@ export class ProfileComponent implements OnInit {
   public hidePassword: boolean = true;
   public hideConfirmPassword: boolean = true;
   readonly inputAppearance = inputAppearance;
+  readonly acceptImageTypes = acceptImageTypes;
 
   constructor(
     private profileService: ProfileService,
     private loginRegisterService: LoginRegisterService,
-    private router: Router
+    private router: Router,
+    private snackBar: MatSnackBar
   ) {}
 
   public async ngOnInit(): Promise<void> {
@@ -256,5 +259,28 @@ export class ProfileComponent implements OnInit {
     }
 
     this.togglingFavoriteGroup = false;
+  }
+
+  public async setUserImage(imageData: string): Promise<void> {
+    if (imageData.length < 262144) {
+      const b64Image = btoa(imageData);
+
+      try {
+        await this.profileService.setUserImage(b64Image);
+
+        (document.getElementById('user-image') as HTMLImageElement).src +=
+          '?' + new Date().getTime();
+      } catch (err) {
+        this.snackBar.open(`Error: ${err}`, undefined, {
+          duration: 5000,
+          panelClass: 'alert-panel-center',
+        });
+      }
+    } else {
+      this.snackBar.open('Error: image must be less than 256 KB', undefined, {
+        duration: 5000,
+        panelClass: 'alert-panel-center',
+      });
+    }
   }
 }
