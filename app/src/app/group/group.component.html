@@ -150,15 +150,28 @@
           >
         </mat-expansion-panel-header>
         <div class="config-section">
-          <p>
-            You may choose an image to set as the group image. Please use an
-            image of 256 KB or smaller.
-          </p>
-          <mdd-file-input
-            buttonLabel="Choose image"
-            [acceptTypes]="acceptImageTypes"
-            (fileChange)="setGroupImage($event)"
-          ></mdd-file-input>
+          <div class="space-below">
+            <p>
+              You may choose an image to set as the group image. Please use an
+              image of 256 KB or smaller.
+            </p>
+            <mdd-file-input
+              buttonLabel="Choose image"
+              [acceptTypes]="acceptImageTypes"
+              (fileChange)="setGroupImage($event)"
+            ></mdd-file-input>
+          </div>
+          <div>
+            <p>You may also remove the group image.</p>
+            <button
+              type="button"
+              mat-raised-button
+              color="primary"
+              (click)="deleteGroupImage()"
+            >
+              Remove image
+            </button>
+          </div>
         </div>
       </mat-expansion-panel>
       <mat-expansion-panel>

@@ -36,6 +36,10 @@ export class ProfileService {
     });
   }
 
+  public async deleteUserImage(): Promise<void> {
+    await apiPost(this.http, '/delete_user_image');
+  }
+
   public async getGroupsOwned(): Promise<GroupInfo[]> {
     return await apiGet<GroupInfo[]>(this.http, '/get_user_groups_owned');
   }

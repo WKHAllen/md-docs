@@ -157,6 +157,28 @@ groupRouter.post(
   })
 );
 
+// Deletes the group's image
+groupRouter.post(
+  "/delete_group_image",
+  wrapRoute(async (req, res) => {
+    const dbm = getDBM(req);
+    const user = await getLoggedInUser(req);
+    const groupID = getBodyParam(req, "group_id", "string");
+
+    const group = await dbm.groupService.getGroup(groupID);
+
+    if (user.id === group.owner_user_id) {
+      await dbm.groupService.deleteGroupImage(groupID);
+
+      respond(res);
+    } else {
+      throw new ServiceError(
+        "You do not have permission to delete this group's image"
+      );
+    }
+  })
+);
+
 // Passes group ownership to another user
 groupRouter.post(
   "/pass_group_ownership",

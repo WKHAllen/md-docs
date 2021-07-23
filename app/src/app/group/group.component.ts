@@ -344,4 +344,19 @@ export class GroupComponent implements OnInit {
       });
     }
   }
+
+  public async deleteGroupImage(): Promise<void> {
+    try {
+      await this.groupService.deleteGroupImage(this.groupID);
+      this.groupInfo = await this.groupService.getGroupInfo(this.groupID);
+
+      (document.getElementById('group-image') as HTMLImageElement).src +=
+        '?' + new Date().getTime();
+    } catch (err) {
+      this.snackBar.open(`Error: ${err}`, undefined, {
+        duration: 5000,
+        panelClass: 'alert-panel-center',
+      });
+    }
+  }
 }

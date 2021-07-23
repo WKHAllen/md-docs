@@ -94,6 +94,19 @@ userRouter.post(
   })
 );
 
+// Deletes a user's image
+userRouter.post(
+  "/delete_user_image",
+  wrapRoute(async (req, res) => {
+    const dbm = getDBM(req);
+    const user = await getLoggedInUser(req);
+
+    await dbm.userService.deleteUserImage(user.id);
+
+    respond(res);
+  })
+);
+
 // Gets all groups owned by the user
 userRouter.get(
   "/get_user_groups_owned",

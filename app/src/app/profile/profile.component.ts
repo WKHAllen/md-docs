@@ -284,4 +284,19 @@ export class ProfileComponent implements OnInit {
       });
     }
   }
+
+  public async deleteUserImage(): Promise<void> {
+    try {
+      await this.profileService.deleteUserImage();
+      this.userInfo = await this.profileService.getUserInfo();
+
+      (document.getElementById('user-image') as HTMLImageElement).src +=
+        '?' + new Date().getTime();
+    } catch (err) {
+      this.snackBar.open(`Error: ${err}`, undefined, {
+        duration: 5000,
+        panelClass: 'alert-panel-center',
+      });
+    }
+  }
 }

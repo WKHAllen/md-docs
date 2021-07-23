@@ -92,6 +92,10 @@ export class GroupService {
     });
   }
 
+  public async deleteGroupImage(groupID: string): Promise<void> {
+    await apiPost(this.http, '/delete_group_image', { group_id: groupID });
+  }
+
   public async passGroupOwnership(
     groupID: string,
     newOwnerID: string

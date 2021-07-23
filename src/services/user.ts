@@ -314,7 +314,7 @@ export class UserService extends BaseService {
    *
    * @param userID The ID of the user.
    * @param imageData The image data.
-   * @returns The updataed user record.
+   * @returns The updated user record.
    */
   public async setUserImage(userID: string, imageData: string): Promise<User> {
     const user = await this.getByID<User>(userID);
@@ -328,6 +328,28 @@ export class UserService extends BaseService {
         const image = await this.dbm.imageService.createImage(imageData);
 
         return await this.updateByID<User>(userID, { image_id: image.id });
+      }
+    } else {
+      throw new ServiceError("User does not exist");
+    }
+  }
+
+  /**
+   * Deletes a user's image.
+   *
+   * @param userID The ID of the user.
+   * @returns The updated user record.
+   */
+  public async deleteUserImage(userID: string): Promise<User> {
+    const user = await this.getByID<User>(userID);
+
+    if (user) {
+      if (user.image_id) {
+        await this.dbm.imageService.deleteImage(user.image_id);
+
+        return await this.updateByID<User>(userID, { image_id: null });
+      } else {
+        return user;
       }
     } else {
       throw new ServiceError("User does not exist");

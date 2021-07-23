@@ -72,15 +72,28 @@
   <mat-card class="settings-card">
     <mat-card-title>Change your avatar</mat-card-title>
     <mat-card-content>
-      <p>
-        You may choose an image to set as your user avatar. Please use an image
-        of 256 KB or smaller.
-      </p>
-      <mdd-file-input
-        buttonLabel="Choose image"
-        [acceptTypes]="acceptImageTypes"
-        (fileChange)="setUserImage($event)"
-      ></mdd-file-input>
+      <div class="space-below">
+        <p>
+          You may choose an image to set as your user avatar. Please use an
+          image of 256 KB or smaller.
+        </p>
+        <mdd-file-input
+          buttonLabel="Choose image"
+          [acceptTypes]="acceptImageTypes"
+          (fileChange)="setUserImage($event)"
+        ></mdd-file-input>
+      </div>
+      <div>
+        <p>You may also remove your avatar.</p>
+        <button
+          type="button"
+          mat-raised-button
+          color="primary"
+          (click)="deleteUserImage()"
+        >
+          Remove avatar
+        </button>
+      </div>
     </mat-card-content>
   </mat-card>
   <mat-card class="settings-card">

@@ -245,6 +245,28 @@ export class GroupService extends BaseService {
   }
 
   /**
+   * Deletes a group's image.
+   *
+   * @param groupID The group's ID.
+   * @returns The updated group record.
+   */
+  public async deleteGroupImage(groupID: string): Promise<Group> {
+    const group = await this.getByID<Group>(groupID);
+
+    if (group) {
+      if (group.image_id) {
+        await this.dbm.imageService.deleteImage(group.image_id);
+
+        return await this.updateByID<Group>(groupID, { image_id: null });
+      } else {
+        return group;
+      }
+    } else {
+      throw new ServiceError("Group does not exist");
+    }
+  }
+
+  /**
    * Passes ownership of the group to a new user.
    *
    * @param groupID The group's ID.
