@@ -12,5 +12,5 @@ CREATE TABLE IF NOT EXISTS app_user (
   CONSTRAINT fk_user_image
     FOREIGN KEY (image_id)
       REFERENCES image(id)
-        ON DELETE CASCADE
+        ON DELETE SET NULL
 );

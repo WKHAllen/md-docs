@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   GroupService,
   GroupInfo,
@@ -11,7 +12,7 @@ import { ProfileService } from '../profile/profile.service';
 import { OtherUserInfo } from '../user/user.service';
 import { DocumentEditInfo } from '../document/document.service';
 import { ConfirmComponent } from '../confirm/confirm.component';
-import { inputAppearance } from '../constants';
+import { inputAppearance, acceptImageTypes } from '../constants';
 
 interface GiveAccessViaSearchForm {
   username: string;
@@ -76,9 +77,10 @@ export class GroupComponent implements OnInit {
   public giveAccessViaSearchError: string = '';
   public passOwnershipError: string = '';
   public showGiveAccessViaSearchSuccess: boolean = false;
-  readonly inputAppearance = inputAppearance;
   public permissionNames = permissionNames;
   public loggedIn: boolean = false;
+  readonly inputAppearance = inputAppearance;
+  readonly acceptImageTypes = acceptImageTypes;
   @ViewChild(ConfirmComponent) deleteConfirmDialog!: ConfirmComponent;
 
   constructor(
@@ -86,7 +88,8 @@ export class GroupComponent implements OnInit {
     private loginRegisterService: LoginRegisterService,
     private profileService: ProfileService,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private snackBar: MatSnackBar
   ) {}
 
   public async ngOnInit() {
@@ -315,6 +318,30 @@ export class GroupComponent implements OnInit {
     if (confirmed) {
       await this.groupService.deleteGroup(this.groupID);
       await this.router.navigate(['/']);
+    }
+  }
+
+  public async setGroupImage(imageData: string): Promise<void> {
+    if (imageData.length < 262144) {
+      const b64Image = btoa(imageData);
+
+      try {
+        await this.groupService.setGroupImage(this.groupID, b64Image);
+        this.groupInfo = await this.groupService.getGroupInfo(this.groupID);
+
+        (document.getElementById('group-image') as HTMLImageElement).src +=
+          '?' + new Date().getTime();
+      } catch (err) {
+        this.snackBar.open(`Error: ${err}`, undefined, {
+          duration: 5000,
+          panelClass: 'alert-panel-center',
+        });
+      }
+    } else {
+      this.snackBar.open('Error: image must be less than 256 KB', undefined, {
+        duration: 5000,
+        panelClass: 'alert-panel-center',
+      });
     }
   }
 }

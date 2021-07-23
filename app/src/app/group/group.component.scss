@@ -1,8 +1,29 @@
 @use '../../styles';
 
+$group-image-size: 96px;
+
+.group-image {
+  margin: auto;
+  border-radius: 9999px;
+  overflow: hidden;
+  width: $group-image-size;
+  height: $group-image-size;
+  margin-bottom: 8px;
+
+  img {
+    width: $group-image-size;
+    height: $group-image-size;
+    object-fit: cover;
+  }
+}
+
 .group-title {
   text-align: center;
   margin-bottom: 16px;
+
+  h1 {
+    margin-bottom: 8px;
+  }
 }
 
 .group-info-error {

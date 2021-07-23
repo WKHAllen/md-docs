@@ -6,6 +6,14 @@
 
 <ng-template #groupInfoTemplate>
   <div class="group-title">
+    <div class="group-image">
+      <img
+        *ngIf="groupInfo.image_id; else defaultGroupImage"
+        src="/image/{{ groupInfo.image_id }}"
+        alt="group image"
+        id="group-image"
+      />
+    </div>
     <h1>{{ groupInfo.name }}</h1>
     <span>{{ groupInfo.description }}</span>
   </div>
@@ -132,6 +140,25 @@
               </div>
             </div>
           </form>
+        </div>
+      </mat-expansion-panel>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>Image</mat-panel-title>
+          <mat-panel-description
+            >Configure the group image</mat-panel-description
+          >
+        </mat-expansion-panel-header>
+        <div class="config-section">
+          <p>
+            You may choose an image to set as the group image. Please use an
+            image of 256 KB or smaller.
+          </p>
+          <mdd-file-input
+            buttonLabel="Choose image"
+            [acceptTypes]="acceptImageTypes"
+            (fileChange)="setGroupImage($event)"
+          ></mdd-file-input>
         </div>
       </mat-expansion-panel>
       <mat-expansion-panel>
@@ -510,4 +537,8 @@
   <div class="centered-text std-padding-y">
     There are currently no edit requests for documents in this group.
   </div>
+</ng-template>
+
+<ng-template #defaultGroupImage>
+  <img src="/assets/images/group.png" alt="group image" id="group-image" />
 </ng-template>

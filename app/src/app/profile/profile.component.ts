@@ -267,6 +267,7 @@ export class ProfileComponent implements OnInit {
 
       try {
         await this.profileService.setUserImage(b64Image);
+        this.userInfo = await this.profileService.getUserInfo();
 
         (document.getElementById('user-image') as HTMLImageElement).src +=
           '?' + new Date().getTime();

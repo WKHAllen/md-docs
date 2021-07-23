@@ -1,17 +1,17 @@
 @use '../../styles';
 
-$image-size: 64px;
+$user-image-size: 96px;
 
 .user-image {
   margin: auto;
   border-radius: 9999px;
   overflow: hidden;
-  width: $image-size;
-  height: $image-size;
+  width: $user-image-size;
+  height: $user-image-size;
 
   img {
-    width: $image-size;
-    height: $image-size;
+    width: $user-image-size;
+    height: $user-image-size;
     object-fit: cover;
   }
 }

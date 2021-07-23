@@ -34,5 +34,5 @@ CREATE TABLE IF NOT EXISTS app_group (
   CONSTRAINT fk_group_image
     FOREIGN KEY (image_id)
       REFERENCES image(id)
-        ON DELETE CASCADE
+        ON DELETE SET NULL
 );
