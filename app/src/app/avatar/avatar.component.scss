@@ -14,11 +14,13 @@ $image-size: 48px;
       flex: 0 0 auto;
       border-radius: 9999px;
       overflow: hidden;
+      width: $image-size;
+      height: $image-size;
 
-      &,
       img {
         width: $image-size;
         height: $image-size;
+        object-fit: cover;
       }
     }
 

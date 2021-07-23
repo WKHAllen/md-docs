@@ -1,14 +1,18 @@
 @use '../../styles';
 
+$image-size: 64px;
+
 .user-image {
   margin: auto;
   border-radius: 9999px;
   overflow: hidden;
+  width: $image-size;
+  height: $image-size;
 
-  &,
   img {
-    width: 64px;
-    height: 64px;
+    width: $image-size;
+    height: $image-size;
+    object-fit: cover;
   }
 }
 
