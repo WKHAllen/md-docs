@@ -262,23 +262,16 @@ export class ProfileComponent implements OnInit {
   }
 
   public async setUserImage(imageData: string): Promise<void> {
-    if (imageData.length < 262144) {
-      const b64Image = btoa(imageData);
+    const b64Image = btoa(imageData);
 
-      try {
-        await this.profileService.setUserImage(b64Image);
-        this.userInfo = await this.profileService.getUserInfo();
+    try {
+      await this.profileService.setUserImage(b64Image);
+      this.userInfo = await this.profileService.getUserInfo();
 
-        (document.getElementById('user-image') as HTMLImageElement).src +=
-          '?' + new Date().getTime();
-      } catch (err) {
-        this.snackBar.open(`Error: ${err}`, undefined, {
-          duration: 5000,
-          panelClass: 'alert-panel-center',
-        });
-      }
-    } else {
-      this.snackBar.open('Error: image must be less than 256 KB', undefined, {
+      (document.getElementById('user-image') as HTMLImageElement).src +=
+        '?' + new Date().getTime();
+    } catch (err) {
+      this.snackBar.open(`Error: ${err}`, undefined, {
         duration: 5000,
         panelClass: 'alert-panel-center',
       });

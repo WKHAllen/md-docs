@@ -5,11 +5,17 @@
 
 import DatabaseManager from ".";
 import * as bcrypt from "bcrypt";
+import * as jimp from "jimp";
 
 /**
  * Number of salt rounds to use when hashing passwords.
  */
-const SALT_ROUNDS = 12;
+export const SALT_ROUNDS = 12;
+
+/**
+ * The maximum size of an image.
+ */
+export const MAX_IMAGE_SIZE = 262144;
 
 /**
  * Get the current timestamp.
@@ -342,4 +348,113 @@ export async function checkPassword(
   hash: string
 ): Promise<boolean> {
   return await bcrypt.compare(password, hash);
+}
+
+/**
+ * Shrink an image.
+ *
+ * @param image The image buffer.
+ * @param factor The scale factor.
+ * @param quality The JPEG quality.
+ * @returns The resulting image buffer.
+ */
+export async function shrinkImage(
+  image: Buffer,
+  factor: number,
+  quality: number = 100
+): Promise<Buffer> {
+  return new Promise((resolve) => {
+    jimp.read(image).then((img) => {
+      const width = img.bitmap.width;
+      img
+        .resize(Math.floor(width * factor), jimp.AUTO)
+        .quality(quality)
+        .getBufferAsync(jimp.MIME_JPEG)
+        .then((buffer) => {
+          resolve(buffer);
+        });
+    });
+  });
+}
+
+/**
+ * Shrink an image to a maximum size.
+ *
+ * @param image The image buffer.
+ * @param maxWidth The maximum width of the image.
+ * @param maxHeight The maximum height of the image.
+ * @returns The resulting image buffer.
+ */
+export async function shrinkImageToSize(
+  image: Buffer,
+  maxWidth: number = 1920,
+  maxHeight: number = 1080
+): Promise<Buffer> {
+  return new Promise((resolve) => {
+    jimp.read(image).then((img) => {
+      const existingRatio = img.bitmap.width / img.bitmap.height;
+      const potentialRatio = maxWidth / maxHeight;
+      if (existingRatio > potentialRatio) {
+        img
+          .resize(maxWidth, jimp.AUTO)
+          .getBufferAsync(jimp.MIME_JPEG)
+          .then((buffer) => {
+            resolve(buffer);
+          });
+      } else {
+        img
+          .resize(jimp.AUTO, maxHeight)
+          .getBufferAsync(jimp.MIME_JPEG)
+          .then((buffer) => {
+            resolve(buffer);
+          });
+      }
+    });
+  });
+}
+
+/**
+ * Shrink an image automatically.
+ *
+ * @param image The image buffer.
+ * @param factor The scale factor.
+ * @param quality The JPEG quality.
+ * @returns The resulting image buffer.
+ */
+export async function shrinkImageAuto(
+  image: Buffer,
+  maxWidth: number = 1600,
+  maxHeight: number = 900,
+  factor: number = 0.7071,
+  quality: number = 40
+): Promise<Buffer> {
+  if (image.length < MAX_IMAGE_SIZE) {
+    return image;
+  } else {
+    const buffer = await shrinkImageToSize(image, maxWidth, maxHeight);
+
+    if (buffer.length * (4 / 3) < MAX_IMAGE_SIZE) {
+      return buffer;
+    } else {
+      let newBuffer = await shrinkImage(buffer, factor, quality);
+
+      while (newBuffer.length * (4 / 3) >= MAX_IMAGE_SIZE) {
+        newBuffer = await shrinkImage(newBuffer, factor, quality);
+      }
+
+      return newBuffer;
+    }
+  }
+}
+
+/**
+ * Shrinks a base64 encoded image.
+ *
+ * @param imageB64 The base64 image.
+ * @returns The shrunk base64 image.
+ */
+export async function shrinkImageBase64(imageB64: string): Promise<string> {
+  const image = Buffer.from(imageB64, "base64");
+  const shrunk = await shrinkImageAuto(image);
+  return shrunk.toString("base64");
 }

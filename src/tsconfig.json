@@ -6,5 +6,5 @@
     "allowJs": true,
     "target": "es5"
   },
-  "include": ["./*.ts", "db/dbm.ts", "db.ts"]
+  "include": ["./*.ts"]
 }

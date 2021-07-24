@@ -3,12 +3,12 @@
  * @packageDocumentation
  */
 
-import { BaseService, ServiceError } from "./util";
-
-/**
- * The maximum size of an image.
- */
-export const MAX_IMAGE_SIZE = 349525; // 2^18 * log(256, 64)
+import {
+  BaseService,
+  ServiceError,
+  shrinkImageBase64,
+  MAX_IMAGE_SIZE,
+} from "./util";
 
 /**
  * Image architecture.
@@ -30,12 +30,12 @@ export class ImageService extends BaseService {
    * @returns The new image record.
    */
   public async createImage(data: string): Promise<Image> {
-    if (data.length < MAX_IMAGE_SIZE) {
-      return await this.create<Image>({ data });
+    const imageData = await shrinkImageBase64(data);
+
+    if (imageData.length < MAX_IMAGE_SIZE) {
+      return await this.create<Image>({ data: imageData });
     } else {
-      throw new ServiceError(
-        `Image must be no more than ${MAX_IMAGE_SIZE / 1024} KB`
-      );
+      throw new ServiceError("Image is too large");
     }
   }
 
@@ -74,18 +74,18 @@ export class ImageService extends BaseService {
    * @returns The updated image.
    */
   public async setImageData(imageID: string, newData: string): Promise<Image> {
-    if (newData.length < MAX_IMAGE_SIZE) {
+    const imageData = await shrinkImageBase64(newData);
+
+    if (imageData.length < MAX_IMAGE_SIZE) {
       const imageExists = await this.imageExists(imageID);
 
       if (imageExists) {
-        return await this.updateByID<Image>(imageID, { data: newData });
+        return await this.updateByID<Image>(imageID, { data: imageData });
       } else {
         throw new ServiceError("Image does not exist");
       }
     } else {
-      throw new ServiceError(
-        `Image must be no more than ${MAX_IMAGE_SIZE / 1024} KB`
-      );
+      throw new ServiceError("Image is too large");
     }
   }
 

@@ -45,7 +45,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname + "/../../app/dist/md-docs")));
 
 // Set maximum JSON body size
-app.use(express.json({ limit: 349525 }));
+app.use(express.json({ limit: "8mb" }));
 
 // Use routes
 app.use("/image", routes.imageRouter);
