@@ -66,9 +66,6 @@ export class ProfileComponent implements OnInit {
   public setPasswordError: string = '';
   public logoutEverywhereError: string = '';
   public addFavoriteUserError: string = '';
-  public showUsernameSuccess: boolean = false;
-  public showPasswordSuccess: boolean = false;
-  public showAddFavoriteUserSuccess: boolean = false;
   public togglingFavoriteGroup: boolean = false;
   public hidePassword: boolean = true;
   public hideConfirmPassword: boolean = true;
@@ -155,12 +152,12 @@ export class ProfileComponent implements OnInit {
       try {
         await this.profileService.setUsername(form.username);
         this.submittingUsernameForm = false;
-        this.ngOnInit();
-        this.showUsernameSuccess = true;
+        await this.ngOnInit();
 
-        setTimeout(() => {
-          this.showUsernameSuccess = false;
-        }, 3000);
+        this.snackBar.open('Username changed', undefined, {
+          duration: 3000,
+          panelClass: 'alert-panel-center',
+        });
       } catch (err) {
         this.submittingUsernameForm = false;
         this.setUsernameError = err;
@@ -184,12 +181,10 @@ export class ProfileComponent implements OnInit {
       try {
         await this.profileService.setPassword(form.password);
 
-        this.submittingPasswordForm = false;
-        this.showPasswordSuccess = true;
-
-        setTimeout(() => {
-          this.showPasswordSuccess = false;
-        }, 3000);
+        this.snackBar.open('Password changed', undefined, {
+          duration: 3000,
+          panelClass: 'alert-panel-center',
+        });
       } catch (err) {
         this.submittingPasswordForm = false;
         this.setPasswordError = err;
@@ -232,11 +227,11 @@ export class ProfileComponent implements OnInit {
       await this.profileService.favoriteUserByUsername(form.username);
       this.submittingAddFavoriteUserForm = false;
       await this.ngOnInit();
-      this.showAddFavoriteUserSuccess = true;
 
-      setTimeout(() => {
-        this.showAddFavoriteUserSuccess = false;
-      }, 3000);
+      this.snackBar.open('User favorited', undefined, {
+        duration: 3000,
+        panelClass: 'alert-panel-center',
+      });
     } catch (err) {
       this.submittingAddFavoriteUserForm = false;
       this.addFavoriteUserError = err;

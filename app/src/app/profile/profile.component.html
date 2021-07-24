@@ -120,12 +120,6 @@
         >
           Change username
         </button>
-        <small
-          class="success-message"
-          [ngClass]="{ 'success-show': showUsernameSuccess === true }"
-        >
-          <mat-icon>check</mat-icon>
-        </small>
         <div *ngIf="setUsernameError" class="form-error-text">
           <small>
             {{ setUsernameError }}
@@ -193,12 +187,6 @@
         >
           Change password
         </button>
-        <small
-          class="success-message"
-          [ngClass]="{ 'success-show': showPasswordSuccess === true }"
-        >
-          <mat-icon>check</mat-icon>
-        </small>
         <div *ngIf="setPasswordError" class="form-error-text">
           <small>
             {{ setPasswordError }}
@@ -318,12 +306,6 @@
         >
           Favorite user
         </button>
-        <small
-          class="success-message"
-          [ngClass]="{ 'success-show': showAddFavoriteUserSuccess === true }"
-        >
-          <mat-icon>check</mat-icon>
-        </small>
         <div *ngIf="addFavoriteUserError" class="form-error-text">
           <small>
             {{ addFavoriteUserError }}

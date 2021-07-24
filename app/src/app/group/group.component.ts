@@ -80,7 +80,6 @@ export class GroupComponent implements OnInit {
   public setPermissionsError: string = '';
   public giveAccessViaSearchError: string = '';
   public passOwnershipError: string = '';
-  public showGiveAccessViaSearchSuccess: boolean = false;
   public groupIsFavorite: boolean = false;
   public groupOwnerIsFavorite: boolean = false;
   public groupCreatorIsFavorite: boolean = false;
@@ -258,21 +257,12 @@ export class GroupComponent implements OnInit {
       );
       this.submittingGiveAccessViaSearch = false;
 
-      const usersWithAccess = await this.groupService.getUsersWithAccess(
-        this.groupID
-      );
-      this.usersWithAccess = usersWithAccess.map((user) => ({
-        ...user,
-        favorite: this.favoriteUsers.some(
-          (favoriteUser) => user.id === favoriteUser.id
-        ),
-      }));
+      this.updateUsersWithAccess();
 
-      this.showGiveAccessViaSearchSuccess = true;
-
-      setTimeout(() => {
-        this.showGiveAccessViaSearchSuccess = false;
-      }, 3000);
+      this.snackBar.open('Access granted', undefined, {
+        duration: 3000,
+        panelClass: 'alert-panel-center',
+      });
     } catch (err) {
       this.submittingGiveAccessViaSearch = false;
       this.giveAccessViaSearchError = err;
