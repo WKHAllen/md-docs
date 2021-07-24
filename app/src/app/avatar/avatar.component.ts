@@ -7,7 +7,7 @@ import { ImageEntityType } from '../image/image.service';
   styleUrls: ['./avatar.component.scss'],
 })
 export class AvatarComponent {
-  @Input() imageID: string = '';
+  @Input() imageID: string | undefined = '';
   @Input() title: string = '';
   @Input() subtitle: string = '';
   @Input() imageEntityType: ImageEntityType = 'unknown';

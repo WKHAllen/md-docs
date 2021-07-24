@@ -232,17 +232,15 @@
 </ng-template>
 
 <ng-template #yourGroupsTemplate>
-  <div
-    *ngIf="userGroupsOwned.length > 0; else noGroupsOwned"
-    class="groups-owned"
-  >
-    <div *ngFor="let group of userGroupsOwned" class="group-owned">
+  <div *ngIf="userGroupsOwned.length > 0; else noGroupsOwned">
+    <div *ngFor="let group of userGroupsOwned" class="avatar-list-item">
       <a routerLink="/group/{{ group.id }}">
-        <mat-card>
-          <mat-card-title>{{ group.name }}</mat-card-title>
-          <mat-card-subtitle>{{ group.create_time | date }}</mat-card-subtitle>
-          <mat-card-content>{{ group.description }}</mat-card-content>
-        </mat-card>
+        <mdd-avatar
+          [imageID]="group.image_id"
+          imageEntityType="group"
+          [title]="group.name"
+          [subtitle]="group.description"
+        ></mdd-avatar>
       </a>
     </div>
   </div>
@@ -271,27 +269,26 @@
 </ng-template>
 
 <ng-template #favoriteUsersTemplate>
-  <div
-    *ngIf="userFavoriteUsers.length > 0; else noFavoriteUsers"
-    class="favorite-users"
-  >
-    <div *ngFor="let favoriteUser of userFavoriteUsers" class="favorite-user">
-      <mat-card>
-        <mat-card-title>{{ favoriteUser.username }}</mat-card-title>
-        <mat-card-subtitle>{{
-          favoriteUser.join_time | date
-        }}</mat-card-subtitle>
-        <mat-card-content>
-          <button mat-icon-button (click)="toggleFavoriteUser(favoriteUser.id)">
-            <mat-icon *ngIf="favoriteUser.favorite" class="star-icon"
-              >star</mat-icon
-            >
-            <mat-icon *ngIf="!favoriteUser.favorite" class="border-star-icon"
-              >star_border</mat-icon
-            >
-          </button>
-        </mat-card-content>
-      </mat-card>
+  <div *ngIf="userFavoriteUsers.length > 0; else noFavoriteUsers">
+    <div
+      *ngFor="let favoriteUser of userFavoriteUsers"
+      class="avatar-list-item"
+    >
+      <mdd-avatar
+        [imageID]="favoriteUser.image_id"
+        imageEntityType="user"
+        [title]="favoriteUser.username"
+        [subtitle]="(favoriteUser.join_time | date) || ''"
+      >
+        <button mat-icon-button (click)="toggleFavoriteUser(favoriteUser.id)">
+          <mat-icon *ngIf="favoriteUser.favorite" class="star-icon"
+            >star</mat-icon
+          >
+          <mat-icon *ngIf="!favoriteUser.favorite" class="border-star-icon"
+            >star_border</mat-icon
+          >
+        </button>
+      </mdd-avatar>
     </div>
   </div>
   <mat-card class="add-favorite-user-card">
@@ -338,36 +335,32 @@
 </ng-template>
 
 <ng-template #favoriteGroupsTemplate>
-  <div
-    *ngIf="userFavoriteGroups.length > 0; else noFavoriteGroups"
-    class="favorite-groups"
-  >
+  <div *ngIf="userFavoriteGroups.length > 0; else noFavoriteGroups">
     <div
       *ngFor="let favoriteGroup of userFavoriteGroups"
-      class="favorite-group"
+      class="avatar-list-item"
     >
       <a
         [routerLink]="togglingFavoriteGroup ? [] : '/group/' + favoriteGroup.id"
       >
-        <mat-card>
-          <mat-card-title>{{ favoriteGroup.name }}</mat-card-title>
-          <mat-card-subtitle>{{
-            favoriteGroup.create_time | date
-          }}</mat-card-subtitle>
-          <mat-card-content>
-            <button
-              mat-icon-button
-              (click)="toggleFavoriteGroup(favoriteGroup.id)"
+        <mdd-avatar
+          [imageID]="favoriteGroup.image_id"
+          imageEntityType="group"
+          [title]="favoriteGroup.name"
+          [subtitle]="favoriteGroup.description"
+        >
+          <button
+            mat-icon-button
+            (click)="toggleFavoriteGroup(favoriteGroup.id)"
+          >
+            <mat-icon *ngIf="favoriteGroup.favorite" class="star-icon"
+              >star</mat-icon
             >
-              <mat-icon *ngIf="favoriteGroup.favorite" class="star-icon"
-                >star</mat-icon
-              >
-              <mat-icon *ngIf="!favoriteGroup.favorite" class="border-star-icon"
-                >star_border</mat-icon
-              >
-            </button>
-          </mat-card-content>
-        </mat-card>
+            <mat-icon *ngIf="!favoriteGroup.favorite" class="border-star-icon"
+              >star_border</mat-icon
+            >
+          </button>
+        </mdd-avatar>
       </a>
     </div>
   </div>

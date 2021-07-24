@@ -53,18 +53,12 @@ $user-image-size: 96px;
   opacity: 1;
 }
 
-.groups-owned,
-.document-edit-requests,
-.favorite-users,
-.favorite-groups {
+.document-edit-requests {
   padding: 16px;
   @include styles.flex-grid(20em, 16px);
 }
 
-.group-owned,
-.document-edit-request,
-.favorite-user,
-.favorite-group {
+.document-edit-request {
   a {
     text-decoration: none;
     width: 100%;
@@ -90,11 +84,6 @@ $user-image-size: 96px;
   }
 }
 
-.favorite-users mat-card-content,
-.favorite-groups mat-card-content {
-  text-align: center;
-}
-
 .star-icon {
   color: gold;
   @include styles.hover-zoom(1.25);
@@ -110,4 +99,14 @@ $user-image-size: 96px;
   max-width: 600px;
   margin: 8px auto;
   padding: 20px;
+}
+
+.avatar-list-item {
+  a {
+    text-decoration: none;
+  }
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
 }

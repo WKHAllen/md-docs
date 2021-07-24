@@ -25,7 +25,7 @@ $image-size: 48px;
     }
 
     .avatar-content {
-      flex: 1 0 auto;
+      flex: 1 1 auto;
       display: flex;
       flex-direction: column;
       justify-content: space-evenly;
@@ -40,6 +40,10 @@ $image-size: 48px;
         color: rgba(0, 0, 0, 0.54);
         @include styles.line-cutoff(1);
       }
+    }
+
+    .avatar-extra {
+      flex: 0 0 auto;
     }
   }
 }
