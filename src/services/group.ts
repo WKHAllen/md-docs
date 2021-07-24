@@ -494,6 +494,7 @@ export class GroupService extends BaseService {
    * @param groupID The group's ID.
    */
   public async deleteGroup(groupID: string): Promise<void> {
+    await this.deleteGroupImage(groupID);
     await this.deleteByID(groupID);
   }
 }

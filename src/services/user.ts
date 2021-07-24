@@ -465,6 +465,7 @@ export class UserService extends BaseService {
    * @param userID The ID of the user.
    */
   public async deleteUser(userID: string): Promise<void> {
+    await this.deleteUserImage(userID);
     await this.deleteByID(userID);
   }
 
