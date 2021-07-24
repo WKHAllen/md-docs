@@ -77,6 +77,7 @@ export class GroupComponent implements OnInit {
   public giveAccessViaSearchError: string = '';
   public passOwnershipError: string = '';
   public showGiveAccessViaSearchSuccess: boolean = false;
+  public groupIsFavorite: boolean = false;
   public permissionNames = permissionNames;
   public loggedIn: boolean = false;
   readonly inputAppearance = inputAppearance;
@@ -102,6 +103,9 @@ export class GroupComponent implements OnInit {
         this.groupInfo = await this.groupService.getGroupInfo(this.groupID);
         this.groupName = this.groupInfo.name;
         this.groupDescription = this.groupInfo.description;
+        this.groupIsFavorite = await this.profileService.groupIsFavorite(
+          this.groupID
+        );
 
         this.canViewDetails = await this.groupService.canViewGroupDetails(
           this.groupID
@@ -345,6 +349,23 @@ export class GroupComponent implements OnInit {
 
       (document.getElementById('group-image') as HTMLImageElement).src +=
         '?' + new Date().getTime();
+    } catch (err) {
+      this.snackBar.open(`Error: ${err}`, undefined, {
+        duration: 5000,
+        panelClass: 'alert-panel-center',
+      });
+    }
+  }
+
+  public async toggleFavoriteGroup(): Promise<void> {
+    try {
+      if (this.groupIsFavorite) {
+        await this.profileService.unfavoriteGroup(this.groupID);
+        this.groupIsFavorite = false;
+      } else {
+        await this.profileService.favoriteGroup(this.groupID);
+        this.groupIsFavorite = true;
+      }
     } catch (err) {
       this.snackBar.open(`Error: ${err}`, undefined, {
         duration: 5000,

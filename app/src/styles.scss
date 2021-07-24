@@ -249,3 +249,14 @@ a.standard-link {
 .space-below {
   margin-bottom: 12px;
 }
+
+.star-icon {
+  color: gold;
+  @include hover-zoom(1.25);
+}
+
+.border-star-icon {
+  color: gold;
+  @include grayscale();
+  @include hover-zoom(1.25);
+}

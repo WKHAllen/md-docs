@@ -15,7 +15,13 @@
       />
     </div>
     <h1>{{ groupInfo.name }}</h1>
-    <span>{{ groupInfo.description }}</span>
+    <div>{{ groupInfo.description }}</div>
+    <button *ngIf="loggedIn" mat-icon-button (click)="toggleFavoriteGroup()">
+      <mat-icon *ngIf="groupIsFavorite" class="star-icon">star</mat-icon>
+      <mat-icon *ngIf="!groupIsFavorite" class="border-star-icon"
+        >star_border</mat-icon
+      >
+    </button>
   </div>
   <mat-tab-group dynamicHeight mat-align-tabs="center">
     <mat-tab label="Documents">
