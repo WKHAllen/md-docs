@@ -65,16 +65,75 @@
     <mat-card>
       <mat-card-title>Group owner and creator</mat-card-title>
       <mat-card-content>
-        <mat-list class="item-list">
-          <mat-list-item>
-            <span class="item-primary">{{ groupOwner.username }}</span>
-            <span class="item-secondary">Owner</span>
-          </mat-list-item>
-          <mat-list-item *ngIf="groupCreator">
-            <span class="item-primary">{{ groupCreator.username }}</span>
-            <span class="item-secondary">Creator</span>
-          </mat-list-item>
-        </mat-list>
+        <div *ngIf="groupOwner.id === groupCreator?.id">
+          <div class="avatar-list-item">
+            <mdd-avatar
+              [imageID]="groupOwner.image_id"
+              imageEntityType="user"
+              [title]="groupOwner.username"
+              subtitle="Creator and owner"
+            >
+              <button
+                *ngIf="loggedIn"
+                mat-icon-button
+                (click)="toggleFavoriteOwner()"
+              >
+                <mat-icon *ngIf="groupOwnerIsFavorite" class="star-icon"
+                  >star</mat-icon
+                >
+                <mat-icon *ngIf="!groupOwnerIsFavorite" class="border-star-icon"
+                  >star_border</mat-icon
+                >
+              </button>
+            </mdd-avatar>
+          </div>
+        </div>
+        <div *ngIf="groupOwner.id !== groupCreator?.id">
+          <div class="avatar-list-item">
+            <mdd-avatar
+              [imageID]="groupOwner.image_id"
+              imageEntityType="user"
+              [title]="groupOwner.username"
+              subtitle="Owner"
+            >
+              <button
+                *ngIf="loggedIn"
+                mat-icon-button
+                (click)="toggleFavoriteOwner()"
+              >
+                <mat-icon *ngIf="groupOwnerIsFavorite" class="star-icon"
+                  >star</mat-icon
+                >
+                <mat-icon *ngIf="!groupOwnerIsFavorite" class="border-star-icon"
+                  >star_border</mat-icon
+                >
+              </button>
+            </mdd-avatar>
+          </div>
+          <div *ngIf="groupCreator" class="avatar-list-item">
+            <mdd-avatar
+              [imageID]="groupCreator.image_id"
+              imageEntityType="user"
+              [title]="groupCreator.username"
+              subtitle="Creator"
+            >
+              <button
+                *ngIf="loggedIn"
+                mat-icon-button
+                (click)="toggleFavoriteCreator()"
+              >
+                <mat-icon *ngIf="groupCreatorIsFavorite" class="star-icon"
+                  >star</mat-icon
+                >
+                <mat-icon
+                  *ngIf="!groupCreatorIsFavorite"
+                  class="border-star-icon"
+                  >star_border</mat-icon
+                >
+              </button>
+            </mdd-avatar>
+          </div>
+        </div>
       </mat-card-content>
     </mat-card>
   </div>
@@ -82,15 +141,29 @@
     <mat-card>
       <mat-card-title>Users with access</mat-card-title>
       <mat-card-content>
-        <mat-list
-          *ngIf="usersWithAccess.length > 0; else noUsersWithAccess"
-          class="item-list"
-        >
-          <mat-list-item *ngFor="let user of usersWithAccess">
-            <span class="item-primary">{{ user.username }}</span>
-            <span class="item-secondary">{{ user.join_time | date }}</span>
-          </mat-list-item>
-        </mat-list>
+        <div *ngIf="usersWithAccess.length > 0; else noUsersWithAccess">
+          <div *ngFor="let user of usersWithAccess" class="avatar-list-item">
+            <mdd-avatar
+              [imageID]="user.image_id"
+              imageEntityType="user"
+              [title]="user.username"
+              [subtitle]="(user.join_time | date) || ''"
+            >
+              <button
+                *ngIf="loggedIn"
+                mat-icon-button
+                (click)="toggleFavoriteUser(user.id)"
+              >
+                <mat-icon *ngIf="user.favorite" class="star-icon"
+                  >star</mat-icon
+                >
+                <mat-icon *ngIf="!user.favorite" class="border-star-icon"
+                  >star_border</mat-icon
+                >
+              </button>
+            </mdd-avatar>
+          </div>
+        </div>
       </mat-card-content>
     </mat-card>
   </div>
@@ -389,17 +462,19 @@
                         >Revoke group access</mat-panel-description
                       >
                     </mat-expansion-panel-header>
-                    <mat-list class="item-list">
-                      <mat-list-item *ngFor="let user of usersWithAccess">
-                        <div class="space-between">
-                          <div>
-                            <span class="item-primary">{{
-                              user.username
-                            }}</span>
-                            <span class="item-secondary">{{
-                              user.join_time | date
-                            }}</span>
-                          </div>
+                    <div
+                      *ngIf="usersWithAccess.length > 0; else noUsersWithAccess"
+                    >
+                      <div
+                        *ngFor="let user of usersWithAccess"
+                        class="avatar-list-item"
+                      >
+                        <mdd-avatar
+                          [imageID]="user.image_id"
+                          imageEntityType="user"
+                          [title]="user.username"
+                          [subtitle]="(user.join_time | date) || ''"
+                        >
                           <button
                             mat-icon-button
                             matTooltip="Revoke access"
@@ -407,43 +482,40 @@
                           >
                             <mat-icon>person_remove</mat-icon>
                           </button>
-                        </div>
-                      </mat-list-item>
-                    </mat-list>
+                        </mdd-avatar>
+                      </div>
+                    </div>
                   </mat-expansion-panel>
                 </mat-accordion>
               </div>
             </mat-tab>
             <mat-tab label="Favorites">
-              <mat-list class="item-list">
-                <mat-list-item *ngFor="let user of favoriteUsers">
-                  <div class="space-between">
-                    <div>
-                      <span class="item-primary">{{ user.username }}</span>
-                      <span class="item-secondary">{{
-                        user.join_time | date
-                      }}</span>
-                    </div>
-                    <button
-                      *ngIf="user.hasAccess"
-                      mat-icon-button
-                      matTooltip="Revoke access"
-                      color="primary"
-                      (click)="onRevokeAccess(user.id)"
-                    >
-                      <mat-icon>person_remove</mat-icon>
-                    </button>
-                    <button
-                      *ngIf="!user.hasAccess"
-                      mat-icon-button
-                      matTooltip="Grant access"
-                      (click)="onGrantAccess(user.id)"
-                    >
-                      <mat-icon>person_add</mat-icon>
-                    </button>
-                  </div>
-                </mat-list-item>
-              </mat-list>
+              <div *ngFor="let user of favoriteUsers" class="avatar-list-item">
+                <mdd-avatar
+                  [imageID]="user.image_id"
+                  imageEntityType="user"
+                  [title]="user.username"
+                  [subtitle]="(user.join_time | date) || ''"
+                >
+                  <button
+                    *ngIf="user.hasAccess"
+                    mat-icon-button
+                    matTooltip="Revoke access"
+                    color="primary"
+                    (click)="onRevokeAccess(user.id)"
+                  >
+                    <mat-icon>person_remove</mat-icon>
+                  </button>
+                  <button
+                    *ngIf="!user.hasAccess"
+                    mat-icon-button
+                    matTooltip="Grant access"
+                    (click)="onGrantAccess(user.id)"
+                  >
+                    <mat-icon>person_add</mat-icon>
+                  </button>
+                </mdd-avatar>
+              </div>
             </mat-tab>
           </mat-tab-group>
         </div>

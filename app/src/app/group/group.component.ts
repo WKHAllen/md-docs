@@ -26,6 +26,10 @@ interface FavoriteUsersInfo extends OtherUserInfo {
   hasAccess: boolean;
 }
 
+interface FavoriteUserInfo extends OtherUserInfo {
+  favorite: boolean;
+}
+
 @Component({
   selector: 'mdd-group',
   templateUrl: './group.component.html',
@@ -59,7 +63,7 @@ export class GroupComponent implements OnInit {
     image_id: '',
     join_time: 0,
   };
-  public usersWithAccess: OtherUserInfo[] = [];
+  public usersWithAccess: FavoriteUserInfo[] = [];
   public gotDetails: boolean = false;
   public editRequests: DocumentEditInfo[] = [];
   public gotEditRequests: boolean = false;
@@ -78,6 +82,8 @@ export class GroupComponent implements OnInit {
   public passOwnershipError: string = '';
   public showGiveAccessViaSearchSuccess: boolean = false;
   public groupIsFavorite: boolean = false;
+  public groupOwnerIsFavorite: boolean = false;
+  public groupCreatorIsFavorite: boolean = false;
   public permissionNames = permissionNames;
   public loggedIn: boolean = false;
   readonly inputAppearance = inputAppearance;
@@ -128,9 +134,17 @@ export class GroupComponent implements OnInit {
             this.groupOwner = await this.groupService.getGroupOwner(
               this.groupID
             );
-            this.usersWithAccess = await this.groupService.getUsersWithAccess(
-              this.groupID
-            );
+
+            this.groupOwnerIsFavorite =
+              await this.profileService.userIsFavorite(this.groupOwner.id);
+
+            if (this.groupCreator) {
+              this.groupCreatorIsFavorite =
+                await this.profileService.userIsFavorite(this.groupCreator.id);
+            }
+
+            this.updateUsersWithAccess();
+
             this.gotDetails = true;
 
             this.editRequests =
@@ -138,17 +152,6 @@ export class GroupComponent implements OnInit {
                 this.groupID
               );
             this.gotEditRequests = true;
-          }
-
-          if (this.isGroupOwner) {
-            this.favoriteUsers = (
-              await this.profileService.getFavoriteUsers()
-            ).map((favoriteUser) => ({
-              ...favoriteUser,
-              hasAccess: this.usersWithAccess.some(
-                (user) => user.id === favoriteUser.id
-              ),
-            }));
           }
         }
       } catch (err) {
@@ -254,9 +257,17 @@ export class GroupComponent implements OnInit {
         form.username
       );
       this.submittingGiveAccessViaSearch = false;
-      this.usersWithAccess = await this.groupService.getUsersWithAccess(
+
+      const usersWithAccess = await this.groupService.getUsersWithAccess(
         this.groupID
       );
+      this.usersWithAccess = usersWithAccess.map((user) => ({
+        ...user,
+        favorite: this.favoriteUsers.some(
+          (favoriteUser) => user.id === favoriteUser.id
+        ),
+      }));
+
       this.showGiveAccessViaSearchSuccess = true;
 
       setTimeout(() => {
@@ -279,17 +290,30 @@ export class GroupComponent implements OnInit {
   }
 
   private async updateUsersWithAccess(): Promise<void> {
-    this.usersWithAccess = await this.groupService.getUsersWithAccess(
+    const usersWithAccess = await this.groupService.getUsersWithAccess(
       this.groupID
     );
-    this.favoriteUsers = (await this.profileService.getFavoriteUsers()).map(
-      (favoriteUser) => ({
-        ...favoriteUser,
-        hasAccess: this.usersWithAccess.some(
-          (user) => user.id === favoriteUser.id
-        ),
-      })
-    );
+    this.usersWithAccess = usersWithAccess.map((user) => ({
+      ...user,
+      favorite: this.favoriteUsers.some(
+        (favoriteUser) => user.id === favoriteUser.id
+      ),
+    }));
+
+    const favoriteUsers = await this.profileService.getFavoriteUsers();
+    this.favoriteUsers = favoriteUsers.map((favoriteUser) => ({
+      ...favoriteUser,
+      hasAccess: this.usersWithAccess.some(
+        (user) => user.id === favoriteUser.id
+      ),
+    }));
+
+    this.usersWithAccess = usersWithAccess.map((user) => ({
+      ...user,
+      favorite: this.favoriteUsers.some(
+        (favoriteUser) => user.id === favoriteUser.id
+      ),
+    }));
   }
 
   public async onPassOwnership(form: PassOwnershipForm): Promise<void> {
@@ -361,16 +385,87 @@ export class GroupComponent implements OnInit {
     try {
       if (this.groupIsFavorite) {
         await this.profileService.unfavoriteGroup(this.groupID);
-        this.groupIsFavorite = false;
       } else {
         await this.profileService.favoriteGroup(this.groupID);
-        this.groupIsFavorite = true;
+      }
+
+      this.groupIsFavorite = !this.groupIsFavorite;
+    } catch (err) {
+      this.snackBar.open(`Error: ${err}`, undefined, {
+        duration: 5000,
+        panelClass: 'alert-panel-center',
+      });
+    }
+  }
+
+  public async toggleFavoriteOwner(): Promise<void> {
+    try {
+      if (this.groupOwnerIsFavorite) {
+        await this.profileService.unfavoriteUser(this.groupOwner.id);
+      } else {
+        await this.profileService.favoriteUser(this.groupOwner.id);
+      }
+
+      this.groupOwnerIsFavorite = !this.groupOwnerIsFavorite;
+
+      await this.updateUsersWithAccess();
+    } catch (err) {
+      this.snackBar.open(`Error: ${err}`, undefined, {
+        duration: 5000,
+        panelClass: 'alert-panel-center',
+      });
+    }
+  }
+
+  public async toggleFavoriteCreator(): Promise<void> {
+    try {
+      if (this.groupCreator) {
+        if (this.groupCreatorIsFavorite) {
+          await this.profileService.unfavoriteUser(this.groupCreator.id);
+        } else {
+          await this.profileService.favoriteUser(this.groupCreator.id);
+        }
+
+        this.groupCreatorIsFavorite = !this.groupCreatorIsFavorite;
+
+        await this.updateUsersWithAccess();
       }
     } catch (err) {
       this.snackBar.open(`Error: ${err}`, undefined, {
         duration: 5000,
         panelClass: 'alert-panel-center',
       });
+    }
+  }
+
+  public async toggleFavoriteUser(userID: string): Promise<void> {
+    const favoriteUsers = await this.profileService.getFavoriteUsers();
+    this.favoriteUsers = favoriteUsers.map((favoriteUser) => ({
+      ...favoriteUser,
+      hasAccess: this.usersWithAccess.some(
+        (user) => user.id === favoriteUser.id
+      ),
+    }));
+
+    const usersWithAccessIndex = this.usersWithAccess.findIndex(
+      (user) => user.id === userID
+    );
+
+    if (this.usersWithAccess[usersWithAccessIndex].favorite) {
+      await this.profileService.unfavoriteUser(userID);
+    } else {
+      await this.profileService.favoriteUser(userID);
+    }
+
+    this.usersWithAccess[usersWithAccessIndex].favorite =
+      !this.usersWithAccess[usersWithAccessIndex].favorite;
+
+    if (userID === this.groupOwner.id) {
+      this.groupOwnerIsFavorite = !this.groupOwnerIsFavorite;
+    }
+
+    if (userID === this.groupCreator?.id) {
+      this.groupCreatorIsFavorite = !this.groupCreatorIsFavorite;
     }
   }
 }
