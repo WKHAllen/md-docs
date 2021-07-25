@@ -15,6 +15,7 @@ import { DirectoryPageComponent } from './directory/directory-page.component';
 import { DocumentComponent } from './document/document.component';
 import { DocumentEditComponent } from './document/document-edit.component';
 import { DocumentEditRequestComponent } from './document/document-edit-request.component';
+import { SearchGroupsComponent } from './search/search-groups.component';
 
 const routes: Routes = [
   { path: '', component: IndexComponent },
@@ -34,6 +35,7 @@ const routes: Routes = [
     path: 'document-edit/:documentEditID',
     component: DocumentEditRequestComponent,
   },
+  { path: 'search', component: SearchGroupsComponent },
   { path: '**', component: NotFoundComponent },
 ];
 

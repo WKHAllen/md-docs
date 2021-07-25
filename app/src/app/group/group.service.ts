@@ -253,4 +253,8 @@ export class GroupService {
   public async deleteGroup(groupID: string): Promise<void> {
     await apiPost(this.http, '/delete_group', { group_id: groupID });
   }
+
+  public async searchGroups(query: string): Promise<GroupInfo[]> {
+    return await apiGet<GroupInfo[]>(this.http, '/search_groups', { query });
+  }
 }

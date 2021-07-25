@@ -89,13 +89,3 @@ $user-image-size: 96px;
   margin: 8px auto;
   padding: 20px;
 }
-
-.avatar-list-item {
-  a {
-    text-decoration: none;
-  }
-
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.05);
-  }
-}

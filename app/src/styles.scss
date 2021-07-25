@@ -264,3 +264,13 @@ a.standard-link {
   @include grayscale();
   @include hover-zoom(1.25);
 }
+
+.avatar-list-item {
+  a {
+    text-decoration: none;
+  }
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+}

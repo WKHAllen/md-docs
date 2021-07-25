@@ -641,3 +641,16 @@ groupRouter.post(
     }
   })
 );
+
+// Searches for groups
+groupRouter.get(
+  "/search_groups",
+  wrapRoute(async (req, res) => {
+    const dbm = getDBM(req);
+    const query = getQueryParam(req, "query", "string");
+
+    const results = await dbm.groupService.searchGroups(query);
+
+    respond(res, results);
+  })
+);

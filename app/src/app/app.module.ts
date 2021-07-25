@@ -48,6 +48,7 @@ import { DirectoryPageComponent } from './directory/directory-page.component';
 import { DocumentComponent } from './document/document.component';
 import { DocumentEditComponent } from './document/document-edit.component';
 import { DocumentEditRequestComponent } from './document/document-edit-request.component';
+import { SearchGroupsComponent } from './search/search-groups.component';
 import {
   ConfirmComponent,
   ConfirmDialogComponent,
@@ -112,6 +113,7 @@ function markedOptionsFactory(): MarkedOptions {
     DocumentComponent,
     DocumentEditComponent,
     DocumentEditRequestComponent,
+    SearchGroupsComponent,
     ConfirmComponent,
     ConfirmDialogComponent,
     NewItemComponent,

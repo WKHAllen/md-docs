@@ -497,4 +497,24 @@ export class GroupService extends BaseService {
     await this.deleteGroupImage(groupID);
     await this.deleteByID(groupID);
   }
+
+  /**
+   * Searches for groups.
+   *
+   * @param query The query string.
+   * @returns The groups matching the query.
+   */
+  public async searchGroups(query: string): Promise<Group[]> {
+    const sql = `
+      SELECT * FROM app_group
+      WHERE
+        searchable = TRUE
+        AND (
+             LOWER(name)        LIKE LOWER(?)
+          OR LOWER(description) LIKE LOWER(?)
+        )
+      ORDER BY create_time ASC;`;
+    const params = Array(2).fill(`%${query}%`);
+    return await this.dbm.execute<Group>(sql, params);
+  }
 }

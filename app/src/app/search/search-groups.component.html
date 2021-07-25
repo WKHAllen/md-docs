@@ -1,0 +1,50 @@
+<div class="search-page">
+  <mat-card class="search-card">
+    <mat-card-title>Search groups</mat-card-title>
+    <mat-card-content>
+      <form
+        #searchForm="ngForm"
+        (ngSubmit)="search(searchForm.value)"
+        class="search-form"
+      >
+        <mat-form-field [appearance]="inputAppearance" class="max-width">
+          <mat-label>Search</mat-label>
+          <input
+            matInput
+            type="text"
+            id="query"
+            name="query"
+            maxlength="255"
+            ngModel
+          />
+          <button
+            mat-icon-button
+            matSuffix
+            type="submit"
+            matTooltip="Search"
+            [disabled]="submittingSearch"
+          >
+            <mat-icon>search</mat-icon>
+          </button>
+        </mat-form-field>
+        <div *ngIf="error" class="search-error">
+          <span class="error-text">{{ error }}</span>
+        </div>
+      </form>
+      <div class="search-results">
+        <div *ngFor="let result of results">
+          <div class="avatar-list-item">
+            <a routerLink="/group/{{ result.id }}">
+              <mdd-avatar
+                [imageID]="result.image_id"
+                [title]="result.name"
+                [subtitle]="result.description"
+                imageEntityType="group"
+              ></mdd-avatar>
+            </a>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
