@@ -1,6 +1,8 @@
 <div *ngIf="!gotDetails; else documentEditTemplate">
-  <div *ngIf="!documentInfoError; else documentInfoErrorTemplate">
-    <mat-spinner class="spinner"></mat-spinner>
+  <div *ngIf="documentEditExists; else documentEditDoesNotExist">
+    <div *ngIf="!documentInfoError; else documentInfoErrorTemplate">
+      <mat-spinner class="spinner"></mat-spinner>
+    </div>
   </div>
 </div>
 
@@ -81,3 +83,7 @@
 ></mdd-new-item>
 
 <mdd-document-edit-help #helpDialog></mdd-document-edit-help>
+
+<ng-template #documentEditDoesNotExist>
+  <mdd-does-not-exist name="document"></mdd-does-not-exist>
+</ng-template>

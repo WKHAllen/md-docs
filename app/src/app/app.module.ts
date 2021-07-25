@@ -67,6 +67,7 @@ import {
 import { PathComponent } from './path/path.component';
 import { AvatarComponent } from './avatar/avatar.component';
 import { FileInputComponent } from './file-input/file-input.component';
+import { DoesNotExistComponent } from './does-not-exist/does-not-exist.component';
 
 import { FileSizePipe } from './pipes/file-size.pipe';
 
@@ -122,6 +123,7 @@ function markedOptionsFactory(): MarkedOptions {
     PathComponent,
     AvatarComponent,
     FileInputComponent,
+    DoesNotExistComponent,
   ],
   imports: [
     CommonModule,

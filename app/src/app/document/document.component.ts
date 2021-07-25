@@ -31,6 +31,7 @@ export class DocumentComponent implements OnInit {
   };
   public gotDetails: boolean = false;
   public documentInfoError: string = '';
+  public documentExists: boolean = true;
   public isGroupOwner: boolean = false;
   public canViewDetails: boolean = false;
   public canEditDocuments: boolean = false;
@@ -88,6 +89,8 @@ export class DocumentComponent implements OnInit {
         if (err === 'You do not have permission to view this document') {
           this.canViewDetails = false;
           this.gotDetails = true;
+        } else if (err === 'Document does not exist') {
+          this.documentExists = false;
         } else {
           this.documentInfoError = err;
         }

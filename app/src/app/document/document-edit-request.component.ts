@@ -35,6 +35,7 @@ export class DocumentEditRequestComponent implements OnInit {
   };
   public gotDetails: boolean = false;
   public documentEditInfoError: string = '';
+  public documentEditRequestExists: boolean = true;
   public canViewDetails: boolean = false;
   public canApproveDocumentEdits: boolean = false;
   @ViewChild('approveEditsDialog') approveEditsDialog!: ConfirmComponent;
@@ -76,6 +77,8 @@ export class DocumentEditRequestComponent implements OnInit {
         ) {
           this.canViewDetails = false;
           this.gotDetails = true;
+        } else if (err === 'Document edit request does not exist') {
+          this.documentEditRequestExists = false;
         } else {
           this.documentEditInfoError = err;
         }

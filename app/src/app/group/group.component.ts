@@ -52,6 +52,7 @@ export class GroupComponent implements OnInit {
   public groupName: string = '';
   public groupDescription: string = '';
   public groupInfoError: string = '';
+  public groupExists: boolean = true;
   public isGroupOwner: boolean = false;
   public canViewDetails: boolean = false;
   public canEditDocuments: boolean = false;
@@ -154,7 +155,11 @@ export class GroupComponent implements OnInit {
           }
         }
       } catch (err) {
-        this.groupInfoError = err;
+        if (err === 'Group does not exist') {
+          this.groupExists = false;
+        } else {
+          this.groupInfoError = err;
+        }
       }
     });
   }

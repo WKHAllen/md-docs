@@ -49,6 +49,7 @@ export class DirectoryComponent implements OnInit, OnChanges {
   public documents: DocumentInfo[] = [];
   public gotDetails: boolean = false;
   public directoryInfoError: string = '';
+  public directoryExists: boolean = true;
   public selectedDirectory: DirectoryInfo = {
     id: '',
     name: '',
@@ -113,7 +114,11 @@ export class DirectoryComponent implements OnInit, OnChanges {
 
       this.gotDetails = true;
     } catch (err) {
-      this.directoryInfoError = err;
+      if (err === 'Directory does not exist') {
+        this.directoryExists = false;
+      } else {
+        this.directoryInfoError = err;
+      }
     }
   }
 

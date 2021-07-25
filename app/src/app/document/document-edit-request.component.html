@@ -1,6 +1,8 @@
 <div *ngIf="!gotDetails; else documentEditInfoTemplate">
-  <div *ngIf="!documentEditInfoError; else documentEditInfoErrorTemplate">
-    <mat-spinner class="spinner"></mat-spinner>
+  <div *ngIf="documentEditRequestExists; else documentEditRequestDoesNotExist">
+    <div *ngIf="!documentEditInfoError; else documentEditInfoErrorTemplate">
+      <mat-spinner class="spinner"></mat-spinner>
+    </div>
   </div>
 </div>
 
@@ -87,3 +89,7 @@
   confirmMessage="Are you certain you want to deny these document edits?"
   (close)="denyEdits($event)"
 ></mdd-confirm>
+
+<ng-template #documentEditRequestDoesNotExist>
+  <mdd-does-not-exist name="document edit request"></mdd-does-not-exist>
+</ng-template>

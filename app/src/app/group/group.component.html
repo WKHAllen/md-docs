@@ -1,6 +1,8 @@
 <div *ngIf="groupInfo.id === ''; else groupInfoTemplate">
-  <div *ngIf="!groupInfoError; else groupInfoErrorTemplate">
-    <mat-spinner class="spinner"></mat-spinner>
+  <div *ngIf="groupExists; else groupDoesNotExist">
+    <div *ngIf="!groupInfoError; else groupInfoErrorTemplate">
+      <mat-spinner class="spinner"></mat-spinner>
+    </div>
   </div>
 </div>
 
@@ -620,4 +622,8 @@
 
 <ng-template #defaultGroupImage>
   <img src="/assets/images/group.png" alt="group image" id="group-image" />
+</ng-template>
+
+<ng-template #groupDoesNotExist>
+  <mdd-does-not-exist name="group"></mdd-does-not-exist>
 </ng-template>
