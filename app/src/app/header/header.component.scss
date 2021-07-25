@@ -1,4 +1,11 @@
 .header {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+
+  .header-icons-right {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
 }
