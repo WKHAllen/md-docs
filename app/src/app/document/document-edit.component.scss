@@ -1,6 +1,8 @@
 $document-edit-border: 1px solid rgba(0, 0, 0, 0.15);
 
 .document-edit-container {
+  padding-top: 16px;
+
   .document-edit {
     border: $document-edit-border;
     border-radius: 6px;
@@ -34,6 +36,19 @@ $document-edit-border: 1px solid rgba(0, 0, 0, 0.15);
     }
 
     .document-edit-content {
+      padding: 12px;
+    }
+  }
+}
+
+.document-preview-container {
+  padding-top: 16px;
+
+  .document-preview {
+    border: $document-edit-border;
+    border-radius: 6px;
+
+    .document-preview-content {
       padding: 12px;
     }
   }
