@@ -15,6 +15,7 @@ export class SearchGroupsComponent {
   public submittingSearch: boolean = false;
   public error: string = '';
   public results: GroupInfo[] = [];
+  public hasSearched: boolean = false;
   readonly inputAppearance = inputAppearance;
 
   constructor(private groupService: GroupService) {}
@@ -25,6 +26,7 @@ export class SearchGroupsComponent {
 
     try {
       this.results = await this.groupService.searchGroups(form.query);
+      this.hasSearched = true;
     } catch (err) {
       this.error = err;
     }

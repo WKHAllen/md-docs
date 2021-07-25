@@ -31,6 +31,9 @@
           <span class="error-text">{{ error }}</span>
         </div>
       </form>
+      <div *ngIf="hasSearched && results.length === 0">
+        <div class="centered-text">No groups match your search query.</div>
+      </div>
       <div class="search-results">
         <div *ngFor="let result of results">
           <div class="avatar-list-item">
