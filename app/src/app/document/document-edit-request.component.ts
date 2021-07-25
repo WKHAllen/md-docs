@@ -7,6 +7,7 @@ import {
   DocumentInfo,
 } from './document.service';
 import { GroupService } from '../group/group.service';
+import { UserService, OtherUserInfo } from '../user/user.service';
 import { ConfirmComponent } from '../confirm/confirm.component';
 import { copyMessage } from '../util';
 
@@ -33,6 +34,11 @@ export class DocumentEditRequestComponent implements OnInit {
     content: '',
     create_time: 0,
   };
+  public documentEditor: OtherUserInfo = {
+    id: '',
+    username: '',
+    join_time: 0,
+  };
   public gotDetails: boolean = false;
   public documentEditInfoError: string = '';
   public documentEditRequestExists: boolean = true;
@@ -44,6 +50,7 @@ export class DocumentEditRequestComponent implements OnInit {
   constructor(
     private documentService: DocumentService,
     private groupService: GroupService,
+    private userService: UserService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private snackBar: MatSnackBar
@@ -59,6 +66,9 @@ export class DocumentEditRequestComponent implements OnInit {
         );
         this.documentInfo = await this.documentService.getDocumentInfo(
           this.documentEditInfo.document_id
+        );
+        this.documentEditor = await this.userService.getSpecificUserInfo(
+          this.documentEditInfo.editor_user_id
         );
 
         this.canViewDetails = await this.groupService.canViewGroupDetails(

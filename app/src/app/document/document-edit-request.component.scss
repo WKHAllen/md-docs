@@ -1,4 +1,5 @@
 $edit-request-border: 1px solid rgba(0, 0, 0, 0.15);
+$image-size: 32px;
 
 .edit-request-container {
   .edit-request {
@@ -25,8 +26,33 @@ $edit-request-border: 1px solid rgba(0, 0, 0, 0.15);
           margin: 0;
         }
 
+        .document-editor {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          padding: 0 8px;
+
+          .document-editor-image {
+            border-radius: 9999px;
+            overflow: hidden;
+            width: $image-size;
+            height: $image-size;
+
+            img {
+              width: $image-size;
+              height: $image-size;
+              object-fit: cover;
+            }
+          }
+
+          .document-editor-username {
+            padding-left: 6px;
+            font-weight: 500;
+            font-size: 1.15em;
+          }
+        }
+
         .edit-request-description {
-          padding: 0 4px;
         }
       }
 

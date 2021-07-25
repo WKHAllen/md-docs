@@ -16,6 +16,17 @@
       <div class="edit-request-toolbar">
         <div class="edit-request-toolbar-title">
           <mdd-path [documentID]="documentInfo.id"></mdd-path>
+          <div class="document-editor">
+            <div class="document-editor-image">
+              <img
+                src="/image/{{ documentEditor.image_id }}"
+                alt="user image"
+              />
+            </div>
+            <span class="document-editor-username">{{
+              documentEditor.username
+            }}</span>
+          </div>
           <div class="edit-request-description">
             {{ documentEditInfo.description }}
           </div>
