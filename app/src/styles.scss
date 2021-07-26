@@ -150,6 +150,25 @@ mat-card-title {
     margin-bottom: 0;
     padding-bottom: 0;
   }
+
+  blockquote {
+    border-left: 4px solid rgba(0, 0, 0, 0.25);
+    border-radius: 2px;
+    margin: 0;
+    padding: 0 12px;
+    color: rgba(0, 0, 0, 0.75);
+
+    ul {
+      margin-top: 0;
+      list-style-type: none;
+      padding-left: 24px;
+
+      li::before {
+        content: "-";
+        padding-right: 4px;
+      }
+    }
+  }
 }
 
 .document-edit-content .mat-form-field-wrapper {
