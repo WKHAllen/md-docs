@@ -2,6 +2,8 @@ $edit-request-border: 1px solid rgba(0, 0, 0, 0.15);
 $image-size: 32px;
 
 .edit-request-container {
+  padding-top: 16px;
+
   .edit-request {
     border: $edit-request-border;
     border-radius: 6px;
@@ -65,6 +67,26 @@ $image-size: 32px;
     }
 
     .edit-request-content {
+    }
+  }
+}
+
+.document-edit-preview-container {
+  padding-top: 16px;
+
+  .document-edit-preview {
+    border: $edit-request-border;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: row;
+
+    .document-edit-preview-content {
+      padding: 16px;
+      flex: 1;
+
+      &:first-child {
+        border-right: $edit-request-border;
+      }
     }
   }
 }

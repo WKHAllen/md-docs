@@ -8,72 +8,97 @@
 
 <ng-template #documentEditInfoTemplate>
   <h1>Document Edit Request</h1>
-  <div
-    *ngIf="canViewDetails; else cannotViewDetailsTemplate"
-    class="edit-request-container"
-  >
-    <div class="edit-request">
-      <div class="edit-request-toolbar">
-        <div class="edit-request-toolbar-title">
-          <mdd-path [documentID]="documentInfo.id"></mdd-path>
-          <div class="document-editor">
-            <div class="document-editor-image">
-              <img
-                src="/image/{{ documentEditor.image_id }}"
-                alt="user image"
-              />
+  <div *ngIf="canViewDetails; else cannotViewDetailsTemplate">
+    <mat-tab-group dynamicHeight mat-align-tabs="center">
+      <mat-tab label="Markdown">
+        <div class="edit-request-container">
+          <div class="edit-request">
+            <div class="edit-request-toolbar">
+              <div class="edit-request-toolbar-title">
+                <mdd-path [documentID]="documentInfo.id"></mdd-path>
+                <div class="document-editor">
+                  <div class="document-editor-image">
+                    <img
+                      src="/image/{{ documentEditor.image_id }}"
+                      alt="user image"
+                    />
+                  </div>
+                  <span class="document-editor-username">{{
+                    documentEditor.username
+                  }}</span>
+                </div>
+                <div class="edit-request-description">
+                  {{ documentEditInfo.description }}
+                </div>
+              </div>
+              <div class="edit-request-toolbar-items">
+                <a
+                  mat-icon-button
+                  matTooltip="View document"
+                  routerLink="/document/view/{{ documentInfo.id }}"
+                >
+                  <mat-icon>insert_drive_file</mat-icon>
+                </a>
+                <button
+                  *ngIf="canApproveDocumentEdits"
+                  mat-icon-button
+                  matTooltip="Approve edit request"
+                  (click)="openApproveEditsDialog()"
+                >
+                  <mat-icon>check</mat-icon>
+                </button>
+                <button
+                  *ngIf="canApproveDocumentEdits"
+                  mat-icon-button
+                  matTooltip="Deny edit request"
+                  (click)="openDenyEditsDialog()"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+                <button
+                  mat-icon-button
+                  matTooltip="Copy link to edit request"
+                  (click)="copyEditRequestLink()"
+                >
+                  <mat-icon>link</mat-icon>
+                </button>
+              </div>
             </div>
-            <span class="document-editor-username">{{
-              documentEditor.username
-            }}</span>
-          </div>
-          <div class="edit-request-description">
-            {{ documentEditInfo.description }}
+            <div class="edit-request-content">
+              <td-ngx-text-diff
+                [left]="documentInfo.content"
+                [right]="documentEditInfo.new_content"
+                [showToolbar]="false"
+                [showBtnToolbar]="false"
+                outerContainerClass="diff-content"
+              ></td-ngx-text-diff>
+            </div>
           </div>
         </div>
-        <div class="edit-request-toolbar-items">
-          <a
-            mat-icon-button
-            matTooltip="View document"
-            routerLink="/document/view/{{ documentInfo.id }}"
-          >
-            <mat-icon>insert_drive_file</mat-icon>
-          </a>
-          <button
-            *ngIf="canApproveDocumentEdits"
-            mat-icon-button
-            matTooltip="Approve edit request"
-            (click)="openApproveEditsDialog()"
-          >
-            <mat-icon>check</mat-icon>
-          </button>
-          <button
-            *ngIf="canApproveDocumentEdits"
-            mat-icon-button
-            matTooltip="Deny edit request"
-            (click)="openDenyEditsDialog()"
-          >
-            <mat-icon>close</mat-icon>
-          </button>
-          <button
-            mat-icon-button
-            matTooltip="Copy link to edit request"
-            (click)="copyEditRequestLink()"
-          >
-            <mat-icon>link</mat-icon>
-          </button>
+      </mat-tab>
+      <mat-tab label="Preview">
+        <div class="document-edit-preview-container">
+          <div class="document-edit-preview">
+            <div class="document-edit-preview-content">
+              <markdown
+                *ngIf="documentInfo.content; else noContent"
+                [data]="documentInfo.content"
+                ngPreserveWhitespaces
+                class="document-markdown"
+              ></markdown>
+            </div>
+            <div class="document-edit-preview-content">
+              <markdown
+                *ngIf="documentEditInfo.new_content; else noContent"
+                [data]="documentEditInfo.new_content"
+                ngPreserveWhitespaces
+                class="document-markdown"
+              ></markdown>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="edit-request-content">
-        <td-ngx-text-diff
-          [left]="documentInfo.content"
-          [right]="documentEditInfo.new_content"
-          [showToolbar]="false"
-          [showBtnToolbar]="false"
-          outerContainerClass="diff-content"
-        ></td-ngx-text-diff>
-      </div>
-    </div>
+      </mat-tab>
+    </mat-tab-group>
   </div>
 </ng-template>
 
@@ -103,4 +128,8 @@
 
 <ng-template #documentEditRequestDoesNotExist>
   <mdd-does-not-exist name="document edit request"></mdd-does-not-exist>
+</ng-template>
+
+<ng-template #noContent>
+  <div class="centered-text">This document is empty.</div>
 </ng-template>
