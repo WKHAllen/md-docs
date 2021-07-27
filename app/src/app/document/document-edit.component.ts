@@ -68,6 +68,10 @@ export class DocumentEditComponent implements OnInit {
         this.newContent = this.documentInfo.content;
 
         this.gotDetails = true;
+
+        setTimeout(() => {
+          this.updateTextareaHeight();
+        }, 100);
       } catch (err) {
         if (err === 'You do not have permission to view this document') {
           this.canViewDetails = false;
@@ -120,5 +124,11 @@ export class DocumentEditComponent implements OnInit {
 
   public openHelpDialog(): void {
     this.helpDialog.openDialog();
+  }
+
+  public updateTextareaHeight(): void {
+    const textarea = document.getElementById('content') as HTMLElement;
+    textarea.style.height = '';
+    textarea.style.height = textarea.scrollHeight + 'px';
   }
 }

@@ -36,20 +36,19 @@ $document-edit-border: 1px solid rgba(0, 0, 0, 0.15);
     }
 
     .document-edit-content {
-      padding: 16px;
-    }
-  }
-}
+      display: flex;
+      flex-direction: row;
 
-.document-preview-container {
-  padding-top: 16px;
+      .document-edit-form {
+        flex: 1;
+        padding: 16px;
+        border-right: $document-edit-border;
+      }
 
-  .document-preview {
-    border: $document-edit-border;
-    border-radius: 6px;
-
-    .document-preview-content {
-      padding: 16px;
+      .document-edit-preview {
+        flex: 1;
+        padding: 16px;
+      }
     }
   }
 }
