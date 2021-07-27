@@ -169,6 +169,39 @@
       </mat-card-content>
     </mat-card>
   </div>
+  <div class="card-container item-list-card">
+    <mat-card>
+      <mat-card-title>Configuration</mat-card-title>
+      <mat-card-content>
+        <mat-list role="list">
+          <mat-list-item role="listitem" class="details-config-item">
+            <span class="details-config-item-section">
+              <mat-icon>{{
+                groupInfo.details_visible ? "check" : "close"
+              }}</mat-icon>
+            </span>
+            <span class="details-config-item-section">Details visible</span>
+          </mat-list-item>
+          <mat-list-item role="listitem" class="details-config-item">
+            <span class="details-config-item-section">
+              <mat-icon>{{
+                groupInfo.searchable ? "check" : "close"
+              }}</mat-icon>
+            </span>
+            <span class="details-config-item-section">Searchable</span>
+          </mat-list-item>
+          <mat-list-item role="listitem">
+            Edit documents permissions:
+            {{ permissionNames[groupInfo.edit_documents_permission_id] }}
+          </mat-list-item>
+          <mat-list-item role="listitem">
+            Approve edits permissions:
+            {{ permissionNames[groupInfo.approve_edits_permission_id] }}
+          </mat-list-item>
+        </mat-list>
+      </mat-card-content>
+    </mat-card>
+  </div>
 </ng-template>
 
 <ng-template #groupConfigTemplate>

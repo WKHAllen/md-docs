@@ -34,6 +34,15 @@ $group-image-size: 96px;
   margin: auto;
 }
 
+.details-config-item {
+  display: flex;
+  align-items: center;
+
+  .details-config-item-section:last-child {
+    padding-left: 8px;
+  }
+}
+
 .config-card {
   max-width: 600px;
   margin: auto;
