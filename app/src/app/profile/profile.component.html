@@ -220,18 +220,43 @@
 </ng-template>
 
 <ng-template #yourGroupsTemplate>
-  <div *ngIf="userGroupsOwned.length > 0; else noGroupsOwned">
-    <div *ngFor="let group of userGroupsOwned" class="avatar-list-item">
-      <a routerLink="/group/{{ group.id }}">
-        <mdd-avatar
-          [imageID]="group.image_id"
-          imageEntityType="group"
-          [title]="group.name"
-          [subtitle]="group.description"
-        ></mdd-avatar>
-      </a>
-    </div>
-  </div>
+  <mat-card class="your-groups-card">
+    <mat-card-title>Groups owned</mat-card-title>
+    <mat-card-content>
+      <div *ngIf="userGroupsOwned.length > 0; else noGroupsOwned">
+        <div *ngFor="let group of userGroupsOwned" class="avatar-list-item">
+          <a routerLink="/group/{{ group.id }}">
+            <mdd-avatar
+              [imageID]="group.image_id"
+              imageEntityType="group"
+              [title]="group.name"
+              [subtitle]="group.description"
+            ></mdd-avatar>
+          </a>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <mat-card class="your-groups-card">
+    <mat-card-title>Groups with access</mat-card-title>
+    <mat-card-content>
+      <div *ngIf="userGroupsWithAccess.length > 0; else noGroupsWithAccess">
+        <div
+          *ngFor="let group of userGroupsWithAccess"
+          class="avatar-list-item"
+        >
+          <a routerLink="/group/{{ group.id }}">
+            <mdd-avatar
+              [imageID]="group.image_id"
+              imageEntityType="group"
+              [title]="group.name"
+              [subtitle]="group.description"
+            ></mdd-avatar>
+          </a>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
 </ng-template>
 
 <ng-template #documentEditRequestsTemplate>
@@ -361,6 +386,12 @@
 
 <ng-template #noGroupsOwned>
   <div class="centered-text std-padding-y">You do not own any groups.</div>
+</ng-template>
+
+<ng-template #noGroupsWithAccess>
+  <div class="centered-text std-padding-y">
+    You do not have access to any groups.
+  </div>
 </ng-template>
 
 <ng-template #noDocumentEditRequests>

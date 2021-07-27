@@ -392,11 +392,33 @@ export class UserService extends BaseService {
 
     if (userExists) {
       const sql = `
+        SELECT *
+          FROM app_group
+          WHERE owner_user_id = ?
+        ORDER BY create_time ASC;`;
+      const params = [userID];
+      return await this.dbm.execute<Group>(sql, params);
+    } else {
+      throw new ServiceError("User does not exist");
+    }
+  }
+
+  /**
+   * Returns all groups a user has access to.
+   *
+   * @param userID The ID of the user.
+   * @returns All groups the user owns.
+   */
+  public async getUserGroupsWithAccess(userID: string): Promise<Group[]> {
+    const userExists = await this.userExists(userID);
+
+    if (userExists) {
+      const sql = `
         SELECT app_group.*
           FROM app_group
-          JOIN app_user
-            ON app_group.owner_user_id = app_user.id
-        WHERE app_user.id = ?
+          JOIN group_access
+            ON app_group.id = group_access.group_id
+        WHERE group_access.user_id = ?
         ORDER BY app_group.create_time ASC;`;
       const params = [userID];
       return await this.dbm.execute<Group>(sql, params);

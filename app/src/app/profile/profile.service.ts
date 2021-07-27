@@ -44,6 +44,10 @@ export class ProfileService {
     return await apiGet<GroupInfo[]>(this.http, '/get_user_groups_owned');
   }
 
+  public async getGroupsWithAccess(): Promise<GroupInfo[]> {
+    return await apiGet<GroupInfo[]>(this.http, '/get_user_groups_with_access');
+  }
+
   public async getDocumentEditRequests(): Promise<DocumentEditInfo[]> {
     return await apiGet<DocumentEditInfo[]>(
       this.http,

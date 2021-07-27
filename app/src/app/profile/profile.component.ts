@@ -43,6 +43,7 @@ export class ProfileComponent implements OnInit {
     join_time: 0,
   };
   public userGroupsOwned: GroupInfo[] = [];
+  public userGroupsWithAccess: GroupInfo[] = [];
   public userDocumentEditRequests: DocumentEditInfo[] = [];
   public userFavoriteUsers: FavoriteUserInfo[] = [];
   public userFavoriteGroups: FavoriteGroupInfo[] = [];
@@ -97,6 +98,11 @@ export class ProfileComponent implements OnInit {
       try {
         const userGroupsOwned = await this.profileService.getGroupsOwned();
         this.userGroupsOwned = userGroupsOwned;
+
+        const userGroupsWithAccess =
+          await this.profileService.getGroupsWithAccess();
+        this.userGroupsWithAccess = userGroupsWithAccess;
+
         this.gotUserGroupsOwned = true;
       } catch (err) {
         this.userGroupsOwnedError = err;

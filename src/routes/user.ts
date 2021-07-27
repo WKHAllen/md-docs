@@ -120,6 +120,21 @@ userRouter.get(
   })
 );
 
+// Gets all groups the user has access to
+userRouter.get(
+  "/get_user_groups_with_access",
+  wrapRoute(async (req, res) => {
+    const dbm = getDBM(req);
+    const user = await getLoggedInUser(req);
+
+    const groupsWithAccess = await dbm.userService.getUserGroupsWithAccess(
+      user.id
+    );
+
+    respond(res, groupsWithAccess);
+  })
+);
+
 // Gets all document edit requests made by the user
 userRouter.get(
   "/get_user_document_edit_requests",
