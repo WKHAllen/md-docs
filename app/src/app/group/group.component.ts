@@ -109,9 +109,6 @@ export class GroupComponent implements OnInit {
         this.groupInfo = await this.groupService.getGroupInfo(this.groupID);
         this.groupName = this.groupInfo.name;
         this.groupDescription = this.groupInfo.description;
-        this.groupIsFavorite = await this.profileService.groupIsFavorite(
-          this.groupID
-        );
 
         this.canViewDetails = await this.groupService.canViewGroupDetails(
           this.groupID
@@ -126,15 +123,18 @@ export class GroupComponent implements OnInit {
           const user = await this.profileService.getUserInfo();
 
           this.isGroupOwner = user.id === this.groupInfo.owner_user_id;
+          this.groupIsFavorite = await this.profileService.groupIsFavorite(
+            this.groupID
+          );
+        }
 
-          if (this.canViewDetails) {
-            this.groupCreator = await this.groupService.getGroupCreator(
-              this.groupID
-            );
-            this.groupOwner = await this.groupService.getGroupOwner(
-              this.groupID
-            );
+        if (this.canViewDetails) {
+          this.groupCreator = await this.groupService.getGroupCreator(
+            this.groupID
+          );
+          this.groupOwner = await this.groupService.getGroupOwner(this.groupID);
 
+          if (this.loggedIn) {
             this.groupOwnerIsFavorite =
               await this.profileService.userIsFavorite(this.groupOwner.id);
 
@@ -142,18 +142,16 @@ export class GroupComponent implements OnInit {
               this.groupCreatorIsFavorite =
                 await this.profileService.userIsFavorite(this.groupCreator.id);
             }
-
-            this.updateUsersWithAccess();
-
-            this.gotDetails = true;
-
-            this.editRequests =
-              await this.groupService.getGroupDocumentEditRequests(
-                this.groupID
-              );
-            this.gotEditRequests = true;
           }
+
+          await this.updateUsersWithAccess();
+
+          this.editRequests =
+            await this.groupService.getGroupDocumentEditRequests(this.groupID);
+          this.gotEditRequests = true;
         }
+
+        this.gotDetails = true;
       } catch (err) {
         if (err === 'Group does not exist') {
           this.groupExists = false;
@@ -295,20 +293,22 @@ export class GroupComponent implements OnInit {
       ),
     }));
 
-    const favoriteUsers = await this.profileService.getFavoriteUsers();
-    this.favoriteUsers = favoriteUsers.map((favoriteUser) => ({
-      ...favoriteUser,
-      hasAccess: this.usersWithAccess.some(
-        (user) => user.id === favoriteUser.id
-      ),
-    }));
+    if (this.loggedIn) {
+      const favoriteUsers = await this.profileService.getFavoriteUsers();
+      this.favoriteUsers = favoriteUsers.map((favoriteUser) => ({
+        ...favoriteUser,
+        hasAccess: this.usersWithAccess.some(
+          (user) => user.id === favoriteUser.id
+        ),
+      }));
 
-    this.usersWithAccess = usersWithAccess.map((user) => ({
-      ...user,
-      favorite: this.favoriteUsers.some(
-        (favoriteUser) => user.id === favoriteUser.id
-      ),
-    }));
+      this.usersWithAccess = usersWithAccess.map((user) => ({
+        ...user,
+        favorite: this.favoriteUsers.some(
+          (favoriteUser) => user.id === favoriteUser.id
+        ),
+      }));
+    }
   }
 
   public async onPassOwnership(form: PassOwnershipForm): Promise<void> {

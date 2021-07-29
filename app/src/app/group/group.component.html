@@ -1,4 +1,4 @@
-<div *ngIf="groupInfo.id === ''; else groupInfoTemplate">
+<div *ngIf="!gotDetails; else groupInfoTemplate">
   <div *ngIf="groupExists; else groupDoesNotExist">
     <div *ngIf="!groupInfoError; else groupInfoErrorTemplate">
       <mat-spinner class="spinner"></mat-spinner>

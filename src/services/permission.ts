@@ -104,30 +104,37 @@ export class PermissionService extends BaseService {
    * @returns Whether or not the user can make edits to documents within the group.
    */
   public async canEditDocuments(
-    userID: string,
+    userID: string | undefined | null,
     groupID: string
   ): Promise<boolean> {
-    const userExists = await this.dbm.userService.userExists(userID);
+    const group = await this.dbm.groupService.getGroup(groupID);
 
-    if (userExists) {
-      const group = await this.dbm.groupService.getGroup(groupID);
+    if (userID) {
+      const userExists = await this.dbm.userService.userExists(userID);
 
-      if (group.owner_user_id === userID) {
-        return true;
-      } else {
-        switch (group.edit_documents_permission_id) {
-          case PermissionType.Anyone:
-            return true;
-          case PermissionType.ThoseWithAccess:
-            return await this.dbm.groupAccessService.hasAccess(groupID, userID);
-          case PermissionType.OwnerOnly:
-            return false;
-          default:
-            return false;
+      if (userExists) {
+        if (group.owner_user_id === userID) {
+          return true;
+        } else {
+          switch (group.edit_documents_permission_id) {
+            case PermissionType.Anyone:
+              return true;
+            case PermissionType.ThoseWithAccess:
+              return await this.dbm.groupAccessService.hasAccess(
+                groupID,
+                userID
+              );
+            case PermissionType.OwnerOnly:
+              return false;
+            default:
+              return false;
+          }
         }
+      } else {
+        throw new ServiceError("User does not exist");
       }
     } else {
-      throw new ServiceError("User does not exist");
+      return group.edit_documents_permission_id === PermissionType.Anyone;
     }
   }
 
@@ -139,30 +146,37 @@ export class PermissionService extends BaseService {
    * @returns Whether or not the user can approve edit requests within the group.
    */
   public async canApproveEdits(
-    userID: string,
+    userID: string | undefined | null,
     groupID: string
   ): Promise<boolean> {
-    const userExists = await this.dbm.userService.userExists(userID);
+    const group = await this.dbm.groupService.getGroup(groupID);
 
-    if (userExists) {
-      const group = await this.dbm.groupService.getGroup(groupID);
+    if (userID) {
+      const userExists = await this.dbm.userService.userExists(userID);
 
-      if (group.owner_user_id === userID) {
-        return true;
-      } else {
-        switch (group.approve_edits_permission_id) {
-          case PermissionType.Anyone:
-            return true;
-          case PermissionType.ThoseWithAccess:
-            return await this.dbm.groupAccessService.hasAccess(groupID, userID);
-          case PermissionType.OwnerOnly:
-            return false;
-          default:
-            return false;
+      if (userExists) {
+        if (group.owner_user_id === userID) {
+          return true;
+        } else {
+          switch (group.approve_edits_permission_id) {
+            case PermissionType.Anyone:
+              return true;
+            case PermissionType.ThoseWithAccess:
+              return await this.dbm.groupAccessService.hasAccess(
+                groupID,
+                userID
+              );
+            case PermissionType.OwnerOnly:
+              return false;
+            default:
+              return false;
+          }
         }
+      } else {
+        throw new ServiceError("User does not exist");
       }
     } else {
-      throw new ServiceError("User does not exist");
+      return group.approve_edits_permission_id === PermissionType.Anyone;
     }
   }
 }
