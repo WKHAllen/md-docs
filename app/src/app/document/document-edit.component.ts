@@ -129,6 +129,6 @@ export class DocumentEditComponent implements OnInit {
   public updateTextareaHeight(): void {
     const textarea = document.getElementById('content') as HTMLElement;
     textarea.style.height = '';
-    textarea.style.height = textarea.scrollHeight + 'px';
+    textarea.style.height = textarea.scrollHeight + 10 + 'px';
   }
 }

@@ -1,5 +1,6 @@
 $primary-color: #3f51b5;
 $secondary-color: white;
+$scrollbar-size: 10px;
 
 html,
 body {
@@ -12,8 +13,8 @@ body {
 }
 
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: $scrollbar-size;
+  height: $scrollbar-size;
 }
 
 ::-webkit-scrollbar-track {
