@@ -37,6 +37,7 @@
             <mat-icon>north</mat-icon>
           </a>
           <button
+            *ngIf="isGroupOwner"
             mat-icon-button
             matTooltip="New directory"
             (click)="newDirectoryDialog()"
@@ -44,6 +45,7 @@
             <mat-icon>create_new_folder</mat-icon>
           </button>
           <button
+            *ngIf="isGroupOwner"
             mat-icon-button
             matTooltip="New document"
             (click)="newDocumentDialog()"
@@ -165,6 +167,7 @@
       <mat-icon>info</mat-icon>
     </button>
     <button
+      *ngIf="isGroupOwner"
       mat-icon-button
       matTooltip="Rename directory"
       (click)="openRenameDirectoryDialog(directoryID)"
@@ -172,6 +175,7 @@
       <mat-icon>edit</mat-icon>
     </button>
     <button
+      *ngIf="isGroupOwner"
       mat-icon-button
       matTooltip="Delete directory"
       (click)="openDeleteDirectoryDialog(directoryID)"
@@ -191,6 +195,7 @@
       <mat-icon>info</mat-icon>
     </button>
     <button
+      *ngIf="isGroupOwner"
       mat-icon-button
       matTooltip="Rename document"
       (click)="openRenameDocumentDialog(documentID)"
@@ -198,6 +203,7 @@
       <mat-icon>edit</mat-icon>
     </button>
     <button
+      *ngIf="isGroupOwner"
       mat-icon-button
       matTooltip="Delete document"
       (click)="openDeleteDocumentDialog(documentID)"

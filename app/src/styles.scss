@@ -181,6 +181,7 @@ mat-card-title {
 }
 
 .mat-menu-panel {
+  min-width: auto !important;
   min-height: 0 !important;
 
   .mat-menu-content {

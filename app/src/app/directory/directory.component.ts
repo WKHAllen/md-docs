@@ -10,7 +10,13 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { DatePipe } from '@angular/common';
 import { DirectoryService, DirectoryInfo } from './directory.service';
 import { DocumentService, DocumentInfo } from '../document/document.service';
-import { GroupService } from '../group/group.service';
+import {
+  GroupService,
+  GroupInfo,
+  PermissionType,
+} from '../group/group.service';
+import { ProfileService } from '../profile/profile.service';
+import { LoginRegisterService } from '../login-register/login-register.service';
 import { ConfirmComponent } from '../confirm/confirm.component';
 import { NewItemComponent } from '../new-item/new-item.component';
 import {
@@ -50,6 +56,18 @@ export class DirectoryComponent implements OnInit, OnChanges {
   public gotDetails: boolean = false;
   public directoryInfoError: string = '';
   public directoryExists: boolean = true;
+  public groupInfo: GroupInfo = {
+    id: '',
+    owner_user_id: '',
+    name: '',
+    description: '',
+    details_visible: false,
+    searchable: false,
+    edit_documents_permission_id: PermissionType.OwnerOnly,
+    approve_edits_permission_id: PermissionType.OwnerOnly,
+    create_time: 0,
+  };
+  public isGroupOwner: boolean = false;
   public selectedDirectory: DirectoryInfo = {
     id: '',
     name: '',
@@ -67,6 +85,7 @@ export class DirectoryComponent implements OnInit, OnChanges {
   };
   public selectedDirectoryInfo: EntityInfo[] = [];
   public selectedDocumentInfo: EntityInfo[] = [];
+  public loggedIn: boolean = false;
   @ViewChild('newDirectory') createDirectoryDialog!: NewItemComponent;
   @ViewChild('newDocument') createDocumentDialog!: NewItemComponent;
   @ViewChild('directoryInfoDialog') directoryInfoDialog!: EntityInfoComponent;
@@ -80,12 +99,15 @@ export class DirectoryComponent implements OnInit, OnChanges {
     private directoryService: DirectoryService,
     private documentService: DocumentService,
     private groupService: GroupService,
+    private profileService: ProfileService,
+    private loginRegisterService: LoginRegisterService,
     private snackBar: MatSnackBar,
     private datePipe: DatePipe,
     private fileSizePipe: FileSizePipe
   ) {}
 
   public async ngOnInit(): Promise<void> {
+    this.loggedIn = this.loginRegisterService.loggedIn();
     this.isRoot = !this.root || this.root === 'true';
 
     try {
@@ -110,6 +132,14 @@ export class DirectoryComponent implements OnInit, OnChanges {
           await this.directoryService.getDocumentsWithinDirectory(
             this.directoryID
           );
+      }
+
+      this.groupInfo = await this.groupService.getGroupInfo(this.groupID);
+
+      if (this.loggedIn) {
+        const user = await this.profileService.getUserInfo();
+
+        this.isGroupOwner = user.id === this.groupInfo.owner_user_id;
       }
 
       this.gotDetails = true;
