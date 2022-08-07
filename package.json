@@ -9,7 +9,7 @@
     "build-backend": "cd src && npm run build",
     "start": "cd src && npm start",
     "start-frontend": "cd app && npm start",
-    "postinstall": "cd app && npm install && cd .. && cd src && npm install"
+    "postinstall": "cd app && npm install --legacy-peer-deps && cd .. && cd src && npm install"
   },
   "repository": {
     "type": "git",
