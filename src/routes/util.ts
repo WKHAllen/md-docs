@@ -9,6 +9,11 @@ import { ServiceError } from "../services/util";
 import { User } from "../services/user";
 
 /**
+ * Cookie maximum age.
+ */
+export const cookieAge = 33 * 365.242 * 24 * 60 * 60 * 1000;
+
+/**
  * A standard JSON response object.
  */
 export interface StandardResponse<T = undefined> {
@@ -57,7 +62,7 @@ export function getSessionID(req: Request): string {
  */
 export function setSessionID(res: Response, sessionID: string): void {
   res.cookie("sessionID", sessionID, {
-    httpOnly: true,
+    maxAge: cookieAge,
   });
 }
 

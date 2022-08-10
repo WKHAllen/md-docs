@@ -7,8 +7,7 @@ import { apiPost } from '../api';
   providedIn: 'root',
 })
 export class LoginRegisterService {
-  private loggedInName = 'loggedIn';
-  loggedInChange = new Subject<boolean>();
+  public loggedInChange = new Subject<boolean>();
 
   constructor(private http: HttpClient) {}
 
@@ -36,11 +35,25 @@ export class LoginRegisterService {
   }
 
   public loggedIn(): boolean {
-    return localStorage.getItem(this.loggedInName) === 'true';
+    return !!this.getCookie('sessionID');
   }
 
   private setLoggedIn(loggedIn: boolean): void {
-    localStorage.setItem(this.loggedInName, String(loggedIn));
     this.loggedInChange.next(loggedIn);
+  }
+
+  private getCookie(name: string): string | null {
+    const cookies = document.cookie.split(';');
+    const cookieName = `${name}=`;
+
+    for (const cookie of cookies) {
+      const c = cookie.replace(/^\s+/g, '');
+
+      if (c.indexOf(cookieName) === 0) {
+        return c.substring(cookieName.length, c.length);
+      }
+    }
+
+    return null;
   }
 }
